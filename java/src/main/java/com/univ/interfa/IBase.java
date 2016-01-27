@@ -31,3 +31,20 @@ class A implements IDerive{
 	}
 	
 }
+
+//-------------------------------------------------------------------------
+
+/**
+ * 抽象类实现接口时可以不用实现接口中的方法
+ */
+abstract class B implements IBase{
+	
+}
+/**
+ * 当然此时子类继承B时需要实现IBase中的方法
+ */
+class BB extends B {
+	public String baseA() {
+		return null;
+	}
+}
