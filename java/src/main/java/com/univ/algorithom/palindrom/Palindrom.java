@@ -1,4 +1,4 @@
-package com.univ.algorithom;
+package com.univ.algorithom.palindrom;
 /** 
  * @author univ 
  * @date 2016年1月5日 下午4:06:59 
