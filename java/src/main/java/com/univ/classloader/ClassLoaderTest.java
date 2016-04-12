@@ -64,9 +64,11 @@ class MyClassLoader extends ClassLoader {//1.继承ClassLoader
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        data = abos.toByteArray();   //把输出流中的字节弄成一个字节数组  
+        data = abos.toByteArray();   //把输出流中的字节转换成一个字节数组  
         return this.defineClass(name,data, 0, data.length);  
     }  
-	 //defineClass(byte[] b, int off, int len)已经被废弃，用下面的方法取代：
+	//这里讲字节文件内容读入到字节数组中有更简单的方法
+	// byte[] data = new byte[fis.avaiable()];fis.read(b);
+	//defineClass(byte[] b, int off, int len)已经被废弃，用下面的方法取代：
     // defineClass(String name, byte[] b, int off, int len),其中name是要加载的类的全路径名（加载的虽然是.class文件，但这里的全路径名指的是.java文件的全路径名+类名）
 }
