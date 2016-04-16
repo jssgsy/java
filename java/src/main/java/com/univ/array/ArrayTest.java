@@ -66,8 +66,67 @@ public class ArrayTest {
 		}
 	}
 	
+	/*
+	 * 多维数组遍历
+	 * 对于三维数组a[i][j][k],i:页,j:行,k:列
+	 */
+	@Test
+	public void test(){
+		int[][][] arrs = new int[][][]{
+				{
+					{1,2,3},
+					{4,5},
+					{2,3,5,6,7},
+					{1}
+					}
+		};
+		System.out.println(arrs.length);
+		for(int i = 0; i < arrs.length; i++){
+			for(int j = 0; j < arrs[i].length; j++){
+				for(int k = 0; k < arrs[i][j].length; k++){
+					System.out.print(arrs[i][j][k] + " ");
+				}
+			}
+			System.out.println();
+		}
+	}
 	
+	/*
+	 * 二维数组中，每一行按照从左到右递增，每一列从上到下递增。在其中找出给定的数值。
+	 * 思路：从右上角开始找。
+	 * 每当这个元素比目标数字大，则去掉该列，每当这个元素比目标数字小，则去掉该行，重复这个过程，
+	 * 思维重点：
+	 * 1. 虽然这里是二维数组，但并不需要嵌套循环；
+	 * 2. 加深对for循环三个子句的理解，比如这里第三个子句就是在循环体中赋值。
+	 */
+	@Test
+	public void findTarget(){
+		int target = 10;
+		int[][] a = {//假设这里的二维数组是矩形的
+				{1,2,8,9},
+				{2,4,9,12},
+				{4,7,10,13},
+				{6,8,11,15}
+		};
+		int result = findTarget(a, a.length, a[0].length, target);//因为这里假设二维数组是矩形的，所以每列的个数都是a[0].length
+		System.out.println(result);
+	}
 	
+	private int findTarget(int[][] a, int rowLen, int colLen, int target) {
+		for(int row = 0, col = colLen - 1; row < rowLen && col >= 0;){
+			System.out.println("正在和target比较的是: " + a[row][col]);
+			if (a[row][col] > target) {
+				col--;
+			} else if(a[row][col] < target){
+				row++;
+			}else{
+				System.out.println("target在第" + (row+1) + "行" + "第" + (col+1) + "列处找到。");
+				return a[row][col];
+			}
+		}
+		return -1;
+	}
+
 	//输出数组，供其他函数调用
 	public void showArray(int[] arr){
 		for (int i : arr) {
