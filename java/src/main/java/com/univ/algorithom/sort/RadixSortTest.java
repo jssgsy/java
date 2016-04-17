@@ -1,4 +1,4 @@
-package com.univ.algorithom.radixsort;
+package com.univ.algorithom.sort;
 
 /**
  * @author: liuml
