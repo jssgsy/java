@@ -32,7 +32,9 @@ public class Manager extends Employee {
 	
 	@Override
 	public Manager clone() throws CloneNotSupportedException{
-		return (Manager) super.clone();
+		Manager m =  (Manager) super.clone();
+		m.d = (Date) d.clone();
+		return m;
 		
 	}
 }
