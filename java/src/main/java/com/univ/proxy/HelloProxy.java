@@ -7,9 +7,9 @@ import java.lang.reflect.Method;
  * @author univ 
  * @date 2016年1月14日 下午3:59:09 
  * @version v1.0
- * @Description: HelloI接口中方法的代理类
- * 代理类只需要实现InvocationHandler即可
+ * @Description:这个名字取得不太好，因为这里并不是代理类（代理类对象由Proxy生成），是一个调用处理器
  */
+
 public class HelloProxy implements InvocationHandler {
 
 	private Object target;//被代理的对象
