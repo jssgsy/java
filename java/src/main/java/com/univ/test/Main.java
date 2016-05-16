@@ -19,12 +19,12 @@ public class Main<T> {
 				hasZero = true;
 			}
 		}
-		
+
 		int[] b = new int[maxElement+1];//利用此数组实现O(n)内使数组排序
 		for(int i = 0; i < len; i++){
 			b[a[i]] = a[i];//这句是核心
 		}
-		
+
 		int[] c = new int[len];
 		for(int i = 0, j = 0; i < maxElement+1; i++){
 			if(b[i] != 0){
@@ -55,7 +55,11 @@ public class Main<T> {
 		
 	}
 
-	
+
+
+
+
+
 	
 
 }
