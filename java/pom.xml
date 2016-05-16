@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -30,5 +30,14 @@
 			<version>2.4</version>
 			 <classifier>jdk15</classifier>
 		</dependency>
+
+		<!-- http://mvnrepository.com/artifact/ognl/ognl -->
+		<dependency>
+			<groupId>ognl</groupId>
+			<artifactId>ognl</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+
+
 	</dependencies>
 </project>
