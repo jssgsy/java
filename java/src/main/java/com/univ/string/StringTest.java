@@ -33,15 +33,38 @@ public class StringTest {
 		String strResult = new String(chArr);
 		System.out.println(strResult);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+	/**
+	 * 实现一个算法来判断一个字符串中的字符是否唯一。
+     * 来源:http://www.hawstein.com/posts/1.1.html。
+     *
+     * 假定组成字符串的字符都是ascii字符。
+     */
+    @Test
+	public void isCharInStringUnique(){
+
+        String str = " dqwic";
+        if (isCharUnique(str)) {
+            System.out.println("字符串: " + str + " 中的字符都是唯一的。");
+        }else {
+            System.out.println("o o");
+        }
+    }
+
+    private boolean isCharUnique(String str) {
+
+        boolean unique[] = new boolean[128];    //128
+        int len = str.length();
+        for (int i = 0; i < len; i++) {
+            if (!unique[str.charAt(i)]) {//说明是第一次遍历到此字符,并设置为已经被遍历过
+                unique[str.charAt(i)] = true;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }
