@@ -67,4 +67,27 @@ public class StringTest {
     }
 
 
+    /**
+     * 找出字符串中第一个只出现一次的字符。
+     *
+     * 假定组成字符串的字符都是ascii字符.如果包含非ascii字符,可以将count[]替换成hashmap
+     */
+    @Test
+    public void firstCharInString(){
+
+        String str = "jjbiealdkfafweoefbi";
+        int len = str.length();
+        int count[] = new int[128];
+        for (int i = 0; i < len; i++) {
+            count[str.charAt(i)]++;
+        }
+        for (int i = 0; i < len; i++) {
+            if (count[str.charAt(i)] == 1) {
+                System.out.println("字符串" + str + "第一个只出现一次的字符为: " + str.charAt(i));
+                break;
+            }
+        }
+
+    }
+
 }
