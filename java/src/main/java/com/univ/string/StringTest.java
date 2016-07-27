@@ -156,4 +156,101 @@ public class StringTest {
         }
     }
 
+    /**
+     * 找出target中第一个在source中出现的字符在source中的索引
+     */
+    @Test
+    public void fn1(){
+        String source = "abdefad";
+        String target = "fiefa";
+
+        int i = strStr(source, target);
+        System.out.println("the first index(from 0) of target string in source string is : " + i);
+
+    }
+
+    /**
+     * 算法中要注重边界条件,仔细体会一下这里的边界条件的写法
+     * @param source    源字符串
+     * @param target    目标字符串
+     */
+    private int strStr(String source, String target) {
+        if (source == null && target == null) return 0;
+        if (source == null) return -1;
+        if (target == null) return 0;
+
+        for (int i = 0; i < target.length(); i++) {
+            for (int j = 0; j < source.length(); j++) {
+                if (target.charAt(i) == source.charAt(j)) {
+                    return j;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * fn1的延伸延伸:找出target中第一个在source中出现的字符子串在source中的索引
+     */
+    @Test
+    public void fn2(){
+        String source = "abcd";
+        String target = "abcd";
+        int i = strStr2(source, target);
+        System.out.println("the first index(from 0) of target string in source string is : " + i);
+    }
+
+    private int strStr2(String source, String target) {
+        if (source == null && target == null) return 0;
+        if (source == null) return -1;
+        if (target == null) return 0;
+
+        int targetLen = target.length();
+        for (int i = 0; i < targetLen; i++) {
+            for (int j = 0; j < source.length(); j++) {
+                /**
+                 * 这里要注意判断条件source.length()-j >=targetLen。
+                 * 假如source为"abc",而target为"bcde",此时substring方法将抛出异常。
+                 */
+                if (target.charAt(i) == source.charAt(j)
+                        && (source.length()-j >= targetLen) //说明才有可能匹配成功。
+                        && target.equals(source.substring(j,j+targetLen))) {
+                    return j;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * strStr的改进版
+     *  如果source比target短,则根本不需要判断。
+     */
+    public int strStr3(String source, String target){
+
+        if (source == null && target == null) return 0;
+        if (source == null) return -1;
+        if (target == null) return 0;
+
+        if (source.length() < target.length()) {//相比strStr2,strStr3只增加了此句
+            return -1;
+        }
+
+        int targetLen = target.length();
+        for (int i = 0; i < targetLen; i++) {
+            for (int j = 0; j < source.length(); j++) {
+                /**
+                 * 这里要注意判断条件source.length()-j >=targetLen。
+                 * 假如source为"abc",而target为"bcde",此时substring方法将抛出异常。
+                 */
+                if (target.charAt(i) == source.charAt(j)
+                        && (source.length()-j >= targetLen) //说明才有可能匹配成功。
+                        && target.equals(source.substring(j,j+targetLen))) {
+                    return j;
+                }
+            }
+        }
+        return -1;
+    }
+
 }
