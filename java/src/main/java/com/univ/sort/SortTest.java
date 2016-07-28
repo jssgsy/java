@@ -13,7 +13,7 @@ public class SortTest {
     /**
      * 基本数据类型的测试。
      *
-     * Arrays中提供了基本数据类型数组排序。
+     * Arrays中提供了基本数据类型数组排序:Arrays.sort(arr1,arr2)
      */
     @Test
     public void basicTypeSort(){
@@ -33,4 +33,21 @@ public class SortTest {
         System.out.println(Arrays.toString(arrStr));
     }
 
+    /**
+     * 基本类型数组的比较判断。
+     * Arrays中提供了基本数据类型数组排序:Arrays.equals(arr1,arr2)
+     */
+    @Test
+    public void basicTypeArrEquals(){
+        //int 类型数组相等比较
+        int[] arrInt1 = {3, 5, 1, 39, 34, -3};
+        int[] arrInt2 = {3, 39, 34, -3};
+        System.out.println(Arrays.equals(arrInt1,arrInt2));
+
+
+        //String类型数组排序
+        String[] arrStr1 = {"abd", "fjeifa", "iu", "aa", "iy", "etf"};
+        String[] arrSt2 = {"abd", "aefa", "feaf", "fjeifa", "iu", "aa", "iy", "etf"};
+        System.out.println(Arrays.equals(arrStr1,arrSt2));
+    }
 }
