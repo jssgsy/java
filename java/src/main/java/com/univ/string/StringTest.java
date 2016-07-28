@@ -2,6 +2,8 @@ package com.univ.string;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class StringTest {
 
     /*
@@ -251,6 +253,67 @@ public class StringTest {
             }
         }
         return -1;
+    }
+
+
+    /**
+     * 判断两个字符串是否为变位词
+     */
+    @Test
+    public void anagram(){
+        String str1 = "aebce";
+        String str2 = "bceea";
+        if (anagram(str1,str2)) {
+            System.out.println(str1 + "  与  " + str2 + "  是变位词");
+        }else {
+            System.out.println("o o");
+        }
+    }
+
+    /**
+     * 假设组成字符串的字符是ascii字符。
+     * 区分大小写。
+     * 思路1:统计两个字符串中字符出现的次数;
+     * 思路2:先对字符串排序(先转换成字符数组,再转回字符串),然后比较字符串时候相等;
+     */
+    private boolean anagram(String str1, String str2) {
+        if (str1 == null || str2 == null) {
+            return false;
+        }
+        if (str1.length() != str2.length()) {
+            return false;
+        }
+
+
+        int[] countStr1 = new int[128];
+        for (int i = 0; i < str1.length(); i++) {
+            countStr1[str1.charAt(i)]++;
+        }
+
+        int[] countStr2 = new int[128];
+        for (int i = 0; i < str2.length(); i++) {
+            countStr2[str2.charAt(i)]++;
+        }
+
+        if (Arrays.equals(countStr1, countStr2)) {
+            return true;
+        }
+        return false;
+
+        //上面代码的一个小技巧
+        /*int[] countStr = new int[128];
+
+        for (int i = 0; i < str1.length(); i++) {
+            countStr[str1.charAt(i)]++;
+            countStr[str2.charAt(i)]--;
+        }
+        for (int i = 0; i < countStr.length; i++) {
+            if (countStr[i] != 0) {
+                return false;
+            }
+        }
+        return true;*/
+
     }
 
 }
