@@ -295,10 +295,7 @@ public class StringTest {
             countStr2[str2.charAt(i)]++;
         }
 
-        if (Arrays.equals(countStr1, countStr2)) {
-            return true;
-        }
-        return false;
+        return Arrays.equals(countStr1, countStr2);
 
         //上面代码的一个小技巧
         /*int[] countStr = new int[128];
@@ -314,6 +311,60 @@ public class StringTest {
         }
         return true;*/
 
+    }
+
+    /**
+     * Compare two strings A and B, determine whether A contains all of the characters in B.
+     * The characters in string A and B are all Upper Case letters.
+         Example
+         For A = "ABCD", B = "ABC", return true.
+         For A = "ABCD" B = "AABC", return false.
+     思路:还是统计两个字符串中字符出现的次数,然后比较词频大小即可。
+
+     注意:如果B中相同的字符算一个字符,则只需要在遍历B时,先判断一个此字符有没有被遍历过(对应的词频是否为0),
+     如果遍历过则其词频不自增即可。
+     */
+    @Test
+    public void containAll(){
+        String str1 = "ABCD";
+        String str2 = "AABC";
+        if (containAll(str1,str2)) {
+            System.out.println(str1 + "  包含  " + str2 + "  中的所有字符");
+        }else {
+            System.out.println("o o");
+        }
+
+    }
+
+    /**
+     * str1中是否包含str2中的所有字符
+     */
+    private boolean containAll(String str1, String str2) {
+        if (str1 == null || str2 == null) {
+            return false;
+        }
+
+        if (str1.length() < str2.length()) {
+            return false;
+        }
+
+        int[] countStr1 = new int[128];
+        int[] countStr2 = new int[128];
+
+        for (int i = 0; i < str1.length(); i++) {
+            countStr1[str1.charAt(i)]++;
+        }
+
+        for (int i = 0; i < str2.length(); i++) {
+            countStr2[str2.charAt(i)]++;
+        }
+
+        for (int i = 0; i < countStr1.length; i++) {//这里不是str2.length()也不是str2.length()
+            if (countStr1[i] < countStr2[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }
