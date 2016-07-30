@@ -367,4 +367,49 @@ public class StringTest {
         return true;
     }
 
+    /**
+     * 反转组成字符串的单词。
+     * Given an input string, reverse the string word by word.
+     For example,
+         Given s = "the sky is blue",
+         return "blue is sky the".
+
+     *
+     * 思路1:假设句子之间的单词由空格分开
+     *  1. 将句子按单词拆分到String数组中;
+     *  2. 第一步中的String数组逆序;
+     *  缺点:
+     *      1. 单词间如果是以多个空格隔开则可能会出现问题(不会将多个空格合并成一个 );
+     */
+    @Test
+    public void reverseWords(){
+
+        String str = "the    sky is  blue";
+        System.out.println(reverseWords(str));
+    }
+
+    private String reverseWords(String str) {
+        if (str == null) {
+            return null;
+        }
+
+        String[] strArr = str.split(" ");//按空格拆分长String数组,split有些诡异,慎用。
+
+
+
+        int len = strArr.length;
+        for (int i = 0; i < len / 2; i++) {//String数组逆序
+            String temp = strArr[i];
+            strArr[i] = strArr[len-1-i];
+            strArr[len-1-i] = temp;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            sb.append(strArr[i]);
+            sb.append(" ");
+        }
+        return sb.subSequence(0,sb.length()-1).toString();//去掉最后一个空格
+    }
 }
+
