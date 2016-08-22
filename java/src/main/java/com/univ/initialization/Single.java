@@ -23,13 +23,16 @@ class Sample {
 
 public class Single {
 	
-	{
-		System.out.println("普通代码块");
-	}	//4		在非static成员变量初始化之前（如这里的sam1），所以不能访问类的非static成员变量
-	
-	Sample sam1 = new Sample("sam1成员初始化");	//5
-	
-	static Sample sam = new Sample("静态成员sam初始化");	//1	static（不论是static成员变量还是static块）的执行顺序是依据其声明顺序的
+
+	Sample sam1 = new Sample("sam1成员初始化");	//4
+
+    {
+        System.out.println("普通代码块");
+        System.out.println(sam1);
+    }	//5	非静态代码块与非static成员变量的执行顺序取决于两者的定义顺序(就像static块于static成员变量一样);每次new的时候都会被调用
+
+
+    static Sample sam = new Sample("静态成员sam初始化");	//1	static（不论是static成员变量还是static块）的执行顺序是依据其声明顺序的
 	
 	static {
 		System.out.println("static块执行");	//2
