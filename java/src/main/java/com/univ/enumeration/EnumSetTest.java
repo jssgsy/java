@@ -18,7 +18,7 @@ import java.util.Iterator;
  * 3.遍历(既然是集合,当然可以使用迭代器iterator);
  *      Iterator returned by EnumSet traverse the elements in their natural order,
  *      i.e. the order on which enum constants are declared, or the order returned by ordinal() method.
- * 3.常用操作:
+ * 4.常用操作:
  *      1.创建一个EnumSet实例(通过静态方法);
  *      2.判断是否包含某个元素;
  * 5.EnumSet是非线程安全的,要想得到线程安全的EnumSet,使用Collections.synchronizedSet包装一下:
