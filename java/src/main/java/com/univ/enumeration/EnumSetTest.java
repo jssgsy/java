@@ -11,7 +11,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 
 /**
- * 演示EnumSet的使用方法。
+ * 演示EnumSet(EnumSet是一个抽象类)的使用方法。
  *
  * 1.首先,EnumSet是一个集合类型,知道这点很重要,只是这个集合中只能存放枚举类型的对象,且只能是同一种枚举类型的对象;
  * 2.EnumSet中的元素具有唯一性; 不能往EnumSet中存放null值;
