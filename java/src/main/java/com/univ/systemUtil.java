@@ -15,12 +15,19 @@ import java.util.Arrays;
 public class systemUtil {
 
     /**
-     * System.arraycopy()的参数:
+     * System.arraycopy()
+     * 参数:
      *      src - the source array.
      *      srcPos - starting position in the source array.
      *      dest - the destination array.
      *      destPos - starting position in the destination data.
      *      length - 想从原数组中复制元素的个数
+     *
+     * 注意和Arrays.copyOf()方法的区别(见ArrayTest.java):
+     *  1. System.arraycopy():新旧数组都是方法的参数;
+     *  2. Arrays.copy():新数组是方法的返回值;
+     *  3. Arrays.copy()底层调用的是System.arraycopy()方法;
+     *
      */
     @Test
     public void test1(){

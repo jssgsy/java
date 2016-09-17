@@ -86,6 +86,17 @@ public class ArrayTest {
 		showArray(oldArr);//3 6 5 2 
 		showArray(newArr);//3 6 100 2 
 	}
+
+    /**
+     * 拷贝数组的一部分[from,to),是左开右闭
+     *  copyOfRange(int[] original,int from,int to)
+     */
+	@Test
+    public void copyArrayRange(){
+        int[] oldArr = new int[]{3,6,5,2};
+        int[] newArr = Arrays.copyOfRange(oldArr, 1, 3);
+        System.out.println(Arrays.toString(newArr));
+    }
 	
 	//将二维数组当做一位数组对待会好理解一些，退化后的一位数组中的每个元素都是一个数组（类似于广义表）
 	@Test
