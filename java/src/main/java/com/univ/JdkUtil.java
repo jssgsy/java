@@ -12,7 +12,7 @@ import java.util.Arrays;
 /**
  * 用以存放jdk中常用的工具类方法
  */
-public class systemUtil {
+public class JdkUtil {
 
     /**
      * System.arraycopy()
