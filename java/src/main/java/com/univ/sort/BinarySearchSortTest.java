@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * 二叉折半插入排序算法
- *  二叉这边插入排序是稳定的排序算法
+ *  二叉折半插入排序是稳定的排序算法
  */
 public class BinarySearchSortTest {
 
