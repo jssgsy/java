@@ -8,6 +8,7 @@ package com.univ;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 用以存放jdk中常用的工具类方法
@@ -41,9 +42,9 @@ public class JdkUtil {
     }
 
     /**
-     * 基本数据类型数组的排序。
-     *
-     * Arrays中提供了基本数据类型数组排序:Arrays.sort(arr1,arr2)
+     * Arrays.toString
+     *  基本数据类型数组的排序。
+     *  Arrays中提供了基本数据类型数组排序:Arrays.sort(arr1,arr2)
      */
     @Test
     public void test2(){
@@ -64,8 +65,9 @@ public class JdkUtil {
     }
 
     /**
-     * 基本类型数组的比较判断。
-     * Arrays中提供了基本数据类型数组排序:Arrays.equals(arr1,arr2)
+     * Arrays.equals
+     *  基本类型数组的比较判断。
+     *  Arrays中提供了基本数据类型数组排序:Arrays.equals(arr1,arr2)
      */
     @Test
     public void test3(){
@@ -79,6 +81,31 @@ public class JdkUtil {
         String[] arrStr1 = {"abd", "fjeifa", "iu", "aa", "iy", "etf"};
         String[] arrSt2 = {"abd", "aefa", "feaf", "fjeifa", "iu", "aa", "iy", "etf"};
         System.out.println(Arrays.equals(arrStr1,arrSt2));
+    }
+
+    /**
+     * Arrays.asList()
+     *     1. 要转换成list的数组中的元素不能为基本类型;
+     *     2. 转成的list大小是固定的,不能执行add,remove等操作;
+     *     3. 原数组的修改会影响转换后的list;
+     *     4. 上面2和3的原因: Arrays.asList()返回的是Arrays内部的一个类,此类内部维护一个数组a,当调用此方法时,只是将a赋值为传入的参数然后返回a;
+     *     5. list可以修改其中元素的内容(Arrays类中相关内部类继承自AbstractList类);
+     */
+    @Test
+    public void test4(){
+
+        Integer[] a = {2, 5, 3, 4};//1.不能为int[]类型
+        List<Integer> list = Arrays.asList(a);
+        System.out.println(list);//[2, 5, 3, 4]
+
+        //list.add(200);//2.list的大小固定
+
+        a[3] = 100; //3.原数组的修改会影响转换后的list
+        System.out.println(list);//[2, 5, 3, 100]
+
+        list.set(2, 300);//5.list可以修改其中元素的内容;
+        System.out.println(list);//[2, 5, 300, 100]
+
     }
 
 
