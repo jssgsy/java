@@ -7,6 +7,9 @@ package com.univ.patterndesign.composite;
 
 /**
  * 叶子节点
+ *
+ * update: 这里应该移除add,remove等不支持操作的方法,应该将其在父类中默认实现为抛出UnsupportedOperationException异常,
+ * 并在需要支持的子类中覆写,这才是良好的设计(集合框架中就有这样的身影,如AbstractCollection中的add方法)。
  */
 public class Leaf extends Component{
     public Leaf(){}
@@ -18,6 +21,8 @@ public class Leaf extends Component{
     /**
      * 叶子节点不能新增其他节点
      * @param component
+     *
+     * update:此方法应该上移至父类并默认实现为抛出UnsupportedOperationException异常
      */
     @Override
     public void add(Component component) {
@@ -27,6 +32,8 @@ public class Leaf extends Component{
     /**
      * 叶子节点不能删除其他节点(根本就没有子节点)。节点是由父节点删除的
      * @param component
+     *
+     * update:此方法应该上移至父类并默认实现为抛出UnsupportedOperationException异常
      */
     @Override
     public void remove(Component component) {

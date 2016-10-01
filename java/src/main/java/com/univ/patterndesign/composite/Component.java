@@ -27,6 +27,15 @@ public abstract class Component {
     public String getName(){
         return name;
     }
+
+    /**
+     * update: 这里不应该将add,remove等方法定义成abstract修饰,因为并不是所有的子类都需要实现,
+     * 这里的情况恰恰相反,子类叶子节点不用实现此两个方法,所以正确的做法应该是在这里默认实现add,remove方法,
+     * 并抛出UnsupportedOperationException异常,有需要的子类可以覆写此方法。
+     * 这才是良好的设计(集合框架中就有这样的身影,如AbstractCollection中的add方法)。
+     * @param component
+     */
+
     public abstract void add(Component component);
 
     public abstract void remove(Component component);
