@@ -8,6 +8,7 @@ package com.univ;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -105,6 +106,37 @@ public class JdkUtil {
 
         list.set(2, 300);//5.list可以修改其中元素的内容;
         System.out.println(list);//[2, 5, 300, 100]
+
+    }
+
+    /**
+     *  Arrays.sort()
+     *      按自然顺序排序
+     */
+    @Test
+    public void test5(){
+        Integer[] arr = {1,30,5,2,3,15,23,9};
+        //升序
+        Arrays.sort(arr);
+        System.out.println(Arrays.toString(arr));
+
+        //降序
+        Arrays.sort(arr,new Comparator<Integer>(){
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1 > o2 ? -1 : 1;
+            }
+        });
+        System.out.println(Arrays.toString(arr));
+
+        //大小写敏感排序(默认)
+        String[] strArr = {"avd", "eia", "Ahi", "Bad"};
+        Arrays.sort(strArr);
+        System.out.println(Arrays.toString(strArr));
+
+        //大小写不敏感排序(String类内部已经定义了比较器CASE_INSENSITIVE_ORDER)
+        Arrays.sort(strArr,String.CASE_INSENSITIVE_ORDER);
+        System.out.println(Arrays.toString(strArr));
 
     }
 
