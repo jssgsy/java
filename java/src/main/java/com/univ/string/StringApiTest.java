@@ -5,7 +5,6 @@ package com.univ.string;
  * 16/9/11 10:25
  */
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -32,15 +31,26 @@ public class StringApiTest {
     /**
      * 演示如何使用java正则表达式最基本的用法
      * 核心类及其方法:
-     * 1. Pattern:表示经编译的正则表达式(及字符串形式正则表达式的表示)
+     * 1. Pattern:表示经编译的正则表达式(即字符串形式正则表达式的表示)
      *      Pattern pattern = Pattern.compile(regx);
      *      Matcher matcher = pattern.matcher(template);
      * 2. Matcher:封装了匹配结果的类
      *      matcher.find();
      *      matcher.group();
+     *          等价于template.substring(matcher.start(), matcher.end()),即被匹配的内容为[start(), end()),注意是左闭右开
+     *
+     *      //注意,start()和end()方法只能调用一次,第二次调用时其值未可知。
      *      matcher.start();
      *      matcher.end();
      *      matcher.replaceAll("...");
+     *
+     * 3. 补充的重要的方法:和分组相关
+     *      matcher.start(int group);
+     *          匹配第group分组的起始位置
+     *      matcher.end(int group);
+     *          匹配第group分组的结束位置+1
+     *      matcher.group(int group);
+     *          匹配第group分组的内容,等价于template.subString(matcher.start(group),matcher.end(group));
      */
     @Test
     public void test3() {
@@ -64,11 +74,13 @@ public class StringApiTest {
      * 在java中，与regex有关的包，并不都能理解和识别反斜线字符(/)。
      * 为避免这一点，即为了让反斜线字符(/)在模式对象中被完全地传递，应该用双反斜线字符(/)。
      * 此外圆括号或者方括号或者大括号等在正则表达中有特殊含义，如果想让它解释为字面上意思，也需要在它前面用双反斜线字符(/)。
+     *
+     * $在正则表达式中具有特殊意义(匹配字符串的结尾处),所以这里需要对其进行转义。
      */
     @Test
     public void test4() {
         String template = "Hello, ${username}, welcome .";
-        String regex = "\\$\\{username\\}";
+        String regex = "\\$\\{username\\}";//表示要匹配字符串"${username}",把其中的$和{}都当做普通的字符
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(template);
         if (matcher.find()) {//如果匹配到
