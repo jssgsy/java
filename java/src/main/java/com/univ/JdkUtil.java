@@ -143,5 +143,14 @@ public class JdkUtil {
 
     }
 
+    @Test
+    public void test6(){
+        Integer[] arr = {1,30,5,2,3,15,23,9};
+        Integer[] clone = arr.clone();
+        arr[2] = 200;
+        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(clone));
+    }
+
 
 }
