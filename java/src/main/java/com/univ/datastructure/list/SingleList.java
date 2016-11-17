@@ -1,7 +1,4 @@
-package com.univ.datastruct.list;
-
-import com.univ.initialization.Single;
-import org.junit.Test;
+package com.univ.datastructure.list;
 
 /**
  * created by Univ

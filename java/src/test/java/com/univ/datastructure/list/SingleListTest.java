@@ -1,9 +1,7 @@
-package com.univ.datastruct.list;
+package com.univ.datastructure.list;
 
 import org.junit.Test;
 
-
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
