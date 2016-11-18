@@ -8,6 +8,7 @@ package com.univ.datastructure.tree;
 /**
  * 二叉搜索树
  *
+ * 注意这里表示树节点的内部类BSTNode有三个指针:left,right,parent,可以将BSTNode定义成没有parent的节点。
  * 1. contains方法与binarySearch方法需要统一。
  */
 public class BSTree {
