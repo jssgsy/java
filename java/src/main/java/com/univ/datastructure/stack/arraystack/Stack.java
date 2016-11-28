@@ -7,6 +7,7 @@ package com.univ.datastructure.stack.arraystack;
  * 涉及到的问题：
  * 1. 扩容。
  * 	默认栈大小为10，每次需要扩容的时候增加十个元素的容量；
+ * 2. topPositon:可理解成栈的实际容量。
  */
 
 public class Stack {
