@@ -24,6 +24,9 @@ class Base{
 	}//静态代码块只在类装载时执行一次
 }
 
+/**
+ * 加载子类前会先加载父类
+ */
 public class Derive extends Base{
 	{
 		System.out.println("子类普通代码块");

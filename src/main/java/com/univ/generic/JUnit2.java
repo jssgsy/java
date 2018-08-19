@@ -33,7 +33,8 @@ public class JUnit2 {
 	
 	/*
 	 * 如果这里的b既可接收Box<Number>又可接收Box<Integer>，那么b.getData()返回的是Number还是Integer，显然和泛型的
-	 * 初衷违背，所以ox<Integer>不是Box<Number>()的子类。此时的解决方法是利用类型通配符，见getData2()
+	 * 初衷违背，所以ox<Integer>不是Box<Number>()的子类。此时的解决方法是利用类型通配符，见getData2()，其实从类型擦除角度考虑更直观，
+	 * 擦除后，Box<Number>与Box<Integer>都是Box类型
 	 */
 	public static void getData(Box<Number> b) {
 		System.out.println("data :" + b.getData());

@@ -29,8 +29,7 @@ public class Single {
     {
         System.out.println("普通代码块");
         System.out.println(sam1);
-    }	//5	非静态代码块与非static成员变量的执行顺序取决于两者的定义顺序(就像static块于static成员变量一样);每次new的时候都会被调用
-
+    }	//5	非静态代码块与非static成员变量的执行顺序取决于两者的定义顺序(就像static块于static成员变量一样);每次调用构造函数时候都会被先调用
 
     static Sample sam = new Sample("静态成员sam初始化");	//1	static（不论是static成员变量还是static块）的执行顺序是依据其声明顺序的
 	
