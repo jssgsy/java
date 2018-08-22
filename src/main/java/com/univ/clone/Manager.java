@@ -32,6 +32,9 @@ public class Manager extends Employee {
 	
 	@Override
 	public Manager clone() throws CloneNotSupportedException{
+		/**
+		 * 调用super.clone后，基本类型与不可变类型已经拷贝就绪，只需要对可变对象调用clone方法即可
+		 */
 		Manager m =  (Manager) super.clone();
 		m.d = (Date) d.clone();
 		return m;
