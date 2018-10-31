@@ -4,8 +4,13 @@
 * 对照着匿名类理解lambda表达式更容易，有一些弱类型语言中闭包的意思；
 
 ## 函数式接口
+jdk8中新增的常用函数式接口（位于java.util.function包下）:
+* Predicate
+* Consumer
+* Function
 
 ## 流式API
+位于java.util.stream包下
 
 
 ## 默认方法、静态方法
