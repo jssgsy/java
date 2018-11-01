@@ -43,3 +43,10 @@ interface C {
         return 20;
     }
 }
+
+/**
+@FunctionalInterface
+interface D {
+    // 这些方法不能是Object类的public签名方法
+    boolean equals(Object ojb);
+}*/
