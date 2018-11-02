@@ -1,19 +1,40 @@
 package com.univ.compare;
 
 import java.util.Arrays;
+import java.util.Comparator;
+
 import org.junit.Test;
 
+/**
+ * Comparable接口
+ * 1. 实现了Comparable接口的对象，其组成的数组或者集合可被传入给Arrays.sort或者Collections.sort方法进行排序；
+ * 2. 可理解成静态排序，即在开始时就已经确定了排序方法；
+ *
+ * Comparator接口
+ * 1. 要达到的作用与Comparable相同，只是不要求数组(集合)对象实现此接口，而是动态传入给Arrays.sort或者Collections.sort方法进行排序;
+ * 2. 可理解成动态排序，即在运行时才提供排序的方法；
+ * 3. 经常用在TreeSet、TreeMap中
+ */
 public class JUnit {
 
 	@Test
-	public void test(){		
-		Student[] stu = new Student[2];
-		stu[0] = new Student("zhangsan",20);
-		stu[1] = new Student("lisi",39);	
+	public void test() {
+		Student[] stu = new Student[]{new Student("aaa", 2), new Student("bbb", 3)};
+		System.out.println(Arrays.toString(stu));
+		// 使用Comparable接口升序
 		Arrays.sort(stu);
-		for(Student s : stu){
-			System.out.println(s.getAge());
-		}
+		System.out.println(Arrays.toString(stu));
+
+		// 使用Comparator接口降序
+		Arrays.sort(stu, new Comparator<Student>() {
+			@Override
+			public int compare(Student o1, Student o2) {
+				return o1.getAge() - o2.getAge() > 0 ? -1 : 1;
+			}
+		});
+		System.out.println(Arrays.toString(stu));
+
+
 		/*TreeSet<Student> ts = new TreeSet<Student>(new Comparator<Student>() {
 			public int compare(Student o1, Student o2) {
 				return o1.getAge() - o2.getAge();
@@ -26,34 +47,5 @@ public class JUnit {
 		while(it.hasNext()){
 			System.out.println(it.next().getName());
 		}*/
-		
-				
-		/*TreeSet<String> ts = new TreeSet<String>();
-		ts.add("avdfkads");
-		ts.add("adaffad");
-		ts.add("fetdsf");
-		ts.add("hafd");
-		ts.add("vdv");
-		Iterator<String> it = ts.iterator();
-		while(it.hasNext()){
-			System.out.println(it.next());
-		}*/
-		
-		
-		/*TreeSet<String> ts = new TreeSet<String>(new Comparator<String>() {
-			public int compare(String o1, String o2) {				
-				return o2.compareTo(o1);
-			}
-		});
-		ts.add("avdfkads");
-		ts.add("adaffad");
-		ts.add("fetdsf");
-		ts.add("hafd");
-		ts.add("vdv");
-		Iterator<String> it = ts.iterator();
-		while(it.hasNext()){
-			System.out.println(it.next());
-		}*/
-		
 	}
 }

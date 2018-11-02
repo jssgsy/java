@@ -24,8 +24,21 @@ public class Student implements Comparable<Student>{
 		this.age = age;
 	}
 
+	/**
+	 * 要第一个元素少于、等于、大于第二个元素，则分别返回-1、0、1
+	 * @param o 要和this比较的对象
+	 * @return
+	 */
+	@Override
 	public int compareTo(Student o) {
-		return o.age - age;
+		return age - o.age < 0 ? -1 : 1;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Student{" +
+				"name='" + name + '\'' +
+				", age=" + age +
+				'}';
+	}
 }
