@@ -87,7 +87,7 @@ public class ArrayTest {
 	}
 
     /**
-     * 拷贝数组的一部分[from,to),是左开右闭
+     * 拷贝数组的一部分[from,to),是左闭右开
      *  copyOfRange(int[] original,int from,int to)
      */
 	@Test
@@ -105,7 +105,7 @@ public class ArrayTest {
 				{1,2,3},
 				{4,5}
 				};//当做一位数组，每个元素又都是一个数组
-		//遍历二维数组：仍然当做一位数组
+		//遍历二维数组：仍然当做一维数组
 		for (int[] is : arrs) {
 			for (int i : is) {
 				System.out.println(i);
@@ -121,11 +121,11 @@ public class ArrayTest {
 	public void test(){
 		int[][][] arrs = new int[][][]{
 				{
-					{1,2,3},
-					{4,5},
-					{2,3,5,6,7},
-					{1}
-					}
+						{1, 2, 3},
+						{4, 5},
+						{2, 3, 5, 6, 7},
+						{1}
+				}
 		};
 		System.out.println(arrs.length);
 		for(int i = 0; i < arrs.length; i++){
