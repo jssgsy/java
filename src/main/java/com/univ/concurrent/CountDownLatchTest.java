@@ -9,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
  * 1. CountDownLatch、CyclicBarrier、Semaphore均是jdk1.5中引入的，是一个并发编程辅助类；
  * 2. CountDown的使用场景：任务A需要在任务B、C、D任务执行完之后再执行，(A，B，C，D均由不同的线程完成)，此时可用CountDownLatch完成。其实就是，线程A需要在线程B、C、D执行完后才能执行；
  * 3. CountDownLatch的用法很简单，下例模拟了主线程必须在其它线程执行完后才能继续执行；
+ * 4. CountDownLatch不可重用；(参见CyclicBarrierTest)
  */
 
 /*
