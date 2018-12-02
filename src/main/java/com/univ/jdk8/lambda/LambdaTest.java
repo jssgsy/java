@@ -1,9 +1,11 @@
 package com.univ.jdk8.lambda;
 
-import org.junit.Test;
-
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
 
 /**
  * Lambda表达式测试
@@ -61,6 +63,15 @@ public class LambdaTest {
                 };
         System.out.println(demo.say(28));;
     }
+
+    @Test
+    public void test2() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("a", 10);
+        map.put("b", 20);
+        map.put("c", 30);
+        map.forEach((key, value) -> {System.out.print("key: " + key);System.out.println("  value: " + value);});
+    }
 }
 
 /**
@@ -68,6 +79,11 @@ public class LambdaTest {
  */
 @FunctionalInterface
 interface A {
+    int calculate(int a, int b);
+}
+
+@FunctionalInterface
+interface B {
     int calculate(int a, int b);
 }
 

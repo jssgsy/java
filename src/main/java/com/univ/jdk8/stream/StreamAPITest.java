@@ -11,8 +11,8 @@ import java.util.List;
  * 流式api一般结合集合、lambda表达式使用；
  * java.util.Stream类常见的几个方法：
  * 1. map：将一个值计算后更新为另一个值；
- * 2. filter：将一个值进行判断，为true则取起来；
- * 3.
+ * 2. filter：将一个值进行判断，为true则取出来；
+ * 3. forEach
  */
 public class StreamAPITest {
     @Test

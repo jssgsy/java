@@ -73,7 +73,9 @@ public class MethodReferenceTest {
          */
         Function<Integer, StringBuffer> function = n -> new StringBuffer(n);
 
-        // 引用构造函数
+        /*
+        引用构造函数,Function接口中的方法签名是：R apply(T t)，这里定义了T为Integer，R是StringBuffer，所以只要是接收int(Integer)类型为参数，返回类型为StringBuffer的lambda表达式即可
+         */
         Function<Integer, StringBuffer> function1 = StringBuffer::new;
 
         // 4. 引用数组
