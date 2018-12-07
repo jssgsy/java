@@ -1,5 +1,6 @@
 package com.univ.thirdutils.orika;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
  * @author univ
  * @datetime 2018/11/27 11:45 AM
  * @description
+ * 注意：
+ * 1. 用来进行属性拷贝的bean务必给各属性提供getter/setter方法，否则拷贝不成功！
  */
 public class OrikaTest {
 
@@ -46,6 +49,30 @@ public class OrikaTest {
         1. 虽然age字段没有通过field()进行指定，但仍然也被拷贝的，说明同名属性不用进行指定；
         2. 源bean中有height，目标bean中没有，所以不会拷贝，同样，目标bean中有width属性，但源bean中没有，其值为默认的空值；
          */
+
+        // 也可以直接给第二个参数传class，此时返回一个转换后的class对应的实例
+        DestinationBean destinationBean1 = mapperFacade.map(sourceBean, DestinationBean.class);
+
+    }
+
+    /**
+     * 可以将某个字段直接映射成另一个类成员的属性
+     */
+    @Test
+    public void test2() {
+        A a = new A();
+        DefaultMapperFactory defaultMapperFactory = new DefaultMapperFactory.Builder().build();
+        defaultMapperFactory.classMap(A.class, C.class)
+                .field("name", "b.name2")   // 将A类中的name字段映射成C类中b属性的name2字段
+                .byDefault()
+                .register();
+
+
+        C c = new C();
+        MapperFacade mapperFacade = defaultMapperFactory.getMapperFacade();
+        mapperFacade.map(a,c);
+        System.out.println(c);
+
     }
 }
 
@@ -143,3 +170,57 @@ class DestinationBean {
                 '}';
     }
 }
+
+class A {
+    private String name = "a name";
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class B {
+
+    private String name2;
+
+    public void setName2(String name2) {
+        this.name2 = name2;
+    }
+
+    public String getName2() {
+        return name2;
+    }
+
+    @Override
+    public String toString() {
+        return "B{" +
+                "name2='" + name2 + '\'' +
+                '}';
+    }
+}
+
+class C {
+    private B b = new B();
+
+    public void setB(B b) {
+        this.b = b;
+    }
+
+    public B getB() {
+        return b;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "C{" +
+                "b=" + b +
+                '}';
+    }
+}
+
