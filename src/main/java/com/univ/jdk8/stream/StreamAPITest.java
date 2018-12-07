@@ -1,11 +1,13 @@
 package com.univ.jdk8.stream;
 
-import org.junit.Test;
-
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.junit.Test;
 
 /**
  * 流式api，链式调用
@@ -22,9 +24,13 @@ public class StreamAPITest {
         List<Integer> list = Arrays.asList(2, 3, 4, 5, 6, 7, 8);
         // map方法
         list.stream().map(x -> x * x).forEach(x -> System.out.print(x + " "));  // 4 9 16 25 36 49 64
+        System.out.println();
 
         // filter方法
         list.stream().filter(x -> x % 2 == 0).forEach(x -> System.out.print(x + " "));  // 2 4 6 8
+        System.out.println();
+        // 注意，原来的集合并没有发生变化
+        System.out.println(list);
         System.out.println();
 
         // count方法
@@ -47,7 +53,7 @@ public class StreamAPITest {
                 new A("ggg", 10)
         );
 
-        // 按照对象的age字段分组
+        // 按照对象的age字段分组,age值是map中的key，value是包含那些age值相等的项组成的列表
         Map<Integer, List<A>> collect = list.stream().collect(Collectors.groupingBy(t -> t.getAge()));
         System.out.println(collect);
         /*
@@ -57,9 +63,64 @@ public class StreamAPITest {
                 40=[A{name='ddd', age=40}, A{name='ggg', age=40}],
                 10=[A{name='aaa', age=10}, A{name='ggg', age=10}], 30=[A{name='eee', age=30}]
             }
-         */
 
+         */
+        List<A> list1 = collect.get(40);
+        list1.forEach(System.out::print);
     }
+
+    /**
+     * of方法：生成一个stream
+     */
+    @Test
+    public void of() {
+        Stream.of(1, 10, 34, 56l, "hello").forEach(System.out::println);
+    }
+
+    /**
+     * concat方法,连接两个stream
+     */
+    @Test
+    public void concat() {
+        Stream.concat(Stream.of(4, 5, 6), Stream.of(1, 2, 3)).forEach(System.out::println);
+    }
+
+    /**
+     * 去除stream中的重复元素
+     */
+    @Test
+    public void distinct() {
+        Stream.of(1, 3, 4, 3, 5, 3, 2, 4, 10).distinct().forEach(System.out::println);
+    }
+
+    /**
+     * sorted方法，对stream中的元素进行排序
+     * sorted()默认升序，
+     * sorted(Comparator):指定排序规则
+     */
+    @Test
+    public void sorted() {
+        Stream.of(1, 4, 3, 10, 5)
+                .sorted()
+                .forEach(t -> System.out.print(t + " "));
+        // 打印结果
+        // 1 3 4 5 10
+        System.out.println();
+        
+        Stream.of(1, 4, 3, 10, 5).sorted(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                if (o1 < o2) {
+                    return 1;
+                } else if (01 == 02) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        }).forEach(t -> System.out.print(t + " "));// 10 5 4 3 1
+    }
+    
 }
 
 class A {
