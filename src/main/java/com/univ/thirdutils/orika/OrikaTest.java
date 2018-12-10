@@ -109,6 +109,35 @@ public class OrikaTest {
         Integer i = mapperFacade.map(Color.BLUE, Integer.class);
         System.out.println(i);
     }
+
+    /**
+     *  List<A> ---> List<B>
+     *  单个对象转换使用map方法，
+     *  一个list转换成另一个list，使用mapAsList方法
+     */
+    @Test
+    public void test4() {
+        SourceBean s1 = new SourceBean("aaa", 10, 10, Arrays.asList(1,2,3,4));
+        SourceBean s2 = new SourceBean("bbb", 20, 20, Arrays.asList(10,20,30,40));
+        SourceBean s3 = new SourceBean("ccc", 30, 30, Arrays.asList(100,200,300,400));
+
+        List<SourceBean> sourceBeans = Arrays.asList(s1, s2, s3);
+        DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.classMap(SourceBean.class, DestinationBean.class)
+                .field("name", "name2")
+                .field("list", "listNew")
+                .field("height", "width")
+                .byDefault()
+                .register();
+        MapperFacade mapperFacade = mapperFactory.getMapperFacade();
+        /**
+         * 调用mapAsList方法
+         * 注意第二个参数是DestinationBean.class，不是List<DestinationBean>.class
+         */
+        List<DestinationBean> destinationBeans = mapperFacade.mapAsList(sourceBeans, DestinationBean.class);
+        System.out.println(destinationBeans);
+
+    }
 }
 
 class SourceBean {
