@@ -1,8 +1,12 @@
 package com.univ.thirdutils.mockito;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+
 import java.util.List;
 
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 /**
@@ -14,11 +18,14 @@ import org.mockito.Mockito;
  *  1. 模拟并替换测试代码中外部依赖：使用mock方法或者相应的注解
  *  2. 执行测试代码
  *  3. 验证测试代码是否被正确的执行
+ *
+ * 注意：
+ *  1. 被mock对象的方法不会被实际执行，所以不能进到mock对象方法内部进行调试(也不需要)；
  */
 /*
 mockito的常用方法：
 1. mock：mock出一个对象；
-2.  when(mock.someMethod()).thenReturn(X);设定当执行mock.someMethod()方法时返回X
+2. when(mock.someMethod()).thenReturn(X);设定当执行mock.someMethod()方法时返回X
  */
 public class MockitoTest {
 
@@ -44,6 +51,64 @@ public class MockitoTest {
         String s = demoSerivce.sayHello(1);
         System.out.println(s);
     }
+    
+    @Test
+    public void test2() {
+        Demo demo = mock(Demo.class);
+
+        /*
+        根据不同的输入返回不同的值
+         */
+        when(demo.sayHello("aaa")).thenReturn("aaa");
+        when(demo.sayHello("bbb")).thenReturn("bbb");
+        assertEquals("竟然失败了", "aaa", demo.sayHello("aaa"));
+        assertEquals("竟然失败了", "bbb", demo.sayHello("bbb"));
+
+        /**
+         * 返回值不依赖于入参
+         * anyString()
+         * anyint()
+         * ...
+         * any()
+         */
+        when(demo.sayHello(anyString())).thenReturn("hello");
+        assertEquals("竟然失败了", "hello", demo.sayHello("xyz"));
+    }
+
+    /**
+     * 验证函数是否被调用
+     * Mockito 会跟踪 mock 对象里面所有的方法和变量。所以我们可以用来验证函数在传入特定参数的时候是否被调用。这种方式的测试称行为测试，行为测试并不会检查函数的返回值，而是检查在传入正确参数时候函数是否被调用。
+     *
+     */
+    @Test
+    public void test3() {
+        Demo demo = mock(Demo.class);
+
+        // 调用方法
+        demo.sayHello("aaa");
+        demo.getAge();
+        demo.getAge();
+        demo.getAge();
+
+        // 验证当传“aaa”时sayHello方法是否被调用
+        verify(demo).sayHello(Matchers.eq("aaa"));
+
+        // 验证getAge()方法被调用了三次，否则抛异常
+        verify(demo, times(3)).getAge();
+
+        // 验证getName()方法一次都没被调用过
+        // demo.getName();
+        verify(demo, never()).getName();
+
+
+        /*
+        类似的方法有：
+            atLeastOnce();// 至少被调用一次
+            atLeast(3); // 至少被调用3次
+            atMost(3);  // 最多被调用3次
+         */
+    }
+
 
 }
 
@@ -100,6 +165,10 @@ class Demo{
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String sayHello(String name) {
+        return "hello, " + name;
     }
 
     @Override
