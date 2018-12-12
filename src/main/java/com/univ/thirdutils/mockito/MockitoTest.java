@@ -5,9 +5,13 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 /**
  * @author univ
@@ -29,10 +33,35 @@ mockito的常用方法：
  */
 public class MockitoTest {
 
+    @Before
+    public void setUp() {
+        // 有了此句代码，则会自动mock出被@Mock, @Spy, @Captor, @InjectMocks注解的对象
+        // 此时使用@Mock, @Spy, @Captor, @InjectMocks时不用再显示new了
+        MockitoAnnotations.initMocks(this);
+    }
+
+    /**
+     * 使用mock方法模拟的对象的方法不会被真正执行，所以测试时也进不了debug模式，
+     * 通过@InjectMocks模拟的对象就有了（spy）的功能，即会被真正执行，适合用来模拟service层对象，毕竟单测测的就是service层对象的业务方法，如果不能走进去则单测便也没了意义。
+     * 注意，这里要new Demo()一下
+     */
+    @InjectMocks
+    private Demo demo = new Demo();
+
+    @Mock
+    private DemoDao demoDao;
+
+    @InjectMocks
+    private A a;
+
+    // 此时对象b会被装配到对象a中
+    @Mock
+    private B b;
+
     @Test
     public void test1() {
         // 需要啥对象就调用mock方法mock出此对象
-        DemoSerivce demoSerivce = Mockito.mock(DemoSerivce.class);
+        DemoService demoService = Mockito.mock(DemoService.class);
 
         DemoDao demoDao = Mockito.mock(DemoDao.class);
         Demo demo = new Demo();
@@ -42,13 +71,13 @@ public class MockitoTest {
         Mockito.when(demoDao.getById(Mockito.anyInt())).thenReturn(demo);
 
         // 设定，当代码中调用demoSerivce.sayHello方法，且并传入参数为1时返回good
-        //Mockito.when(demoSerivce.sayHello(1)).thenReturn("good");
+        //Mockito.when(demoService.sayHello(1)).thenReturn("good");
 
         /**
          * 1. 核心：内部调用了demoDao.getById，此方法是需要向数据库获取的，在测试环境下，往往不能或者很难从数据库、缓存、dubbo等获取数据源，单元测试的核心就在于mock掉这些依赖于环境的对象，并设定将这些对象的方法被调用时返回指定的结果，这样就可以独立于这些环境对象来测试自己的业务流程！单元测试测试的是自己的业务流程
          * 2. 上面已经设定了当调用demoDao.getById时会返回demo，因此当业务方法sayHello中依赖了demoDao.getById时就能使流程往下走
          */
-        String s = demoSerivce.sayHello(1);
+        String s = demoService.sayHello(1);
         System.out.println(s);
     }
     
@@ -109,13 +138,69 @@ public class MockitoTest {
          */
     }
 
+    /**
+     * spy
+     *  mock方法是模拟出一个“替代”对象，而spy是模拟出一个“真实”的对象，即其方法会真正被调用
+     *  spy方法可以包装一个真实的Java对象, 并返回一个包装后的新对象. 若没有特别配置的话, 对这个新对象的所有方法调用, 都会委派给实际的 Java 对象
+     */
+    @Test
+    public void test4() {
+
+        // 模拟出一个真正的DemoService对象
+        DemoService demoService = spy(DemoService.class);
+
+        // 需要这句代码是因为DemoService内部有DemoDao对象，getById方法内部会调用到
+        demoService.setDemoDao(demoDao);
+
+
+        when(demoDao.getById(anyInt())).thenReturn(new Demo());
+
+        // 此时会调用真正的sayHello方法，因此可以调试进入
+        demoService.sayHello(23);
+    }
+
+    /**
+     * 调试
+     */
+    @Test
+    public void test5() {
+        // 这里可以打断点进入调试,因为demo是被@InjectMocks注入的，有stub的功能
+        demo.sayHello("world");
+    }
+
+    /**
+     * doThrow(ExceptionX).when(x).methodCall
+     *  含义是: 当调用了 x.methodCall 方法后, 抛出异常 ExceptionX
+     */
+    @Test
+    public void test6() {
+        Demo demo = mock(Demo.class);
+
+        // 设定：当调用demo对象的sayHello方法时抛出异常
+        doThrow(new RuntimeException("不能调用此方法")).when(demo).sayHello(anyString());
+
+        // 调用sayHello方法，此时会抛异常
+        demo.sayHello("aaa");
+    }
+
+    /**
+     * 演示 @InjectMocks与@Mock的重要作用
+     */
+    @Test
+    public void test7() {
+        // 在这里打断点
+
+        // when(b.getName(anyString())).thenReturn("aaaa");
+        a.business();
+    }
+
 
 }
 
 /**
  * 模拟service
  */
-class DemoSerivce {
+class DemoService {
 
     private DemoDao demoDao;
 
@@ -129,6 +214,10 @@ class DemoSerivce {
         // 业务逻辑处理
         
         return "hello";
+    }
+
+    public void setDemoDao(DemoDao demoDao) {
+        this.demoDao = demoDao;
     }
 }
 
@@ -178,4 +267,32 @@ class Demo{
                 ", age=" + age +
                 '}';
     }
+}
+
+/**
+ * 业务类
+ */
+class A {
+    private B b;
+    // 这里是需要测试的业务逻辑
+    public void business() {
+        // 业务逻辑处理
+
+        // 依赖的数据源对象
+        String result = b.getName("hello");
+        System.out.println(result);
+
+
+        // 业务逻辑处理
+    }
+}
+
+/**
+ * 业务类A依赖的“数据源”对象
+ */
+class B {
+    public String getName(String name) {
+        return name;
+    }
+
 }
