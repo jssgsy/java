@@ -1,7 +1,10 @@
 package com.univ.thirdutils.jackson;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -55,6 +58,44 @@ public class JacksonTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr = objectMapper.writeValueAsString(user1);
         System.out.println(jsonStr);
+    }
+
+    /**
+     * 将数组形式的json字符串转换成list形式的java类型
+     */
+    @Test
+    public void list() throws IOException {
+        User u1 = new User();
+        u1.setAge(20);
+        u1.setName("aaa");
+
+        User u2 = new User();
+        u2.setAge(30);
+        u2.setName("bbb");
+
+        User u3 = new User();
+        u3.setAge(40);
+        u3.setName("ccc");
+
+        List<User> list = Arrays.asList(u1, u2, u3);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String str = objectMapper.writeValueAsString(list);
+        System.out.println(str);
+        // [{"name":"aaa","age":20},{"name":"bbb","age":30},{"name":"ccc","age":40}]
+
+        String jsonStr = "[{\"name\":\"aaa\",\"age\":20},{\"name\":\"bbb\",\"age\":30},{\"name\":\"ccc\",\"age\":40}]";
+
+        // json字符串转成数组
+        User[] users = objectMapper.readValue(jsonStr, User[].class);
+        System.out.println(Arrays.toString(users));
+        // [User{name='aaa', age=20}, User{name='bbb', age=30}, User{name='ccc', age=40}]
+
+        // json字符串转成list
+        List list1 = objectMapper.readValue(jsonStr, List.class);
+        // Set list1 = objectMapper.readValue(jsonStr, Set.class);
+        System.out.println(list1);
+        // [{name=aaa, age=20}, {name=bbb, age=30}, {name=ccc, age=40}]
+
     }
 }
 
