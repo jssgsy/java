@@ -1,4 +1,4 @@
-package com.univ.junit;
+package com.univ.thirdutils.junit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
