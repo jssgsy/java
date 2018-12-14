@@ -3,6 +3,7 @@ package com.univ.thirdutils.junit.basic;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -50,6 +51,29 @@ public class BasicJunitTest {
         Object obj = null;
         Assert.assertNotNull("对象为null时将随异常一起抛出", new Object());
         Assert.assertNull("对象不为null时将随异常一起抛出", null);
+    }
+
+    /**
+     * 如果因为某些原因暂想忽略某个测试方法，可使用@Ignore，且可以加一个参数进行说明
+     */
+    @Ignore("此方法暂不测试")
+    @Test
+    public void test2() {
+
+    }
+
+    /**
+     * 超过1000毫秒则抛异常，主要是避免某个测试方法时间过长(说明实现可能有问题)
+     */
+    @Test(timeout = 1000)
+    public void test3() {
+        System.out.println("test3 ----- begin");
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
     
     
