@@ -21,8 +21,8 @@ public class JUnit2 {
 	
 	@Test
 	public void test1() {
-		Box<Number> p1 = new Box<Number>(100);
-		Box<Integer> p2 = new Box<Integer>(200);
+		Box<Number> p1 = new Box<>(100);
+		Box<Integer> p2 = new Box<>(200);
 		// p1 = p2;//报错：Type mismatch: cannot convert from Box<Integer> to Box<Number>
 		getData(p1);
 		//getData(p2);//这是错误的
@@ -76,7 +76,7 @@ public class JUnit2 {
 	 */
 	@Test
 	public void test3(){
-		List<Shape> shapes = new ArrayList<Shape>();  
+		List<Shape> shapes = new ArrayList<>();
 		List<? super Cicle> cicleSupers = shapes; // 这表示cicleSupers列表存储的元素为Cicle的超类，因此我们可以往其中加入Cicle对象或者Cicle的子类对象
 		
 		cicleSupers.add(new Cicle()); //可以添加Cicle对象
@@ -89,7 +89,7 @@ public class JUnit2 {
 		
 		
 		
-		List<Shape> s = new ArrayList<Shape>();  
+		List<Shape> s = new ArrayList<>();
 		List<? extends Shape> s1 = shapes;//此时s1既不能添加Shape的父类对象也不能添加其子类对象,甚至不能添加Shape自身的对象
 		//s1.add(new Shape());//不能添加Shape自身的对象
 		//s1.add(new Object());//不能添加Shape的父类对象的对象
