@@ -58,6 +58,19 @@ public class OrikaTest {
     }
 
     /**
+     * 不用mapperFactory.classMap也是ok的，如果两个要转换的类字段不同时才用
+     */
+    @Test
+    public void test1() {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        SourceBean sourceBean = new SourceBean("source_bean_name", 10, 175, list);
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapperFacade = mapperFactory.getMapperFacade();
+        DestinationBean d = mapperFacade.map(sourceBean, DestinationBean.class);
+        System.out.println(d);
+
+    }
+    /**
      * 可以将某个字段直接映射成另一个类成员的属性
      */
     @Test
