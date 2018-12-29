@@ -107,6 +107,28 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--java bean validation，只是定义了接口，真正的实现在hibernate-validator中(hibernate-validator是最常用的一种实现)-->
+        <!--<dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
+        </dependency>-->
+
+        <!--传递依赖了validation-api，所以不用再显示引入-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.1.Final</version>
+        </dependency>
+
+        <!--使用java bean validation不可少的一个依赖-->
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>3.0.1-b06</version>
+        </dependency>
+
+
 
 
     </dependencies>
