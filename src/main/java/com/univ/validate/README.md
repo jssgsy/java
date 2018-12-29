@@ -36,7 +36,17 @@
 4. 校验是否有校验失败的字段；
 
 # 常用的限制(Constraint)
+javax.validation.constraints原生的限制有：
 * @NotNull
-* @NotBlank
 * @Min(注意，修饰包装类型时，如果值为null，则会经过校验)
 * @Max
+* @Null
+* @AssertFalse
+* @AssertTrue
+* @Size,可用于String，集合与map类型身上
+
+org.hibernate.validator.constraints补充的限制有：
+* @NotEmply:Asserts that the annotated string, collection, map or array is not {@code null} or empty.
+* @NotBlank:只用于String，且trailing whitespaces are getting ignored.
+* @Email
+* @URL
