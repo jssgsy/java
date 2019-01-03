@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
@@ -151,6 +152,37 @@ public class OrikaTest {
         System.out.println(destinationBeans);
 
     }
+
+    /**
+     * 映射行为自定义
+     */
+    @Test
+    public void test5() {
+        DefaultMapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.classMap(SourceBean.class, DestinationBean.class)
+                .customize(new CustomMapper<SourceBean, DestinationBean>() {
+                    // 自定义的内容会在映射完成之后再执行，注意观察输出
+                    @Override
+                    public void mapAtoB(SourceBean sourceBean, DestinationBean destinationBean, MappingContext context) {
+                        System.out.println("mapAtoB");
+                        super.mapAtoB(sourceBean, destinationBean, context);
+                        destinationBean.setName2(sourceBean.getName() + "_postfix");
+                    }
+                    // 这里用默认的行为即可
+                    @Override
+                    public void mapBtoA(DestinationBean destinationBean, SourceBean sourceBean, MappingContext context) {
+                        super.mapBtoA(destinationBean, sourceBean, context);
+                    }
+                }).field("name", "name2")
+                .byDefault()
+                .register();
+        MapperFacade mapperFacade = mapperFactory.getMapperFacade();
+        SourceBean sourceBean = new SourceBean("univ", 10, 10, Arrays.asList(1, 2, 3));
+        DestinationBean destinationBean = mapperFacade.map(sourceBean, DestinationBean.class);
+        System.out.println(destinationBean);
+
+    }
+
 }
 
 class SourceBean {
@@ -210,6 +242,7 @@ class DestinationBean {
     }
 
     public void setName2(String name2) {
+        System.out.println("DestinationBean::setName2");
         this.name2 = name2;
     }
 
@@ -218,6 +251,7 @@ class DestinationBean {
     }
 
     public void setAge(Integer age) {
+        System.out.println("DestinationBean::age");
         this.age = age;
     }
 
