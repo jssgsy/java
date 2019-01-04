@@ -36,8 +36,9 @@ public class POITest {
      */
     @Test
     public void read2003() throws IOException {
-        File file = new File("data/excel/2003.xlsx");
+        File file = new File("data/excel/2003.xls");
         // HSSF没法处理excel 2007的版本，放开下面这句看输出
+        // org.apache.poi.poifs.filesystem.OfficeXmlFileException: The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)
         // File file = new File("data/excel/2007.xlsx");
 
         HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(file));
@@ -70,7 +71,8 @@ public class POITest {
     public void read2007() throws IOException {
         File file = new File("data/excel/2007.xlsx");
         // XSSF没法处理excel 2002的版本，放开下面这句看输出
-        // File file = new File("data/excel/2003.xlsx");
+        // org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException: The supplied data appears to be in the OLE2 Format. You are calling the part of POI that deals with OOXML (Office Open XML) Documents. You need to call a different part of POI to process this data (eg HSSF instead of XSSF)
+        // File file = new File("data/excel/2003.xls");
 
         XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file));
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -103,7 +105,7 @@ public class POITest {
     public void readExcel() throws IOException, InvalidFormatException {
         File file = new File("data/excel/2007.xlsx");
         // 两者均可处理，放开下面这句看结果
-        // File file = new File("data/excel/2003.xlsx");
+        // File file = new File("data/excel/2003.xls");
 
         Workbook workbook = WorkbookFactory.create(new FileInputStream(file));
         Sheet sheet = workbook.getSheetAt(0);
