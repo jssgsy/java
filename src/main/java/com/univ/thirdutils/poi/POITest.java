@@ -8,6 +8,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -50,6 +51,7 @@ public class POITest {
         System.out.println("第一行行号：" + sheet.getFirstRowNum());
         System.out.println("最后一行行号：" + sheet.getLastRowNum());// 从0开始计数
 
+        DataFormatter formatter = new DataFormatter();
         // 一般第一行存标题，所以从第二行开始
         for (int i = 1; i < totalRowNum; i++) {
             // 获取行
@@ -57,6 +59,15 @@ public class POITest {
             // 直接定义全局NumberFormatException异常
             System.out.println("单元格的内容为：" + row.getCell(0).getStringCellValue());
         }
+        /*
+        从数字单元格中读取内容
+        核心：每个单元格都有类型！
+        如果单元格中的内容为数字，则不能调用这里的getStringCellValue方法，否则抛出异常Cannot get a STRING value from a NUMERIC cell
+        解决方法：使用DataFormatter
+            DataFormatter formatter = new DataFormatter();
+            formatter.formatCellValue(row.getCell(0))
+        启示：如果只是简单的读取excel的数据，统一使用DataFormatter的方式
+         */
     }
 
     /**
