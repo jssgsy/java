@@ -82,4 +82,64 @@ public class OptionalTest {
 
         // 还有很多其它的方法，慢慢探索
     }
+
+    /**
+     * 利用map链式取值
+     * 注意：没法链式抛异常，即不能在b不存在时抛一个异常，在c不存在时抛一个异常，因为抛出某个异常后某个调用就结束了
+     */
+    @Test
+    public void chain() {
+        A a = new A();
+        Optional<String> s = Optional.ofNullable(a).map(A::getB).map(B::getC).map(C::getD).map(D::getName);
+        String str = s.orElse("default");
+        System.out.println(str);
+    }
+}
+
+class D {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+class C {
+    private D d;
+
+    public D getD() {
+        return d;
+    }
+
+    public void setD(D d) {
+        this.d = d;
+    }
+}
+
+class B {
+    private C c;
+
+    public C getC() {
+        return c;
+    }
+
+    public void setC(C c) {
+        this.c = c;
+    }
+}
+
+class A {
+    private B b;
+
+    public B getB() {
+        return b;
+    }
+
+    public void setB(B b) {
+        this.b = b;
+    }
 }
