@@ -40,7 +40,8 @@ public class LambdaTest {
         // forEach方法是jdk8中Iterable接口新增的方法，可以查看一下其源码
         list.forEach(t -> System.out.println(t));
 
-        // 2. 结合流式api使用,stream方法是Collection接口中新增的默认方法
+        System.out.println("-------------");
+        // 2. 结合流式api使用,stream方法是Collection接口中新增的默认方法,filter中的表达式为true则保留
         list.stream().filter(t -> t % 2 == 0).map(t -> t * 2).forEach(t -> System.out.println(t));
     }
     
