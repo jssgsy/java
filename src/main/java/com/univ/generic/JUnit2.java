@@ -1,6 +1,7 @@
 package com.univ.generic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -66,13 +67,17 @@ public class JUnit2 {
 	 */
 	@Test
 	public void test2(){
-		Collection<?> c=new ArrayList<String>();  
+		Collection<?> c = new ArrayList<String>();
 		//c.add(new Box()); //compile time error，不管加入什么对象都出错，除了null外。  
 		c.add(null); //OK  
 	}
 	
 	/*
 	 * 通配符问题
+	 *
+	 * 关于<? super Cicle>与<? extends Shape>小结：PECS(producer extend consumer super)
+            <? super Cicle>：是生产者
+            <? extends Shape>：不能插入，只能读取，是消费者
 	 */
 	@Test
 	public void test3(){
@@ -86,14 +91,30 @@ public class JUnit2 {
 		//但是我们可以确定的是只要是Cicle或者Circle的子类，则一定是与该元素类别兼容。
 		
 		cicleSupers.add(new Cicle2()); //可以添加Cicle子类的对象
-		
-		
-		
-		List<Shape> s = new ArrayList<>();
-		List<? extends Shape> s1 = shapes;//此时s1既不能添加Shape的父类对象也不能添加其子类对象,甚至不能添加Shape自身的对象
+		// 此时cicleSupers中的元素都是Cicle及其父类，所以获取时只能用Object类型接收
+        for (Object obj : cicleSupers) {
+            System.out.println(obj);
+        }
+        Cicle c1 = (Cicle) cicleSupers.get(0);
+        Cicle2 c2 = (Cicle2) cicleSupers.get(1);
+        // 这里是不ok的，不能由父类转向子类 java.lang.ClassCastException: com.univ.generic.Cicle cannot be cast to com.univ.generic.Cicle2
+        // Cicle2 c3 = (Cicle2) cicleSupers.get(0);
+
+
+        List<Shape> s = Arrays.asList(new Shape(), new Cicle(), new Cicle2());
+		List<? extends Shape> s1 = s;//此时s1既不能添加Shape的父类对象也不能添加其子类对象,甚至不能添加Shape自身的对象，因为只知道是其或其子类，但不知道具体是哪个子类(重要：如果？是Circle，则此时就不能插入其它类，违反类型安全，所以不允许插入)
 		//s1.add(new Shape());//不能添加Shape自身的对象
 		//s1.add(new Object());//不能添加Shape的父类对象的对象
 		//s1.add(new Cicle());//不能添加Shape子类的对象
+
+        System.out.println("----------------");
+        for (Shape shape : s1) {
+            System.out.println(shape);
+        }
+        /*com.univ.generic.Shape@5aaa6d82
+        com.univ.generic.Cicle@73a28541
+        com.univ.generic.Cicle2@6f75e721*/
+
 	}
 	
 }
