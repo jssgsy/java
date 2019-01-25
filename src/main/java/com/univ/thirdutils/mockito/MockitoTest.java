@@ -11,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -103,6 +104,12 @@ public class MockitoTest {
         assertEquals(d2, demoDao.getById(2));
         assertEquals(d1, demoDao.getById(2));
         // ---------------------------------------------------------------------------------
+
+
+        // stub没有返回值的方法:doThrow()、doNothing()
+        // 上述的when.thenReturn都是用来stub有返回值的方法
+        doThrow(new RuntimeException("此方法不能被调用")).when(demoDao).setId();
+        demoDao.setId();
     }
 
     @Test
@@ -194,6 +201,14 @@ public class MockitoTest {
 
         // 此时会调用真正的sayHello方法，因此可以调试进入
         demoService.sayHello(23);
+
+        // 被spy的对象也可以stub其方法，但这是非常不好的实践，即不要对spy对象调用when.thenReturn，实在要这样做的时候使用doReturn.when模式
+        List list = new LinkedList();
+        List spy = spy(list);
+        //Impossible: real method is called so spy.get(0) throws IndexOutOfBoundsException (the list is yet empty)
+        when(spy.get(0)).thenReturn("foo");
+        //You have to use doReturn() for stubbing
+        Mockito.doReturn("foo").when(spy).get(0);
     }
 
     /**
@@ -268,6 +283,8 @@ interface DemoDao {
     List<Demo> getByDemo(Demo demo);
 
     List<Demo> getByNameAndAge(String name, int age);
+
+    public void setId();
 }
 
 /**

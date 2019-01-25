@@ -13,6 +13,8 @@ maven依赖
 ```
 
 # @Mock与@InjectMocks的区别
+* @Spy - you can use it instead spy(Object).
+* @InjectMocks - injects mock or spy fields into tested object automatically.
 > @Mock creates a mock. @InjectMocks creates an instance of the class and injects the mocks that are created with the @Mock (or @Spy) annotations into this instance.
 Note that you must use @RunWith(MockitoJUnitRunner.class) or Mockito.initMocks(this) to initialize these mocks and inject them.
 
