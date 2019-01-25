@@ -60,25 +60,15 @@ public class MockitoTest {
 
     @Test
     public void test1() {
-        // 需要啥对象就调用mock方法mock出此对象
-        DemoService demoService = Mockito.mock(DemoService.class);
 
-        DemoDao demoDao = Mockito.mock(DemoDao.class);
-        Demo demo = new Demo();
-        demo.setAge(20);
-        demo.setName("aaa");
-        // 设定，当代码中调用emoDao.getById方法，且并传入任何int类型的参数时返回demo对象
-        Mockito.when(demoDao.getById(Mockito.anyInt())).thenReturn(demo);
-
-        // 设定，当代码中调用demoSerivce.sayHello方法，且并传入参数为1时返回good
-        //Mockito.when(demoService.sayHello(1)).thenReturn("good");
+        // 设定，当代码中调用demoDao.getById方法，且并传入任何int类型的参数时返回demo对象
+        Mockito.when(b.getName(anyString())).thenReturn("aaa");
 
         /**
-         * 1. 核心：内部调用了demoDao.getById，此方法是需要向数据库获取的，在测试环境下，往往不能或者很难从数据库、缓存、dubbo等获取数据源，单元测试的核心就在于mock掉这些依赖于环境的对象，并设定将这些对象的方法被调用时返回指定的结果，这样就可以独立于这些环境对象来测试自己的业务流程！单元测试测试的是自己的业务流程
-         * 2. 上面已经设定了当调用demoDao.getById时会返回demo，因此当业务方法sayHello中依赖了demoDao.getById时就能使流程往下走
+         * 1. 核心：内部调用了b.getName("hello")，假如此方法是需要向数据库获取的，在测试环境下，往往不能或者很难从数据库、缓存、dubbo等获取数据源，单元测试的核心就在于mock掉这些依赖于环境的对象，并设定将这些对象的方法被调用时返回指定的结果，这样就可以独立于这些环境对象来测试自己的业务流程！单元测试测试的是自己的业务流程
+         * 2. 上面已经设定了当调用b.getName时会返回aaa，因此当业务方法business中依赖了b.getName时就能使流程往下走
          */
-        String s = demoService.sayHello(1);
-        System.out.println(s);
+        a.business();
     }
     
     @Test
@@ -180,7 +170,7 @@ public class MockitoTest {
         doThrow(new RuntimeException("不能调用此方法")).when(demo).sayHello(anyString());
 
         // 调用sayHello方法，此时会抛异常
-        demo.sayHello("aaa");
+        // demo.sayHello("aaa");
     }
 
     /**
