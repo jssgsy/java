@@ -1,7 +1,15 @@
 package com.univ.thirdutils.mockito;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -57,6 +65,45 @@ public class MockitoTest {
     // 此时对象b会被装配到对象a中
     @Mock
     private B b;
+
+    /**
+     * 从官网基本学习的基本知识
+     */
+    @Test
+    public void basic() {
+        // 只要使用了一个参数匹配器(argument matcher)，则所有参数都需要使用参数匹配器
+        DemoDao demoDao = mock(DemoDao.class);
+        demoDao.getByNameAndAge("aaa", 20);
+
+        // 这个是ok的，anyString(), anyInt()都是参数匹配器
+        verify(demoDao).getByNameAndAge(anyString(), anyInt());
+
+        // 会抛异常，因为12不是参数匹配器
+        // verify(demoDao).getByNameAndAge(anyString(), 12);
+        // ---------------------------------------------------------------------------------
+
+
+        // 调用mock对象的任何非stubbed的方法(when.thenReturn),都将返回相应的零值(By default, for all methods that return a value, a mock will return either null, a primitive/primitive wrapper value, or an empty collection, as appropriate. For example 0 for an int/Integer and false for a boolean/Boolean)
+        //following prints "null" because demoDao.getById was not stubbed
+        System.out.println(demoDao.getById(anyInt()));
+        // ---------------------------------------------------------------------------------
+
+
+        // 同样的调用返回不同的结果
+        Demo d1 = new Demo();
+        Demo d2 = new Demo();
+        when(demoDao.getById(1)).thenReturn(d1).thenReturn(d2);
+        // 第一次调用返回d1,第二次调用返回d2
+        assertEquals(d1, demoDao.getById(1));
+        assertEquals(d2, demoDao.getById(1));
+
+        // 或者可以使用如下的写法
+        when(demoDao.getById(2)).thenReturn(d2, d1);
+        // 第一次调用返回d1,第二次调用返回d2
+        assertEquals(d2, demoDao.getById(2));
+        assertEquals(d1, demoDao.getById(2));
+        // ---------------------------------------------------------------------------------
+    }
 
     @Test
     public void test1() {
