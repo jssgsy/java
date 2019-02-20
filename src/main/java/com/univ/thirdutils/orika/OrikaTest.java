@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import lombok.Data;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -21,6 +22,8 @@ import ma.glasnost.orika.metadata.Type;
  * 1. 用来进行属性拷贝的bean务必给各属性提供getter/setter方法，否则拷贝不成功！
  */
 public class OrikaTest {
+
+    private MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 
     /*
     1. 获取MapperFactory；
@@ -180,6 +183,23 @@ public class OrikaTest {
         SourceBean sourceBean = new SourceBean("univ", 10, 10, Arrays.asList(1, 2, 3));
         DestinationBean destinationBean = mapperFacade.map(sourceBean, DestinationBean.class);
         System.out.println(destinationBean);
+
+    }
+
+    /**
+     * 继承时转换
+     * 和预料中的一样，子类会直接继承父类中的字段进行转换，如果子类有覆盖字段则以子类中的为准
+     *
+     */
+    @Test
+    public void test6() {
+        mapperFactory.classMap(Derived.class, DerivedDest.class)
+                .byDefault()
+                .register();
+        MapperFacade mapperFacade = mapperFactory.getMapperFacade();
+        Derived d = new Derived();
+        DerivedDest derivedDest = mapperFacade.map(d, DerivedDest.class);
+        System.out.println(derivedDest);
 
     }
 
@@ -420,3 +440,28 @@ enum Color {
         this.code = code;
     }
 }
+
+
+// ----------------------继承时转换----------------------
+@Data
+class Base {
+    private Long id = 10l;
+    private String name = "liu";
+    private List<Integer> list = Arrays.asList(1, 2, 3, 4);
+}
+@Data
+class Derived extends Base {
+    /**
+     * 父类中也有id字段
+     */
+    private Long id = 20l;
+    private String address = "hubei";
+}
+@Data
+class DerivedDest {
+    private Long id;
+    private String name;
+    private List<Integer> list;
+    private String address;
+}
+// ----------------------继承时转换----------------------
