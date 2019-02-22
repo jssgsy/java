@@ -52,15 +52,33 @@ public class StreamAPITest {
     }
 
     /**
-     * map与flatmap方法
+     * map与flatMap方法
+     * 对stream的操作都是对其中的“对象”进行操作，这种的“对象”指的是单一的对象，此时用map方法就足够了，
+     * 如果stream中的对象是集合类型，则此时没法(不方便)操作，所以stream中的元素为集合类型时，需要使用flatMap方法将其中的元素“扁平(flat)”为单一的对象
+     *
+     * map：适合stream中元素为单个的对象；
+     * flatMap：适合stream中元素为集合类型的对象；（适合处理嵌套的对象）
+     *
+     * 注：Optional类中也有map与flatMap方法，含义同这里
      */
     @Test
     public void map() {
-        List<Integer> list = Arrays.asList(2, 3, 4, 5, 6, 7, 8);
-        list.stream().map(t -> t * 10).forEach(t -> System.out.print(t + " "));
+        // 此时stream中是单一的对象，可直接操作
+        objList.stream().map(t -> {t.setAge(t.getAge() * 10);return t;}).forEach(t -> System.out.print(t + " "));
         System.out.println();
-        list.stream().flatMap(t -> Stream.of(t * 10)).forEach(t -> System.out.print(t + " "));
-        list.forEach(t -> System.out.print(t + " "));
+
+        List<List<Integer>> list = Arrays.asList(
+                Arrays.asList(1, 2),
+                Arrays.asList(3, 4),
+                Arrays.asList(5, 6)
+        );
+
+        // 注意，此时stream中的元素是集合类型，此时在map方法中进行操作就很麻烦
+        list.stream().map(t -> t.stream().map(x -> x * 10)).forEach(t -> System.out.println(t + " "));
+
+        // 这里利用flatMap方法将集合t中的元素平铺(flat)出来形成一个新stream，之后再进行相应操作
+        list.stream().flatMap(t -> t.stream()).map(x -> x * 10).forEach(y -> System.out.print(y + " "));
+
 
     }
 
