@@ -1,13 +1,15 @@
 package com.univ.jdk8.stream;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * 流式api，链式调用
@@ -19,6 +21,16 @@ import org.junit.Test;
  * 3. forEach
  */
 public class StreamAPITest {
+
+    private List<A> objList = Arrays.asList(
+            new A("aaa", 10),
+                new A("bbb", 20),
+                new A("ccc", 30),
+                new A("ddd", 40),
+                new A("eee", 50),
+                new A("fff", 60)
+        );
+
     @Test
     public void test() {
         List<Integer> list = Arrays.asList(2, 3, 4, 5, 6, 7, 8);
@@ -36,6 +48,19 @@ public class StreamAPITest {
         // count方法
         long count = list.stream().filter(x -> x % 2 == 0).count();
         System.out.println("count: " + count);
+
+    }
+
+    /**
+     * map与flatmap方法
+     */
+    @Test
+    public void map() {
+        List<Integer> list = Arrays.asList(2, 3, 4, 5, 6, 7, 8);
+        list.stream().map(t -> t * 10).forEach(t -> System.out.print(t + " "));
+        System.out.println();
+        list.stream().flatMap(t -> Stream.of(t * 10)).forEach(t -> System.out.print(t + " "));
+        list.forEach(t -> System.out.print(t + " "));
 
     }
 
@@ -78,7 +103,7 @@ public class StreamAPITest {
     }
 
     /**
-     * concat方法,连接两个stream
+     * concat方法,连接两个stream中的元素形成一个新的stream
      */
     @Test
     public void concat() {
@@ -107,19 +132,59 @@ public class StreamAPITest {
         // 1 3 4 5 10
         System.out.println();
         
-        Stream.of(1, 4, 3, 10, 5).sorted(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                if (o1 < o2) {
-                    return 1;
-                } else if (01 == 02) {
-                    return 0;
-                } else {
-                    return -1;
-                }
+        Stream.of(1, 4, 3, 10, 5).sorted((o1, o2) -> {
+            if (o1 < o2) {
+                return 1;
+            } else if (01 == 02) {
+                return 0;
+            } else {
+                return -1;
             }
         }).forEach(t -> System.out.print(t + " "));// 10 5 4 3 1
     }
+
+    /**
+     * noneMatch：stream中的所有元素都不满足某种条件返回true
+     * 注意，返回的是bool类型
+     */
+    @Test
+    public void noneMatch() {
+        // stream中的所有元素都不等于iii时返回true
+        boolean b1 = objList.stream().noneMatch(t -> t.getName().equals("iii"));
+        System.out.println(b1); // true
+
+        boolean b2 = objList.stream().noneMatch(t -> t.getName().equals("aaa"));
+        System.out.println(b2); // false
+    }
+
+    /**
+     * anyMatch：stream中的任一元素满足某种条件时就返回true
+     */
+    @Test
+    public void anyMatch() {
+        boolean b1 = objList.stream().anyMatch(t -> t.getName().equals("iii"));
+        System.out.println(b1); // false
+
+        boolean b2 = objList.stream().anyMatch(t -> t.getName().equals("aaa"));
+        System.out.println(b2); // true
+    }
+
+    /**
+     * allMatch：stream中的所有元素都满足某种条件时才返回true
+     */
+    @Test
+    public void allMatch() {
+        // 所有的元素都不等于iii时才返回true
+        boolean b1 = objList.stream().allMatch(t -> !t.getName().equals("iii"));
+        System.out.println(b1); // true
+
+        boolean b2 = objList.stream().allMatch(t -> t.getName().equals("aaa"));
+        System.out.println(b2); // false
+    }
+
+
+
+
     
 }
 
@@ -159,4 +224,10 @@ class A {
                 ", age=" + age +
                 '}';
     }
+}
+
+@Data
+@AllArgsConstructor
+class Demo {
+    private Integer id;
 }
