@@ -16,6 +16,10 @@ import lombok.experimental.Accessors;
  * 对PECS(extends:produce, super:consumer)的理解：
  * 入参：用super
  * 出参：用extends，因为是出参，所以外部必定需要某个类型来接收，因此只能是extends，否则接不住
+ * 举例：Predicate是入参，用? super T
+ *      Function的第一个参数是入参，用? super T
+ *      Function的第二个参数是出参，用? extends T
+ *      Supplier是出参，用? extends T
  *
  * 很多类(如Optional)类中的频繁使用? super T或者? extends U，不是必须，但使得程序更灵活，健壮
  *
