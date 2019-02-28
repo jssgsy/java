@@ -3,6 +3,7 @@ package com.univ.jdk8.stream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -200,10 +201,25 @@ public class StreamAPITest {
         System.out.println(b2); // false
     }
 
+    /**
+     * min：按给定的规则或者stream中最小的元素
+     */
+    @Test
+    public void min() {
+        Optional<A> min = objList.stream().min((first, second) -> first.getAge() - second.getAge() > 0 ? -1 : 1);
+        System.out.println(min.orElse(new A()));
+    }
+
+    /**
+     * max：按给定的规则或者stream中最小的元素
+     */
+    @Test
+    public void max() {
+        Optional<A> min = objList.stream().max((first, second) -> first.getAge() - second.getAge() > 0 ? -1 : 1);
+        System.out.println(min.orElse(new A()));
+    }
 
 
-
-    
 }
 
 class A {
