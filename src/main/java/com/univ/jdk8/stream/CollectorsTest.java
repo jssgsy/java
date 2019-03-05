@@ -42,6 +42,7 @@ public class CollectorsTest {
 
     /**
      * Collectors.toMap: 将stream中的元素以某种规则组装成map返回
+     * 注意：放入map中的key必须唯一，否则报Duplicate key xxx的异常
      */
     @Test
     public void testToMap() {
