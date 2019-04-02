@@ -1,0 +1,4 @@
+# 文件名即是提供的服务接口的全路径名
+# 每行放一个实现类
+com.univ.spi.JavaHelloService
+com.univ.spi.PhpHelloService
