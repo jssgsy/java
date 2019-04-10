@@ -21,6 +21,14 @@ echo "\$4：$4"
 echo "\$#：$#"   # 表示参数个数
 echo "\$@：$@"   # 表示所有的参数，即param1 param2 param3
 echo "\$*：$*"   # 与$@类似
+
+# $@与$*的区别 参考：https://bash.cyberciti.biz/guide/How_to_use_positional_parameters
+# $@ expanded as "$1" "$2" "$3" ... "$n"
+# $* expanded as "$1y$2y$3y...$n", where y is the value of $IFS variable i.e. "$*" is one long string and $IFS act as an separator or token delimiters.
+# 即$@相当于是以空格作为分隔符来区分开各个参数，而$*则是以变量$IFS的值作为分隔符来区分开参数
+IFS=","
+echo "差别\$@: $@"    # one two three
+echo "差别\$*: $*"    # one,two,three
 #---------------------------------------------------------------------
 
 
@@ -38,7 +46,7 @@ function fn1() { # function关键字可以省略
     echo "\$*：$*"   # 与$@类似
 }
 # 下面是函数调用的方式，
-fn1 funtion_param1 funtion_param2 funtion_param3
+`fn1 funtion_param1 funtion_param2 funtion_param3`
 
 
 
@@ -155,6 +163,8 @@ a=10;
 b=20;
 sum=$((a + b ))
 echo "${a} + ${b} = ${sum}" # 10 + 20 = 30
+
+
 
 
 
