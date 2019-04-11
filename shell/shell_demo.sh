@@ -144,7 +144,20 @@ case $a in
         echo "这里是默认会被执行的语句"
         echo "这里是默认会被执行的语句"
 esac
-
+# case可以用正则表达式来匹配，如下面 忽略大小写
+s=TaR
+case $s in
+    [Tt][Aa][Rr])
+        echo "the cmd is tar"
+        ;;
+    [Jj][Aa][Rr])
+        echo "the cmd is jar"
+        ;;
+    *)
+        echo "unknow cmd"
+        ;;
+esac
+# 也可以在shell脚本中利用shopt -s nocasematch来开启大小写不敏感，利用shopt -u nocasematch关闭大小写不敏感
 
 #---------------------------------------------------------------------
 
