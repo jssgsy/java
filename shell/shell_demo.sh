@@ -159,6 +159,39 @@ case $s in
 esac
 # 也可以在shell脚本中利用shopt -s nocasematch来开启大小写不敏感，利用shopt -u nocasematch关闭大小写不敏感
 
+# 6 for循环 参考：https://bash.cyberciti.biz/guide/For_loop
+# 可以对如下六种数据进行循环处理
+    # 字符串
+    # 数字
+    # 命令参数
+    # 文件名
+    # 命令产生的结果(如ls命令)
+# 循环处理数字
+for i in 1 2 3 4
+do
+    echo "\$i: $i"
+done
+
+# 循环处理字符串
+for s in aaa bbb ccc
+do
+    echo "\$s: $s"
+done
+
+# 循环处理命令
+for cmd in date pwd ls
+do
+    echo "命令${cmd}的输出结果如下："
+    # 执行命令,注意，下面才是执行命令
+    $cmd
+done
+
+# 循环处理文件
+for f in /etc/passwd /etc/group /etc/shadow /etc/gshdow
+do
+	[  -f $f ] && echo "$f file found" || echo "*** Error - $f file missing."
+done
+
 #---------------------------------------------------------------------
 
 
