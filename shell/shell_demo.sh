@@ -192,6 +192,13 @@ do
 	[  -f $f ] && echo "$f file found" || echo "*** Error - $f file missing."
 done
 
+# c风格的for循环 for (( EXP1; EXP2; EXP3 ))
+for (( i = 0; i < 5; i++))
+do
+    echo "i: $i"
+done
+
+
 #---------------------------------------------------------------------
 
 
