@@ -208,7 +208,23 @@ do
     done
 done
 
+# while循环 while [ condition ] do ... done，注意：condition为真才会执行循环语句
+w=1
+while [ $w -le 5 ]
+do
+    echo "\$w: $w"
+    w=$(( $w + 1))
+done
 
+# until循环 until [ condition ] do ... done，注意：condition为假才会执行循环语句，即如果为真则终止循环
+u=1
+until [ $u -g 5 ]
+do
+    echo "\$u: $u"
+    u=$(( $u + 1))
+done
+
+# 补充：shell中也有break、break N、continue等关键词，含义与编程语言中一样；还有一个select循环
 #---------------------------------------------------------------------
 
 
