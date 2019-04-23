@@ -20,6 +20,9 @@ import ma.glasnost.orika.metadata.Type;
  * @description
  * 注意：
  * 1. 用来进行属性拷贝的bean务必给各属性提供getter/setter方法，否则拷贝不成功！
+ * 2. 注册转换器registerConverter与classMap中的customize的区别：
+ *  注册转换器：用来处理将一个类型转换成另一个类型（比如内部类的转换，用customize不行）；
+ *  customize：要转换的字段间不是简单的复制，此时可用来做一些定制化的转换
  */
 public class OrikaTest {
 
