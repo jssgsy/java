@@ -218,7 +218,7 @@ done
 
 # until循环 until [ condition ] do ... done，注意：condition为假才会执行循环语句，即如果为真则终止循环
 u=1
-until [ $u -g 5 ]
+until [ $u -gt 5 ]
 do
     echo "\$u: $u"
     u=$(( $u + 1))
