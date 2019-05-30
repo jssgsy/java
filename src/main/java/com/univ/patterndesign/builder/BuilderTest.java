@@ -13,9 +13,7 @@ public class BuilderTest {
         Director director = new Director();
         Builder builder = new ConcreteBuilder1();
         // 指导者指导建造者进行建造
-        director.guide(builder);
-
-        Product product = builder.getResult();
+        Product product = director.guide(builder);
         System.out.println(product);
     }
 
@@ -104,6 +102,12 @@ class ConcreteBuilder1 extends Builder {
 
     @Override
     public Product getResult() {
+        // 或许可以在这里调用各个部件的建造方法
+        /*buildHead("head");
+        buildBody("body");
+        buildEye("eye");
+        buildFoot("foot");*/
+
         return product;
     }
 }
@@ -111,10 +115,14 @@ class ConcreteBuilder1 extends Builder {
 // 指导者，用来指导建造整个产品的流程、顺序
 class Director {
 
-    public void guide(Builder builder) {
+    public Product guide(Builder builder) {
+        // 这里director需要指导builder具体的装配工作，相当于builder需要把建造的流程告诉director，
+        // 但似乎不需要告诉告诉builder，直接在builder.getResult()中完成即可
         builder.buildBody("body");
         builder.buildHead("head");
         builder.buildEye("eye");
         builder.buildFoot("foot");
+
+        return builder.getResult();
     }
 }
