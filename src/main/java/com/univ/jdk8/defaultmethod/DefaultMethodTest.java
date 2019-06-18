@@ -9,10 +9,12 @@ public class DefaultMethodTest {
 
     @Test
     public void test1() {
-        A a = new B();
+        A b = new B();
+        A c = new C();
 
-        // 调用接口中的默认方法，需要使用其实现类进行
-        System.out.println(a.add(34, 65));
+        // 默认方法是实例级别的方法，需要实例才能调用，不用用接口直接调用
+        System.out.println(b.add(34, 65));
+        System.out.println(c.add(1, 2));
 
         // 调用接口的静态方法，竟然是用点号而不是::
         System.out.println(F.fn());
@@ -23,6 +25,7 @@ public class DefaultMethodTest {
 interface A {
     /**
      * jdk1.8新增的默认实现方法
+     * 0. 默认方法是实例级别的方法，不能用类直接调用；
      * 1. 语法上仅仅只是在方法实现前面加一个default关键字
      * 2. 注意，方法的修饰符默认依然是(也只能是)public的
      * 3. 接口的默认方法不用强制子类进行实现，当然子类进行实现也是可以的
