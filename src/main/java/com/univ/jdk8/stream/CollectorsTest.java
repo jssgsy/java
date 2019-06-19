@@ -51,6 +51,15 @@ public class CollectorsTest {
     }
 
     /**
+     * 转成map时，如果key有重复的，默认情况会抛异常，可以使用第三个参数来选择第一个还是第二个
+     */
+    @Test
+    public void testToMap2() {
+        Map<Integer, Entity> collect = objList.stream().collect(Collectors.toMap(t -> t.getAge(), Function.identity(), (t1, t2) -> t2));
+        System.out.println(collect);
+    }
+
+    /**
      * Collectors.groupingBy: 将stream中的元素以某种规则分组
      * 注意，此时返回的是一个map(因为是分组内容)
      */
