@@ -1,11 +1,14 @@
 package com.univ.thirdutils.mockito;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 /**
  * @author univ
@@ -32,6 +35,7 @@ public class MockitoTest {
     /**
      * 通过@InjectMocks模拟的对象就有了（spy）的功能，即会被真正执行，适合用来模拟单测的对象
      */
+    @Spy // 是可以同时和@InjectMocks使用的，此时便可实现@Spy拥有的mock部分方法的能力
     @InjectMocks
     private DemoService demoService;
 
@@ -44,6 +48,19 @@ public class MockitoTest {
         // mock掉外部依赖
         Mockito.when(demoDao.getName(Mockito.anyInt())).thenReturn("aaa");
         demoService.fn();
+    }
+
+    /**
+     * 同时使用@Spy与@InjectMocks来实现只mock部分方法。重要！
+     * 和@Spy一样，此时要使用
+     */
+    @Test
+    public void test2() {
+        Mockito.doReturn("xxx").when(demoService).fn1();
+
+        // 要测试的是fn2方法，但其内部依赖了fn1(当然fn1也会有专门的单测)，所以在这里不用再测试fn1了，将其mock掉，专注单测fn2方法
+        String s = demoService.fn2();
+        assertEquals("xxx", s);
     }
 
 }
@@ -59,6 +76,19 @@ class DemoService {
         int j = 1;
         String name = demoDao.getName(100);
         System.out.println(name);
+    }
+
+    public String fn1() {
+        // 有复杂的逻辑，经过计算得出的值
+        return "aaa";
+    }
+
+    public String fn2() {
+        int i = 1;
+        // 不用去实际调用fn1，fn1也只是一个依赖而已，需要mock掉
+        fn1();
+        int j = 1;
+        return fn1();
     }
 }
 
