@@ -3,6 +3,7 @@ package com.univ.thirdutils.mockito;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -30,6 +31,8 @@ import org.mockito.Mockito;
  *
  * 核心：单测，针对的是一个个独立的方法及其中的业务逻辑，其中所有依赖的方法都应视为外部依赖，应该mock掉。
  *  即使是调用的内部的其它方法，此方法也应该给mock掉，因为其自有单测来保证
+ *
+ *  所谓打桩(stub)：when.thenReturn就是打桩，表示用另外一个东西代替，类似代理
  */
 public class BasicMockitoTest {
 
@@ -170,6 +173,26 @@ public class BasicMockitoTest {
         // 注意，记得使用doReturn.when(obj).method的形式，不要使用when.return的方式
         doReturn("重点关注，关注要单测的方法的逻辑，其它所有调用都mock掉，不论是外部还是内部").when(ordinary).fn1();
         ordinary.fn1();
+    }
+
+    /**
+     * 自定义参数匹配器，其实就一个lambda表达式，注意版本要在2.1.0及以上
+     */
+    @Test
+    public void test8() {
+        Ordinary ordinary = mock(Ordinary.class);
+        // 只有当参数是1时才返回aaa
+        when(ordinary.getType(1)).thenReturn("aaa");
+        assertEquals("aaa", ordinary.getType(1));
+        assertEquals(null, ordinary.getType(2));
+
+        // 参数是任意int时都返回bbb
+        // when(ordinary.getType(anyInt())).thenReturn("bbb");
+
+        // 当参数是偶数时才返回ccc
+        when(ordinary.getType(argThat(t -> t % 2 == 0))).thenReturn("ccc");
+        assertEquals("ccc", ordinary.getType(2));
+        assertEquals(null, ordinary.getType(3));
     }
 
 }
