@@ -57,11 +57,11 @@
 		</dependency>
 
 		<!-- http client -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.3.6</version>
-		</dependency>
+		</dependency>-->
 
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -146,6 +146,14 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.5</version>
+        </dependency>
+
+        <!--elasticsearch-rest-high-level-client-->
+        <!--注意：要正常使用，需要先注释掉上面的httpclient依赖，有冲突-->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>6.2.4</version>
         </dependency>
 
     </dependencies>
