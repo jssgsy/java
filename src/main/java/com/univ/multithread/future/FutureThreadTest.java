@@ -4,6 +4,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import org.junit.Test;
+
 /**
  * @author univ
  * @date 2019/7/22 10:11 AM
@@ -31,7 +33,7 @@ public class FutureThreadTest {
 
             @Override
             public Integer call() throws Exception {
-                System.out.println("线程名：" + Thread.currentThread().getName());
+                System.out.println("线程名a：" + Thread.currentThread().getName());
                 return 10;
             }
         }){
@@ -40,17 +42,28 @@ public class FutureThreadTest {
 
         // 注意使用Callable与Runnable语法上的区别，如下：
         new Thread(new Runnable() {
-
             @Override
             public void run() {
-                System.out.println("线程名：" + Thread.currentThread().getName());
+                System.out.println("线程名b：" + Thread.currentThread().getName());
             }
         }).start();
-
-
-
     }
-    
+
+    @Test
+    public void test() throws ExecutionException, InterruptedException {
+        FutureTask<Integer> result = new FutureTask<>(() -> {
+            System.out.println("当前线程名为：" + Thread.currentThread().getName());
+            Thread.sleep(3000l);
+            System.out.println("休眠结束");
+            return 20;
+        });
+        new Thread(result).start();
+        System.out.println("获取结果前---");
+        // 此时会一直阻塞直到计算完成
+        System.out.println(result.get());
+        System.out.println("获取结果后---");
+    }
+
 }
 
 /**
@@ -65,7 +78,7 @@ class HelloCallable implements Callable<Integer> {
      */
     @Override
     public Integer call() throws Exception {
-        System.out.println("线程名：" + Thread.currentThread().getName());
+        System.out.println("HelloCallable#线程名：" + Thread.currentThread().getName());
         return 10;
     }
 }
