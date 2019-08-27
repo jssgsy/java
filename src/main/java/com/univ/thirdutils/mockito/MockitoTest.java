@@ -38,6 +38,12 @@ public class MockitoTest {
     @Spy // 是可以同时和@InjectMocks使用的，此时便可实现@Spy拥有的mock部分方法的能力
     @InjectMocks
     private DemoService demoService;
+    /**
+     * 注意补充：一般不要@Spy与@InjectMocks结合使用，实际工程中，很有可能有private方法，此时需要通过反映的方式进行单测，
+     * 此时若@Spy与@InjectMocks一起使用则反射则不要用。为了达到能用反射对private方法进行单测，同时能mock掉依赖的public方法(假设fn2内部调用public的fn1方法)，做法如下：
+     * 1. 使用@InjectMocks；
+     * 2. 在fn2方法中，demoService = spy(demoService);doReturn("fn1_result").when(demoService).fn1();
+     */
 
     // 此时对象demoDao会被装配到对象demoService中，这个就是@InjectMocks的作用之一
     @Mock
