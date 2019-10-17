@@ -19,7 +19,7 @@ public class FutureThreadTest {
 
         /**
          * FutureTask实现了Runnable与Future<V>，即FutureTask代表了一个有返回值的Runnable
-         * 内部是持有了一个Callable的实例，任务的执行会委托至此，所以需要作为构造函数传入。
+         * 内部是持有了一个Callable的实例，任务的执行(即Runnable的run方法)会委托至此，所以需要作为构造函数传入。
          */
         FutureTask<Integer> task = new FutureTask<>(callable);
         Thread thread = new Thread(task);
@@ -28,17 +28,14 @@ public class FutureThreadTest {
         // 获取任务执行返回的结果，这也是使用Callable的原因所有
         System.out.println(task.get());
 
-        // 以上代码等价于,当然一般不这么用，因为就不能获取到结果了
+        // 以上代码等价于,当然一般不这么用，因为就不能获取到结果了，失去了FutureTask的意义
         new Thread(new FutureTask<Integer>(new Callable<Integer>() {
-
             @Override
             public Integer call() throws Exception {
                 System.out.println("线程名a：" + Thread.currentThread().getName());
                 return 10;
             }
-        }){
-
-        }).start();
+        })).start();
 
         // 注意使用Callable与Runnable语法上的区别，如下：
         new Thread(new Runnable() {

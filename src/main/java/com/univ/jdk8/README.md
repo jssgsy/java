@@ -5,10 +5,10 @@
 
 ## 函数式接口(functional interface)
 jdk8中新增的常用函数式接口（位于java.util.function包下）:
-* Predicate
-* Consumer
-* Function
-* Supplier
+* Predicate     行为是真是假
+* Consumer      只进不出，黑洞
+* Function      礼尚往来，有进有出
+* Supplier      无私奉献，只出不进
 
 ## 流式API
 位于java.util.stream包下
