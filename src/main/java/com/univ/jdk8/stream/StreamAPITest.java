@@ -219,6 +219,26 @@ public class StreamAPITest {
         System.out.println(min.orElse(new A()));
     }
 
+    /**
+     * 从集合元素中计算出一个总值
+     */
+    @Test
+    public void reduce() {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        // 求和
+        Optional<Integer> reduce = list.stream().reduce((first, second) -> first + second);
+        System.out.println(reduce.get());
+
+        List<String> stringList = Arrays.asList("aaa", "bbb", "ccc");
+
+        // 给定一个初始值再计算总值
+        String r1 = stringList.stream().reduce("000", (first, second) -> first + second);
+        System.out.println(r1);// 000aaabbbccc
+
+        String r2 = stringList.stream().reduce((first, second) -> first + "-" + second).get();
+        System.out.println(r2);// aaa-bbb-ccc
+    }
+
 
 }
 
