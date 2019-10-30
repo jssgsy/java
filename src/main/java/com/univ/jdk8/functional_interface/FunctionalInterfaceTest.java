@@ -1,5 +1,7 @@
 package com.univ.jdk8.functional_interface;
 
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 import org.junit.Test;
@@ -21,6 +23,42 @@ public class FunctionalInterfaceTest {
             // factor += 2;    // error
             return t * 2 * factor;
         });
+    }
+    private void basic(Function<Integer, Integer> function) {
+        System.out.println(function.apply(10));
+    }
+
+    /**
+     * 两个入参，一个返回值
+     * 特点：两个入参与返回值类型均可不同
+     */
+    @Test
+    public void biFunction() {
+        biFunctionParam((x, y) -> x.equals("aaa") && y == 13);
+    }
+
+    private void biFunctionParam(BiFunction<String, Integer, Boolean> biFunction) {
+        Boolean aaa = biFunction.apply("aaa", 113);
+        System.out.println(aaa);
+    }
+
+    /**
+     * 就是一个BiFunction
+     * 只是此时两个入参与返回值类型均一致
+     */
+    @Test
+    public void binaryOperator() {
+        binaryOperatorParam((x, y) -> x + "_" + y);
+    }
+
+    /**
+     * 注意，定义BinaryOperator，只需一个类型，其继承自BiFunction<T, T>。BinaryOperator的声明中也只有一个泛型参数
+     * 如下定义是错误的：BinaryOperator<String, String, String> binaryOperator
+     * @param binaryOperator
+     */
+    private void binaryOperatorParam(BinaryOperator<String> binaryOperator) {
+        String result = binaryOperator.apply("aaa", "bbb");
+        System.out.println(result);
     }
 
     @Test
@@ -44,15 +82,11 @@ public class FunctionalInterfaceTest {
 
         // 造价于
         cascadFunctionInterface(t -> (i -> i * i));
-
     }
 
-    private void basic(Function<Integer, Integer> function) {
-        System.out.println(function.apply(10));
-    }
+
     private void basicFunctionInterface(Function<Integer, Integer> function) {
         System.out.println(function.apply(10));
-
     }
 
     private void cascadFunctionInterface(Function<Integer, Function<Integer, Integer>> cascadFunction) {
