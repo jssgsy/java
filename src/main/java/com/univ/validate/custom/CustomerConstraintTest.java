@@ -1,5 +1,6 @@
 package com.univ.validate.custom;
 
+import java.util.Arrays;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -43,4 +44,21 @@ public class CustomerConstraintTest {
             System.out.println(result.getMessage());
         }
     }
+
+    @Test
+    public void customValidatorList() {
+        DemoList demoList = new DemoList();
+        demoList.setName("xxxxx");
+        demoList.setAge(5);
+        DemoSingle demoSingle = new DemoSingle();
+        demoSingle.setId(100);
+        demoSingle.setName("");
+        demoList.setList(Arrays.asList(demoSingle));
+
+        Set<ConstraintViolation<DemoList>> validate = validator.validate(demoList);
+        for (ConstraintViolation<DemoList> result : validate) {
+            System.out.println(result.getMessage());
+        }
+    }
+
 }
