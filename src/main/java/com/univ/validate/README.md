@@ -50,3 +50,7 @@ org.hibernate.validator.constraints补充的限制有：
 * @NotBlank:只用于String，且trailing whitespaces are getting ignored.
 * @Email
 * @URL
+
+# 注意
+* 很多时候需要多个注解一同使用，如@Pattern只有在所注解的字段不为null时才起作用；
+* 一种约束处理器只能作用在一种类型的字段(入参)上，但一个自定义的约束注解可同时作用在多种类型上，只需为此约束注解指定多个处理器即可；
