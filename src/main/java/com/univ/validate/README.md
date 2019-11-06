@@ -1,4 +1,6 @@
-# [参考资料](https://www.baeldung.com/javax-validation)
+# 参考资料
+[参考资料1](https://www.baeldung.com/javax-validation)
+[参考资料2](https://www.ibm.com/developerworks/cn/java/j-lo-beanvalid/)
 
 # 何为validate？
 其实就是校验某个参数，某个字段是否符合一定的要求，如是否为空，长度等等。这样可以少写很多if之类的判断语句。

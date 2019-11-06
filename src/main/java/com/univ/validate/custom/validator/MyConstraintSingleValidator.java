@@ -14,13 +14,24 @@ import com.univ.validate.custom.constrain.MyConstraintSingle;
  *  UnivConstraint：表示必须其适用于UnivString注解上；
  *  String：表示UnivString注解只能作用于String类型字段、参数上
  */
-public class MyConstraintValidator implements ConstraintValidator<MyConstraintSingle, String> {
+public class MyConstraintSingleValidator implements ConstraintValidator<MyConstraintSingle, String> {
 
+    /**
+     * 用来初始化此validator，会在isValid方法之前被调用
+     * @param constraintAnnotation  即要处理(对应)的约束注解。
+     *  作用：当约束注解中定义了其它字段，则可以通过此参数获取
+     */
     @Override
     public void initialize(MyConstraintSingle constraintAnnotation) {
-
+        // 重要：可利用入参获取约束中定义的其它字段的值(声明时使用的值)
     }
 
+    /**
+     * 校验逻辑
+     * @param value 要被验证的bean实例
+     * @param context
+     * @return
+     */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (null == value || value.length() < 3) {
