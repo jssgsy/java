@@ -10,11 +10,14 @@ import org.junit.Test;
 
 import com.univ.validate.custom.bean.DemoClassOrInterface;
 import com.univ.validate.custom.bean.DemoCompound;
+import com.univ.validate.custom.bean.DemoGroup;
 import com.univ.validate.custom.bean.DemoList;
 import com.univ.validate.custom.bean.DemoMutiple;
 import com.univ.validate.custom.bean.DemoNested;
 import com.univ.validate.custom.bean.DemoSingle;
 import com.univ.validate.custom.bean.DemoString;
+import com.univ.validate.custom.group.GroupA;
+import com.univ.validate.custom.group.GroupB;
 
 /**
  * @author univ
@@ -108,6 +111,34 @@ public class CustomerConstraintTest {
         demoNested.setDemoInner(demoInner);
         Set<ConstraintViolation<DemoNested>> validate = validator.validate(demoNested);
         for (ConstraintViolation<DemoNested> result : validate) {
+            System.out.println(result.getMessage());
+        }
+    }
+
+    // 组验证
+    @Test
+    public void group() {
+        DemoGroup demoGroup = new DemoGroup();
+        demoGroup.setNameDefault("1");
+        // 验证默认组
+        Set<ConstraintViolation<DemoGroup>> validate = validator.validate(demoGroup);
+        for (ConstraintViolation<DemoGroup> result : validate) {
+            System.out.println(result.getMessage());
+        }
+        System.out.println("-----------------");
+
+        // 验证GroupA组
+        demoGroup.setNameA("1");
+        Set<ConstraintViolation<DemoGroup>> groupA = validator.validate(demoGroup, GroupA.class);
+        for (ConstraintViolation<DemoGroup> result : groupA) {
+            System.out.println(result.getMessage());
+        }
+        System.out.println("-----------------");
+
+        // 验证GroupB组
+        demoGroup.setNameB("2");
+        Set<ConstraintViolation<DemoGroup>> groupB = validator.validate(demoGroup, GroupB.class);
+        for (ConstraintViolation<DemoGroup> result : groupB) {
             System.out.println(result.getMessage());
         }
     }
