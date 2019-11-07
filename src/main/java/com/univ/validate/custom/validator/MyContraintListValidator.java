@@ -4,7 +4,7 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.univ.validate.custom.DemoSingle;
+import com.univ.validate.custom.bean.DemoSingle;
 import com.univ.validate.custom.constrain.MyConstraintList;
 
 /**

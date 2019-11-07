@@ -1,4 +1,4 @@
-package com.univ.validate.custom;
+package com.univ.validate.custom.bean;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;

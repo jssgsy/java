@@ -8,6 +8,13 @@ import javax.validation.Validator;
 
 import org.junit.Test;
 
+import com.univ.validate.custom.bean.DemoClassOrInterface;
+import com.univ.validate.custom.bean.DemoCompound;
+import com.univ.validate.custom.bean.DemoList;
+import com.univ.validate.custom.bean.DemoMutiple;
+import com.univ.validate.custom.bean.DemoSingle;
+import com.univ.validate.custom.bean.DemoString;
+
 /**
  * @author univ
  * @date 2019/11/1 7:37 PM
@@ -76,6 +83,16 @@ public class CustomerConstraintTest {
         demoCompound.setName("123456");
         Set<ConstraintViolation<DemoCompound>> validate = validator.validate(demoCompound);
         for (ConstraintViolation<DemoCompound> result : validate) {
+            System.out.println(result.getMessage());
+        }
+    }
+
+    @Test
+    public void classOrInterfaceValidator() {
+        DemoClassOrInterface demoClassOrInterface = new DemoClassOrInterface();
+        demoClassOrInterface.setAge(10);
+        Set<ConstraintViolation<DemoClassOrInterface>> validate = validator.validate(demoClassOrInterface);
+        for (ConstraintViolation<DemoClassOrInterface> result : validate) {
             System.out.println(result.getMessage());
         }
     }

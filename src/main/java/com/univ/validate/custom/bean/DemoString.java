@@ -1,4 +1,4 @@
-package com.univ.validate.custom;
+package com.univ.validate.custom.bean;
 
 import com.univ.validate.custom.constrain.LengthContraint;
 

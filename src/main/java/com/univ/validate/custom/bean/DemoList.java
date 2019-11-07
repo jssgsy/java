@@ -1,4 +1,4 @@
-package com.univ.validate.custom;
+package com.univ.validate.custom.bean;
 
 import java.util.List;
 import javax.validation.Valid;
