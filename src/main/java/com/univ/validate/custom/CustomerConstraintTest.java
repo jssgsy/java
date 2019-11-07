@@ -61,4 +61,13 @@ public class CustomerConstraintTest {
         }
     }
 
+    @Test
+    public void lengthValidator() {
+        DemoString demoString = new DemoString();
+        Set<ConstraintViolation<DemoString>> validate = validator.validate(demoString);
+        for (ConstraintViolation<DemoString> result : validate) {
+            System.out.println(result.getMessage());
+        }
+    }
+
 }
