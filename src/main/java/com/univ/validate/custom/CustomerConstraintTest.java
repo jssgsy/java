@@ -12,6 +12,7 @@ import com.univ.validate.custom.bean.DemoClassOrInterface;
 import com.univ.validate.custom.bean.DemoCompound;
 import com.univ.validate.custom.bean.DemoList;
 import com.univ.validate.custom.bean.DemoMutiple;
+import com.univ.validate.custom.bean.DemoNested;
 import com.univ.validate.custom.bean.DemoSingle;
 import com.univ.validate.custom.bean.DemoString;
 
@@ -97,4 +98,17 @@ public class CustomerConstraintTest {
         }
     }
 
+    // 嵌套验证
+    @Test
+    public void nested() {
+        DemoNested demoNested = new DemoNested();
+        demoNested.setAge(10);
+        DemoNested.DemoInner demoInner = new DemoNested.DemoInner();
+        demoInner.setHeight(100);
+        demoNested.setDemoInner(demoInner);
+        Set<ConstraintViolation<DemoNested>> validate = validator.validate(demoNested);
+        for (ConstraintViolation<DemoNested> result : validate) {
+            System.out.println(result.getMessage());
+        }
+    }
 }
