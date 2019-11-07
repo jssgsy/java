@@ -70,4 +70,14 @@ public class CustomerConstraintTest {
         }
     }
 
+    @Test
+    public void compoundValidator() {
+        DemoCompound demoCompound = new DemoCompound();
+        demoCompound.setName("123456");
+        Set<ConstraintViolation<DemoCompound>> validate = validator.validate(demoCompound);
+        for (ConstraintViolation<DemoCompound> result : validate) {
+            System.out.println(result.getMessage());
+        }
+    }
+
 }
