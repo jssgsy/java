@@ -34,7 +34,7 @@ public class JUnit2 {
 	
 	/*
 	 * 如果这里的b既可接收Box<Number>又可接收Box<Integer>，那么b.getData()返回的是Number还是Integer，显然和泛型的
-	 * 初衷违背，所以ox<Integer>不是Box<Number>()的子类。此时的解决方法是利用类型通配符，见getData2()，其实从类型擦除角度考虑更直观，
+	 * 初衷违背，所以Box<Integer>不是Box<Number>()的子类。此时的解决方法是利用类型通配符，见getData2()，其实从类型擦除角度考虑更直观，
 	 * 擦除后，Box<Number>与Box<Integer>都是Box类型
 	 */
 	public static void getData(Box<Number> b) {
@@ -69,15 +69,15 @@ public class JUnit2 {
 	public void test2(){
 		Collection<?> c = new ArrayList<String>();
 		//c.add(new Box()); //compile time error，不管加入什么对象都出错，除了null外。  
-		c.add(null); //OK  
+		c.add(null); //OK
 	}
 	
 	/*
 	 * 通配符问题
 	 *
-	 * 关于<? super Cicle>与<? extends Shape>小结：PECS(producer extend consumer super)
-            <? super Cicle>：是生产者
-            <? extends Shape>：不能插入，只能读取，是消费者
+	 * 关于<? super T>与<? extends T>小结：PECS(producer extend consumer super)
+            <? super T>：只是往集合中插入元素，类似消费者
+            <? extends T>：只能从集合中取得数据，生产者。不能插入(不知道具体是哪个子类)
 	 */
 	@Test
 	public void test3(){
