@@ -223,18 +223,27 @@ public class StreamAPITest {
 
     /**
      * 从集合元素中计算出一个总值
+     * 在轮回计算中，每次计算出的结果都将作为下一次计算的第一个值(first)
      */
     @Test
     public void reduce() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
         // 求和
-        Optional<Integer> reduce = list.stream().reduce((first, second) -> first + second);
+        Optional<Integer> reduce = list.stream().reduce((first, second) -> {
+            System.out.println("first: " + first);
+            System.out.println("second: " + second);
+            return first + second;
+        });
         System.out.println(reduce.get());
 
         List<String> stringList = Arrays.asList("aaa", "bbb", "ccc");
 
         // 给定一个初始值再计算总值
-        String r1 = stringList.stream().reduce("000", (first, second) -> first + second);
+        String r1 = stringList.stream().reduce("000", (first, second) -> {
+            System.out.println("first: " + first);
+            System.out.println("second: " + second);
+            return first + second;
+        });
         System.out.println(r1);// 000aaabbbccc
 
         String r2 = stringList.stream().reduce((first, second) -> first + "-" + second).get();
