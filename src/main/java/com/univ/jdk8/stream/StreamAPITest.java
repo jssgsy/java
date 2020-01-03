@@ -1,6 +1,7 @@
 package com.univ.jdk8.stream;
 
 import java.util.Arrays;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,7 +101,10 @@ public class StreamAPITest {
         );
 
         // 按照对象的age字段分组,age值是map中的key，value是包含那些age值相等的项组成的列表
-        Map<Integer, List<A>> collect = list.stream().collect(Collectors.groupingBy(t -> t.getAge()));
+        // groupingBy参数说明：
+        // 1. 第一个参数：使用什么key作为分组；
+        // 2. 第二个参数：重要！分组后想怎么处理，默认用的toList，即将分到一组的数据放到一个list中，也可以对分到一组的数据作其它操作(如toSet，求和、平均值等等)
+        Map<Integer, List<A>> collect = list.stream().collect(Collectors.groupingBy(A::getAge));
         System.out.println(collect);
         /*
             {
@@ -113,6 +117,57 @@ public class StreamAPITest {
          */
         List<A> list1 = collect.get(40);
         list1.forEach(System.out::print);
+    }
+
+    /**
+     * 指定第二个参数
+     */
+    @Test
+    public void groupingByAdvance() {
+        List<A> list = Arrays.asList(
+                new A("aaa", 10),
+                new A("bbb", 20),
+                new A("ccc", 20),
+                new A("ddd", 40),
+                new A("eee", 30),
+                new A("fff", 20),
+                new A("ggg", 40),
+                new A("ggg", 50),
+                new A("ggg", 10)
+        );
+
+        // 默认分组后是将分到同一组的归为一个list，这里分组后取每个分组的数量
+        Map<Integer, Long> countMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.counting()));
+        System.out.println(countMap);
+
+        // 分组后求统计信息，如count,sum,min,max,average等。
+        Map<Integer, IntSummaryStatistics> summaryMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.summarizingInt(A::getAge)));
+        System.out.println(summaryMap);
+
+        // 分组后求分组数据中age字段的值
+        Map<Integer, Double> averageMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.averagingInt(A::getAge)));
+        System.out.println(averageMap);
+
+        // 分组后求分组数据中age字段的和,summingInt已经表明要求和的是int类型字段
+        Map<Integer, Integer> sumMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.summingInt(A::getAge)));
+        System.out.println(sumMap);
+
+        // 分组后对分组数据map下（将分组后的数据中的name字段放到一个list中）
+        Map<Integer, List<String>> mapMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.mapping(A::getName, Collectors.toList())));
+        System.out.println(mapMap);
+
+        // 分组后取分组数据的最大值，类似的有求最小值minBy
+        // 注意，maxBy与minBy与summingInt不同，不能直接传要作用的字段，maxBy与minBy需要比较器才能确定谁大谁小
+        Map<Integer, Optional<A>> maxMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.maxBy((t1, t2) -> {
+            if (t1.getAge() < t2.getAge()) {
+                return -1;
+            } else if (t1.getAge() == t2.getAge()) {
+                return 0;
+            }
+            return 1;
+        })));
+        System.out.println(maxMap);
+
     }
 
     /**
