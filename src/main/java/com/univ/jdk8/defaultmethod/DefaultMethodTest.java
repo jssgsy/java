@@ -18,7 +18,11 @@ public class DefaultMethodTest {
 
         // 调用接口的静态方法，竟然是用点号而不是::
         System.out.println(F.fn());
-        
+
+        // 静态方法调用只能是 类名.方法名
+        System.out.println(A.minus(2, 1));  //# 只能是定义此静态方法的类才能调用
+        // System.out.println(B.minus(2, 1));   # 实现类不能调用静态方法
+        // System.out.println(E.minus(2, 1));   # 子接口不能调用静态方法
     }
 }
 
@@ -33,6 +37,10 @@ interface A {
      */
     default int add(int a, int b) {
         return a + b;
+    }
+
+    static int minus(int a, int b){
+        return a - b;
     }
 }
 
