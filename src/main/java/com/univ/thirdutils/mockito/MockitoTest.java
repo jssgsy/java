@@ -35,11 +35,11 @@ public class MockitoTest {
     /**
      * 通过@InjectMocks模拟的对象就有了（spy）的功能，即会被真正执行，适合用来模拟单测的对象
      */
-    @Spy // 是可以同时和@InjectMocks使用的，此时便可实现@Spy拥有的mock部分方法的能力
-    @InjectMocks
+    @Spy // 等价于 DemoService demoService = spy(DemoService.class);即会自动创建实例；
+    @InjectMocks    // 说明此字段(demoService)可以注入mock(比如补@Mock修饰的对象)或者spy对象
     private DemoService demoService;
     /**
-     * 注意补充：一般不要@Spy与@InjectMocks结合使用，实际工程中，很有可能有private方法，此时需要通过反映的方式进行单测，
+     * 注意补充：一般不要@Spy与@InjectMocks结合使用，实际工程中，很有可能有private方法，此时需要通过反射的方式进行单测，
      * 此时若@Spy与@InjectMocks一起使用则反射则不要用。为了达到能用反射对private方法进行单测，同时能mock掉依赖的public方法(假设fn2内部调用public的fn1方法)，做法如下：
      * 1. 使用@InjectMocks；
      * 2. 在fn2方法中，demoService = spy(demoService);doReturn("fn1_result").when(demoService).fn1();
@@ -59,6 +59,7 @@ public class MockitoTest {
 
     /**
      * 同时使用@Spy与@InjectMocks来实现只mock部分方法。重要！
+     * 重点是，使用spy对象要，需要使用doReturn.when语法，而不是mock对象的when.thenReturn语法
      * 和@Spy一样，此时要使用
      */
     @Test

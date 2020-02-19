@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -171,7 +172,7 @@ public class BasicMockitoTest {
     public void test7() {
         OrdinaryObject ordinary = spy(OrdinaryObject.class);
         // 注意，记得使用doReturn.when(obj).method的形式，不要使用when.return的方式
-        doReturn("重点关注，关注要单测的方法的逻辑，其它所有调用都mock掉，不论是外部还是内部").when(ordinary).fn1();
+        doReturn("重点关注，关注要单测的方法的逻辑，其它所有调用都mock掉，不论是外部还是内部").when(ordinary).fn();
         ordinary.fn1();
     }
 
@@ -193,6 +194,20 @@ public class BasicMockitoTest {
         when(ordinary.getType(argThat(t -> t % 2 == 0))).thenReturn("ccc");
         assertEquals("ccc", ordinary.getType(2));
         assertEquals(null, ordinary.getType(3));
+    }
+
+    /**
+     * 可多次使用doReturn when来mock个多个方法依赖
+     */
+    @Test
+    public void test9(){
+        OrdinaryObject spy = spy(OrdinaryObject.class);
+        // 同时mock掉fn与fn3方法
+        doReturn("mock fn").when(spy).fn();
+        doReturn("mock fn3").when(spy).fn3();
+        doNothing().when(spy).fn1();
+        spy.fn2();
+
     }
 
 }
@@ -221,14 +236,34 @@ class OrdinaryObject {
         int i = 0;
         int j = 0;
         int k = 0;
-        return "aaa";
+        return "实际的值";
     }
 
     public void fn1() {
+        System.out.println("进入fn1------");
         String a = "aaa";
         // 此方法
         String fn = fn();
-        String b = "bbb" + fn;
+        System.out.println("依赖的fn方法的返回值：" + fn);
+        System.out.println("离开fn1------");
+    }
+
+    public String fn2() {
+        System.out.println("进入fn2------");
+        String fn = fn();
+        System.out.println("调用依赖的fn方法的返回值：" + fn);
+        fn1();
+        System.out.println("调用了依赖的fn1方法");
+        fn = fn3();
+        System.out.println("调用依赖的f2方法的返回值：" + fn);
+        System.out.println("离开fn2------");
+        return "fn2的真实值";
+    }
+
+    public String fn3(){
+        System.out.println("进入fn3------");
+        System.out.println("离开fn3------");
+        return "fn3的真实值";
     }
 }
 
