@@ -24,6 +24,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <powermock.version>2.0.2</powermock.version>
 	</properties>
 
 	<dependencies>
@@ -33,6 +34,13 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+
+        <!--手动加入，很多jar包有依赖，power mockito要高版本-->
+        <dependency>
+            <artifactId>javassist</artifactId>
+            <groupId>org.javassist</groupId>
+            <version>3.24.0-GA</version>
+        </dependency>
 		
 		<!-- 最好将相应的jar包移除重新下载 (这里是直接将jar包复制到maven下仓库的)-->
 		 <dependency>
@@ -98,13 +106,27 @@
             <version>2.9.9.2</version>
         </dependency>
 
-        <!--测试框架-->
-        <dependency>
+        <!--测试框架mockito，如果不用powermock，记得把这里打开-->
+       <!-- <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.28.2</version>
-            <!--生产环境中这里可以设为test-->
+            <version>1.10.19</version>
+            &lt;!&ndash;生产环境中这里可以设为test&ndash;&gt;
             <scope>compile</scope>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+        <!--内部依赖了mockito-core-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
+            <!--<scope>test</scope>-->
         </dependency>
 
         <!--java bean validation，只是定义了接口，真正的实现在hibernate-validator中(hibernate-validator是最常用的一种实现)-->
