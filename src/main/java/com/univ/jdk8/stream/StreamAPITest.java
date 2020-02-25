@@ -136,10 +136,14 @@ public class StreamAPITest {
                 new A("ggg", 10)
         );
 
-        // 默认分组后是将分到同一组的归为一个list，这里分组后取每个分组的数量
+        // 默认分组后是将分到同一组的归为一个list
+        Map<String, List<A>> collect = list.stream().collect(Collectors.groupingBy(A::getName));
+        System.out.println(collect);
+
+        // 取每个分组的数量
         Map<Integer, Long> countMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.counting()));
         System.out.println(countMap);
-
+        
         // 分组后求统计信息，如count,sum,min,max,average等。
         Map<Integer, IntSummaryStatistics> summaryMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.summarizingInt(A::getAge)));
         System.out.println(summaryMap);
