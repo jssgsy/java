@@ -36,7 +36,7 @@ public class MockitoTest {
      * 通过@InjectMocks模拟的对象就有了（spy）的功能，即会被真正执行，适合用来模拟单测的对象
      */
     @Spy // 等价于 DemoService demoService = spy(DemoService.class);即会自动创建实例；
-    @InjectMocks    // 说明此字段(demoService)可以注入mock(比如补@Mock修饰的对象)或者spy对象
+    @InjectMocks    // 为此字段(demoService)注入mock(比如补@Mock修饰的对象)或者spy对象
     private DemoService demoService;
     /**
      * 注意补充：一般不要@Spy与@InjectMocks结合使用，实际工程中，很有可能有private方法，此时需要通过反射的方式进行单测，

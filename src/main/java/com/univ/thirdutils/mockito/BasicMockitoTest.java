@@ -4,12 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.after;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,8 +22,13 @@ import static org.mockito.Mockito.when;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.internal.util.DefaultMockingDetails;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * @author univ
@@ -28,7 +38,7 @@ import org.mockito.Mockito;
  *  一般使用 Mockito 需要执行下面三步
  *  1. 模拟并替换测试代码中外部依赖：使用mock方法或者相应的注解
  *  2. 执行测试代码
- *  3. 验证测试代码是否被正确的执行
+ *  3. 验证测试代码是否被正确的执行(通过方法是否被调用，被调用次数等等)
  *
  * 核心：单测，针对的是一个个独立的方法及其中的业务逻辑，其中所有依赖的方法都应视为外部依赖，应该mock掉。
  *  即使是调用的内部的其它方法，此方法也应该给mock掉，因为其自有单测来保证
@@ -51,11 +61,104 @@ public class BasicMockitoTest {
         // or an empty collection, as appropriate. For example 0 for an int/Integer and false for a boolean/Boolean)
         System.out.println(b);
 
-        // 这个是ok的，anyString(), anyInt()都是参数匹配器
-        verify(ordinary).getList(anyString(), anyInt());
+        // mock对象的方法不会实际执行
+        ordinary.getList("name", 20);
+
+        // 最后一步，验证，如调用次数
+        verify(ordinary).getList(anyString(), anyInt());// equals to verify(ordinary, times(1)).getList(anyString(), anyInt());
 
         // 会抛异常，因为12不是参数匹配器
         // verify(demoDao).getByNameAndAge(anyString(), 12);
+    }
+
+    /**
+     * 常见的验证方法
+     */
+    @Test
+    public void testVerify(){
+        Ordinary ordinary = mock(Ordinary.class);
+        // 指定当调用ordinary.getType(1)时返回hello
+        Mockito.when(ordinary.getType(1)).thenReturn("hello");
+
+        ordinary.getType(1);
+        // 验证ordinary对象的getType方法(以1为入参)被调用了一次
+        verify(ordinary).getType(1);
+        verify(ordinary, times(1)).getType(1);
+
+        // 以2为入参，getType方法从来没有被调用过
+        verify(ordinary, never()).getType(2);
+
+        // 以1为入参，getType方法至少被调用一次
+        verify(ordinary, atLeastOnce()).getType(1);
+
+        // 以1为入参，getType方法至多被调用一次
+        verify(ordinary, atMost(1)).getType(1);
+
+        // 以1为入参，getType方法被调用了三次
+        // verify(ordinary, times(3)).getType(1);
+
+    }
+
+    /**
+     * timeout方法与after方法主要是用来测试异步代码
+     *
+     * timeout() exits immediately with success when verification passes
+     * after() awaits full duration to check if verification passes
+     */
+    @Test
+    public void testTimeoutAndAfter() {
+        Ordinary ordinary = mock(Ordinary.class);
+        Mockito.when(ordinary.getType(1)).thenReturn("hello");
+        ordinary.getType(1);
+        // 以1为入参，getType方法在3000ms之内被调用了一次，注意，timeout()：只要验证为真，则流程继续往下走
+        System.out.println("before timeout(3000)：" + System.currentTimeMillis());
+        // 此时并不会停顿3000ms
+        verify(ordinary, timeout(3000)).getType(1); // 等价于 verify(ordinary, timeout(3000).times(1));
+        System.out.println("after timeout(3000)：" + System.currentTimeMillis());
+
+        // 以1为入参，getType方法在3000ms之后被调用了一次，注意，after()：不论怎么，先等3000ms，然后看是否被调用了一次
+        System.out.println("before after(3000)：" + System.currentTimeMillis());
+        // 此时程序会停顿3000ms，然后再verify
+        verify(ordinary, after(3000)).getType(1);
+        System.out.println("after after(3000)：" + System.currentTimeMillis());
+    }
+
+    /**
+     * MockingDetails（默认实现类为DefaultMockingDetails）：Provides mocking information.
+     */
+    @Test
+    public void printMockingInfo(){
+        Ordinary ordinary = mock(Ordinary.class);
+        when(ordinary.getType(1)).thenReturn("aaa");
+        when(ordinary.getType(2)).thenReturn("aaa");
+        when(ordinary.getType(3)).thenReturn("aaa");
+        DefaultMockingDetails details = new DefaultMockingDetails(ordinary);
+        System.out.println(details.printInvocations());
+        System.out.println(details.isMock());
+        System.out.println(details.isSpy());
+    }
+
+    /**
+     * ArgumentCaptor：捕获方法调用时传入的实际值
+     *
+     * 当然还有与@Mock，@Spy等一样的@Captor注解可用
+     * 注：ArgumentCaptor是用在验证阶段，而不是stub阶段
+     */
+    @Test
+    public void argumentCaptor(){
+        // 先表明要捕获哪种class
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+
+        Ordinary ordinary = mock(Ordinary.class);
+        when(ordinary.getType(anyInt())).thenReturn("aaa");
+        // 实际调用
+        ordinary.getType(100);
+
+        // 此时argumentCaptor会捕获当getType被实际调用时所传入的参数值
+        verify(ordinary).getType(argumentCaptor.capture());
+
+        // 打印所捕获到的参数值
+        System.out.println(argumentCaptor.getValue());
     }
 
     /**
@@ -89,7 +192,7 @@ public class BasicMockitoTest {
         // 第一次调用ordinary.getType(1)时返回"aaa"，第二次调用时返回"bbb"
         when(ordinary.getType(1)).thenReturn("aaa").thenReturn("bbb");
 
-        assertEquals("aaaa", ordinary.getType(1));
+        assertEquals("aaa", ordinary.getType(1));
         assertEquals("bbb", ordinary.getType(1));
 
         // 等价的写法
@@ -158,9 +261,9 @@ public class BasicMockitoTest {
         List spy = spy(list);
         //Impossible: real method is called so spy.get(0) throws IndexOutOfBoundsException (the list is yet empty)
         // 意思是说，这种形式下，spy.get(0)会实际被调用一次(在thenReturn前)，此时就报错了，所以需要doReturn.when的形式
-        when(spy.get(0)).thenReturn("foo");
+        // when(spy.get(0)).thenReturn("foo");// wrong
         //You have to use doReturn() for stubbing
-        Mockito.doReturn("foo").when(spy).get(0);
+        Mockito.doReturn("foo").when(spy).get(0);// right
     }
 
     /**
@@ -208,6 +311,41 @@ public class BasicMockitoTest {
         doNothing().when(spy).fn1();
         spy.fn2();
 
+    }
+
+    /**
+     * Answer：一般的做法是mock方法时指定一个返回值，Answer可以看做是升级版：mock方法时通过行为指定返回值
+     * 所以：
+     *  1. 要明确指定返回值用thenReturn;
+     *  2. 要通过行为指定返回值用thenAnswer;
+     */
+    @Test
+    public void answer() {
+        Ordinary ordinary = mock(Ordinary.class);
+        // 普通做法
+        when(ordinary.getType(3)).thenReturn("aaa");
+        String result = ordinary.getType(3);
+        Assert.assertEquals(result, "aaa");
+
+        // Answer的做法，泛型参数是要返回的参数类型
+        when(ordinary.getType(3)).thenAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                // Object[] arguments = invocation.getArguments();
+                Integer argument = invocation.getArgument(0);
+                return "prefix_" + argument;
+            }
+        });
+        result = ordinary.getType(3);
+        Assert.assertEquals(result, "prefix_3");
+
+        // Answer的另外一种用途：在调用某个方法时做一些事情
+        doAnswer(invocation -> {
+            Object argument = invocation.getArgument(0);
+            System.out.println("调用的参数为：" + argument);
+            return null;
+        }).when(ordinary).getType(3);
+        ordinary.getType(3);
     }
 
 }
