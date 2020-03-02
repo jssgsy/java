@@ -16,6 +16,11 @@ import org.junit.Test;
  *  Executor：能执行提交任务的对象(接口)；抽象级别高；
  *  ExecutorService：接口，是Executor的子接口，抽象级别高，先理解成线程池(ThreadPoolExecutor是其实现类之一)；
  *  Executors：工具类
+ *
+ *  Executor的作用：用来替代显示的new Thread().start()。
+ *
+ *
+ *  ThreadPoolExecutor常用来自定义线程池
  */
 public class ExecutorServiceTest {
 
