@@ -12,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
  * @date 2020/2/17 8:37 PM
  * @description 继承关系的mockito用法
  *
- * 重要总结：单纯的Mockito功能还是有些弱，涉及到私有方法，父类方法等方面有什么不能解决。
+ * 重要总结：单纯的Mockito功能还是有些弱，涉及到私有方法，父类方法等方面不能解决。
  */
 @RunWith(MockitoJUnitRunner.class)
 public class MockitoExtendTest {
@@ -23,7 +23,7 @@ public class MockitoExtendTest {
 
     @Test
     public void test() {
-        // 这里mock的是child.fn，所以fn1()方法中调用父类方法时不能使用super.fn()!
+        // 这里mock的是child.fn，所以fn1()方法中调用父类方法时不能使用super.fn()!，其实就相当于是mock自己的public方法一样
         Mockito.doReturn(false).when(child).fn();
         child.fn1();
     }
@@ -40,7 +40,7 @@ class Parent {
 
 class Child extends Parent {
 
-    // 注意，如果子类方法名和父类方法名相同(即fn1),则mockito回天乏术，此时需要借助powermock
+    // 注意，如果子类方法名和父类方法名相同(即fn1),则mockito回天乏术，此时需要借助power mock
     public boolean fn1() {
         System.out.println("Child fn1()");
         fn();
