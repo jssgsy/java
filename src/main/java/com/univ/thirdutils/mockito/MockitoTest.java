@@ -71,6 +71,28 @@ public class MockitoTest {
         assertEquals("xxx", s);
     }
 
+    @InjectMocks
+    private L l;
+
+    @Mock
+    private MUtil mUtil;
+
+    /**
+     * 情形：要单测某个方法，然后此方法中获得了一个其它对象，且后续会需要调用此对象的方法。
+     * Q：如何mock掉此半路杀出的对象？
+     * A：其实就和构造mock数据是一样的，mock掉即可
+     *
+     */
+    @Test
+    public void test3() {
+        M m = Mockito.mock(M.class);
+        // 核心，返回一个mock对象!
+        Mockito.when(mUtil.getM()).thenReturn(m);
+
+        Mockito.when(m.mFn()).thenReturn("M mFn()的mock结果");
+        l.fn();
+    }
+
 }
 
 /**
@@ -105,4 +127,34 @@ class DemoService {
  */
 interface DemoDao {
     String getName(int id);
+}
+
+class L {
+
+    private MUtil mUtil;
+
+    public void fn() {
+        System.out.println("进入L fn()了");
+        System.out.println("L fn()的业务逻辑");
+        // 注意这里，中途杀出一个对象，且后续还调用了其方法
+        M m = mUtil.getM();
+        String mFn = m.mFn();
+        System.out.println("L fn()半路对象的方法调用结果为：" + mFn);
+        System.out.println("离开L fn()了");
+    }
+
+}
+
+class MUtil {
+
+    public M getM() {
+        return new M();
+    }
+}
+
+class M {
+
+    public String mFn(){
+        return "M mFn()";
+    }
 }
