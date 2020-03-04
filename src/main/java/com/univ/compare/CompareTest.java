@@ -31,7 +31,9 @@ public class CompareTest {
 		Arrays.sort(stu, new Comparator<Student>() {
 			@Override
 			public int compare(Student o1, Student o2) {
-				return o1.getAge() - o2.getAge() > 0 ? -1 : 1;
+			    // 想升序，则o1 < o2时返回-1
+                // 想降序，则o1 < o2时返回1
+				return o1.getAge() - o2.getAge() < 0 ? 1 : -1;
 			}
 		});
 		System.out.println(Arrays.toString(stu));

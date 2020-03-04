@@ -10,7 +10,7 @@ import org.junit.Test;
 public class SwitchTest {
 
     /**
-     * 当switch中的参数为Object类型时，则其值不能为null，否则抛出异常
+     * 当switch中的参数为Object类型时，则其值不能为null，否则抛出异常，使用switch前先用if判断
      */
     @Test
     public void test() {

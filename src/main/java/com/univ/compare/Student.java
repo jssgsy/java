@@ -25,7 +25,8 @@ public class Student implements Comparable<Student>{
 	}
 
 	/**
-	 * 要第一个元素少于、等于、大于第二个元素，则分别返回-1、0、1
+	 * 要升序，则返回-1、0、1
+	 * 要降序，则返回1、0、-1
 	 * @param o 要和this比较的对象
 	 * @return
 	 */
