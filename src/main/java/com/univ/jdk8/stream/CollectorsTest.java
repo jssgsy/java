@@ -1,6 +1,7 @@
 package com.univ.jdk8.stream;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -55,7 +56,19 @@ public class CollectorsTest {
      */
     @Test
     public void testToMap2() {
+        // 当碰到重复的key时选择第一个key
         Map<Integer, Entity> collect = objList.stream().collect(Collectors.toMap(t -> t.getAge(), Function.identity(), (t1, t2) -> t2));
+        System.out.println(collect);
+    }
+
+    /**
+     * 转成map时，默认是用HashMap来承接，因为是HashMap固然就不能保证顺序，
+     * 所以如果想将list围成map时保持list中元素的顺序，可以指定用什么类型的Map来承接，这里即LinkedHashMap
+     */
+    @Test
+    public void testToMap3() {
+        Map<Integer, Entity> collect = objList.stream().collect(Collectors.toMap(t -> t.getAge(), Function.identity(), (t1, t2) -> t2, LinkedHashMap::new));
+        // 注意观察结果key的顺序，是和objList中的顺序保持一致的
         System.out.println(collect);
     }
 
