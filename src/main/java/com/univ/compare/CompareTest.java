@@ -28,6 +28,7 @@ public class CompareTest {
 		System.out.println(Arrays.toString(stu));
 
 		// 使用Comparator接口降序
+        // 注：在jdk1.8及以后中，Comparator接口中新增了很多comparing方法来获取Comparator实例，很实用，如根据某个字段排序再也不用写样板代码了。
 		Arrays.sort(stu, new Comparator<Student>() {
 			@Override
 			public int compare(Student o1, Student o2) {
