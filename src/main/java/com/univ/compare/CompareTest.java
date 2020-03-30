@@ -2,8 +2,12 @@ package com.univ.compare;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import org.junit.Test;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * Comparable接口
@@ -28,7 +32,6 @@ public class CompareTest {
 		System.out.println(Arrays.toString(stu));
 
 		// 使用Comparator接口降序
-        // 注：在jdk1.8及以后中，Comparator接口中新增了很多comparing方法来获取Comparator实例，很实用，如根据某个字段排序再也不用写样板代码了。
 		Arrays.sort(stu, new Comparator<Student>() {
 			@Override
 			public int compare(Student o1, Student o2) {
@@ -63,4 +66,30 @@ public class CompareTest {
         Arrays.sort(arr, String.CASE_INSENSITIVE_ORDER);
         System.out.println(Arrays.toString(arr));
     }
+
+    /**
+     * 在jdk1.8及以后中，Comparator接口中新增了很多comparing方法来获取Comparator实例，很实用，如根据某个字段排序再也不用写样板代码了。
+     */
+    @Test
+    public void test3() {
+        @Data
+        @AllArgsConstructor
+        class StudentDdd {
+            private Integer age;
+            private String name;
+        }
+
+        StudentDdd s1 = new StudentDdd(14, "aaa");
+        StudentDdd s2 = new StudentDdd(4, "bbb");
+        StudentDdd s3 = new StudentDdd(20, "ccc");
+        StudentDdd s4 = new StudentDdd(10, "dddd");
+        List<StudentDdd> studentDdds = Arrays.asList(s1, s2, s3, s4);
+        System.out.println(studentDdds);
+        // 按照age字段升序
+        // 注，能这样使用的前提是，要比较的字段类型实现了compareTo方法(由源码可知)，当然基本类型都已经实现了
+        studentDdds.sort(Comparator.comparing(StudentDdd::getAge));
+        System.out.println(studentDdds);
+    }
 }
+
+
