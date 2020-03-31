@@ -119,13 +119,11 @@ public class RegularTest {
 
         // matcher的参数是原字符串(要匹配的源字符串)
         Matcher matcher = pattern.matcher(template);
+        // 这里可以使用while来获取所有匹配到的项
         if (matcher.find()) {
             System.out.println(matcher.group());
         }
 
-        
-
-        
     }
     
     @Test
