@@ -19,9 +19,9 @@ public class PowerMockitoTest {
     public void testPrivateMethod() throws Exception {
         // 注意，不要使用Mockito.spy，一个可能的原则是，在需要mock私有方法，静态方法时，用PowerMockito代替Mockito的方法
         PrivateMethod privateMethod = PowerMockito.spy(new PrivateMethod());
-        PowerMockito.doReturn("mock值fn1").when(privateMethod, "fn1");
+        PowerMockito.doReturn("mock值fn1").when(privateMethod, "privateMethod1");
         // 可以同时mock多个私有方法
-        PowerMockito.doReturn("mock值fn2").when(privateMethod, "fn2");
+        PowerMockito.doReturn("mock值fn2").when(privateMethod, "privateMethod2");
         privateMethod.fn();
     }
 
