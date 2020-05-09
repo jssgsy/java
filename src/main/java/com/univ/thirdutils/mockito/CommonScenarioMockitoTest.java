@@ -59,7 +59,9 @@ public class CommonScenarioMockitoTest {
      * 注：
      *  1. 此时只能使用@RunWith(MockitoJUnitRunner.class)
      *  2. 如果使用@RunWith(PowerMockRunner.class)@PrepareForTest({ClassWithPrivateMethod2.class})，则classWithPrivateMethod2所依赖的所有mock对象(如这里的Mo)均为null；
-     *      a. 很诡异(应该是因为@PrepareForTest生成操作字节码类时造成的)
+     *      a. 很诡异(应该是因为@PrepareForTest生成操作字节码类时造成的，但当此类没有继承关系时却又是可以的(如ClassWithPrivateMethod)，需要深入了解@PrepareForTest的作用)
+     *      b. 这样总结：当使用@PrepareForTest之后，mock与spy等的注入可能会失效！！！
+     *          b1. 因此使用@PrepareForTest，需要考虑手动注入相应的依赖对象
      *
      * 注：单纯此种测试情况，只使用@RunWith(PowerMockRunner.class)而不用@PrepareForTest也是可以的
      */
@@ -68,6 +70,12 @@ public class CommonScenarioMockitoTest {
         Class<? extends ClassWithPrivateMethod2> clz = classWithPrivateMethod2.getClass();
         Method method = clz.getDeclaredMethod("pFn", String.class);
         method.setAccessible(true);
+
+        /**
+         * 手动注入依赖时，可以使用@PrepareForTest({ClassWithPrivateMethod2.class})
+         */
+        // classWithPrivateMethod2.setMo(mo);
+
         Mockito.when(mo.fn()).thenReturn("这是mo.fn()被mock后的值");
         /**
          * 如果使用@RunWith(PowerMockRunner.class)@PrepareForTest({ClassWithPrivateMethod2.class})修饰，则此时pFn方法中的mo对象是null。会有NPE
@@ -136,6 +144,10 @@ class ClassWithPrivateMethod2 extends Bbb {
         String fn = mo.fn();
         System.out.println("依赖的mo.fn()返回值为：" + fn);
         return str;
+    }
+
+    public void setMo(Mo mo) {
+        this.mo = mo;
     }
 }
 
