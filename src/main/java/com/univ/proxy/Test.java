@@ -38,7 +38,7 @@ public class Test {
 				return obj;
 			}
 		}) ;
-		proxy.sayHello();;
+		proxy.sayHello();
 		
 		
 	}
