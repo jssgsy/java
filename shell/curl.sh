@@ -19,3 +19,19 @@ echo $result
 # curl某个变量
 url=https://api.apiopen.top/musicBroadcastingDetails?channelname=public_tuijian_spring
 curl ${url}
+
+# post请求-body数据中带有参数，此时-d后的参数外围必须用双引号而不能用单引号
+echo --------------------
+url=www.baidu.com
+arr=(1, 2)
+for i in ${arr}
+do
+    curl -XPOST -d "{
+    \"pages\":[
+        {
+            \"path\": \"pages/case/index\",
+            \"query\": \"i=${i}\"
+        }
+    ]
+}" ${url}
+done
