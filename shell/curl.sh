@@ -15,3 +15,7 @@ echo $result
 #结合jq使用便能解析其它的某些字段了
 result=$(curl -s https://api.apiopen.top/musicBroadcastingDetails?channelname=public_tuijian_spring | jq .code)
 echo $result
+
+# curl某个变量
+url=https://api.apiopen.top/musicBroadcastingDetails?channelname=public_tuijian_spring
+curl ${url}
