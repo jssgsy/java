@@ -5,6 +5,7 @@ import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -172,6 +173,20 @@ public class StreamAPITest {
         })));
         System.out.println(maxMap);
 
+    }
+
+    /**
+     * 将一个集合转成一个map：Collectors.toMap
+     * 有用
+     */
+    @Test
+    public void testToMap() {
+        Map<Integer, A> map = objList.stream().collect(Collectors.toMap(A::getAge, Function.identity()));
+        map.forEach((k, v) -> {
+            System.out.print("key: " + k + "   ");
+            System.out.print("value: " + v + "   ");
+            System.out.println();
+        });
     }
 
     /**
