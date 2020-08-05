@@ -177,11 +177,27 @@ public class StreamAPITest {
 
     /**
      * 将一个集合转成一个map：Collectors.toMap
+     * 注：此时若有相同的key则抛异常
      * 有用
      */
     @Test
     public void testToMap() {
         Map<Integer, A> map = objList.stream().collect(Collectors.toMap(A::getAge, Function.identity()));
+        map.forEach((k, v) -> {
+            System.out.print("key: " + k + "   ");
+            System.out.print("value: " + v + "   ");
+            System.out.println();
+        });
+    }
+
+    /**
+     * 解决冲突版的将一个集合转成一个map
+     * 有用
+     */
+    @Test
+    public void testToMap2() {
+        // 此时转成map若有相同的key，则以第一个为准
+        Map<Integer, A> map = objList.stream().collect(Collectors.toMap(A::getAge, Function.identity(), (o1, o2) -> o1));
         map.forEach((k, v) -> {
             System.out.print("key: " + k + "   ");
             System.out.print("value: " + v + "   ");
