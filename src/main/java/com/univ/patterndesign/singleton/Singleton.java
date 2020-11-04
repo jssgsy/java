@@ -19,7 +19,8 @@ public class Singleton {
         if (null == instance) {
             synchronized (Singleton.class) {
                 if (null == instance) {
-                    // 此句不是原子的，所以需要有volatile修饰
+                    // 分成三步：1. 分配内存空间、2. 初始化对象、3. 将内存空间的地址赋值给对应的引用
+                    // 其中2和3可能会发生指令重排序，所以需要有volatile修饰，禁止其重排序
                     instance = new Singleton();
                 }
             }
