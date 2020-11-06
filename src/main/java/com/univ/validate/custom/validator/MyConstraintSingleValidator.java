@@ -11,8 +11,8 @@ import com.univ.validate.custom.constrain.MyConstraintSingle;
  * @description
  * 一种约束处理器只能对应一种要作用的数据类型，如这里的String；
  * 自定义约束处理器必须实现ConstraintValidator接口，注意其泛型：
- *  UnivConstraint：表示必须其适用于UnivString注解上；
- *  String：表示UnivString注解只能作用于String类型字段、参数上
+ *  MyConstraintSingle：表示其是MyConstraintSingle约束注解的处理器；
+ *  String：表示MyConstraintSingle注解只能作用于String类型字段、参数上
  */
 public class MyConstraintSingleValidator implements ConstraintValidator<MyConstraintSingle, String> {
 

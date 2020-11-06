@@ -16,7 +16,7 @@ import com.univ.validate.custom.validator.CompoundConstraintValidator;
  * @date 2019/11/7 7:01 PM
  * @description 组合约束注解演示
  * 所谓组合约束：就是多个约束(a,b,c)放到一起组合成一个新的注解，这个注解就同时具备了a,b,c约束的作用
- * 注意：能被用作元约束的注解的@Target必须包含值ANNOTATION_TYPE，表示能用在其它注解上；
+ * 注意：能被用作元约束的注解的@Target必须包含值ANNOTATION_TYPE(如这里的@NotNull与@Size)，表示能用在其它注解上；
  */
 @NotNull
 @Size(min = 1)

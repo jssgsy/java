@@ -19,7 +19,7 @@ public class ValidateTest {
 
     @Test
     public void basic() {
-        // 1. 获取validator对象,即this.MyConstraintSingle2
+        // 1. 获取validator对象,即this.validator
 
         // 2. 构造需要校验的对象
         BasicDemo basicDemo = new BasicDemo();

@@ -2,10 +2,15 @@
 [参考资料1](https://www.baeldung.com/javax-validation)
 [参考资料2](https://www.ibm.com/developerworks/cn/java/j-lo-beanvalid/)
 
+# 注解与处理器的关系
+主要是`理解一个注解是如何能作用于多个不用类型上`。如(@NotEmpty即可作用于String也可作用于集合)
+![注解与处理器的关系](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/validate/注解_处理器.png)
+
 # 何为validate？
 其实就是校验某个参数，某个字段是否符合一定的要求，如是否为空，长度等等。这样可以少写很多if之类的判断语句。
 都在javax.validation包下。
-注意：在纯java应用中，不是使用了限制注解(@NotNull等)，则在程序运行中会自动判断，而是要调用相应的api去手动校验，所以这种方式肯定不会直接在项目中使用，而是借助spring mvc，此时如果参数不对则自动出错。
+注意：在纯java应用中，不是使用了约束注解(@NotNull等)，则在程序运行中会自动判断，而是要调用相应的api去手动校验，
+所以这种方式肯定不会直接在项目中使用，而是借助spring mvc，此时如果参数不对则自动出错。
 
 # 引入依赖
 ```xml
