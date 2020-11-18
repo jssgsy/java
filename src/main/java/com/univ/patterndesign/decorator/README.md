@@ -27,5 +27,4 @@ InputStream bis = new GZIPInputStream(bis);
 ```
 
 # UML类图
-![装饰器模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/decorator/decorator_uml.png 
-
+![装饰器模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/decorator/decorator_uml.png)
