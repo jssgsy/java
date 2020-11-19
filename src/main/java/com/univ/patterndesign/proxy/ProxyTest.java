@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * @author univ
  * @datetime 2018/11/6 2:01 PM
- * @description 代理模式
+ * @description 代理模式，是一个静态代理
  */
 public class ProxyTest {
 
@@ -37,7 +37,7 @@ class RealSubject implements Subject {
 
 class Proxy implements Subject {
 
-    // 真正的对象
+    // 真正的对象，其实这里也可以是父类Subject，不过这里强调的是静态的代理，即在编译期间就确认了要代理的是哪个对象
     private RealSubject realSubject;
 
     // 代理模式这里好像偏向于手具体的代理对象
