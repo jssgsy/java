@@ -44,8 +44,9 @@ abstract class AbstractClass {
 
     /**
      * 这是一个算法的骨架(流程)
+     * 一般定义成final，避免子类重写
      */
-    public void process() {
+    public final void process() {
         step1();
         step2();
         // 将具体子类的实现嵌入到整个流程中
