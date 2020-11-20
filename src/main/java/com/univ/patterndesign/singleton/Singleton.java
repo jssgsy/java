@@ -3,7 +3,7 @@ package com.univ.patterndesign.singleton;
 /**
  * @author univ
  * @datetime 2018/11/5 9:33 AM
- * @description 单例模式
+ * @description 单例模式-双重检查锁的写法
  */
 public class Singleton {
 

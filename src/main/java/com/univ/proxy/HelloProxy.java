@@ -10,8 +10,10 @@ import java.lang.reflect.Method;
  * @Description:这个名字取得不太好，因为这里并不是代理类（代理类对象由Proxy生成），是一个调用处理器
  * 实际使用中，一般用匿名函数了，不然用静态的类来代码就失去了动态代理的灵活性(动态)
  *
+ * 当调用proxy的方法时，请求都会被委托给其关联的InvocationHandler对象的invoke方法上。
+ * Each proxy instance has an associated invocation handler. When a method is invoked on a proxy instance,
+ * the method invocation is encoded and dispatched to the invoke method of its invocation handler.
  *
- * Each proxy instance has an associated invocation handler.
  */
 
 public class HelloProxy implements InvocationHandler {
