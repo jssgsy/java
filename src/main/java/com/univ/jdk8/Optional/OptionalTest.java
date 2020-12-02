@@ -60,7 +60,7 @@ public class OptionalTest {
          * orElseThrow方法
          * 与orElse方法一样，只是当i不存在时抛出一个异常
          */
-        Optional.ofNullable(i).orElseThrow(() -> new NullPointerException());
+        Optional.ofNullable(i).orElseThrow(NullPointerException::new);
     }
     
     @Test
@@ -86,6 +86,8 @@ public class OptionalTest {
     /**
      * 利用map链式取值
      * 注意：没法链式抛异常，即不能在b不存在时抛一个异常，在c不存在时抛一个异常，因为抛出某个异常后某个调用就结束了
+     *
+     * 如果对象嵌套只有一层的话，使用Optional带来的好处不大，但多层的嵌套就值得一用
      */
     @Test
     public void chain() {
@@ -93,6 +95,13 @@ public class OptionalTest {
         Optional<String> s = Optional.ofNullable(a).map(A::getB).map(B::getC).map(C::getD).map(D::getName);
         String str = s.orElse("default");
         System.out.println(str);
+
+        // 等价于如下代码
+        /*if (null != a.getB() && null != a.getB().getC() && null != a.getB().getC().getD()) {
+            System.out.println(a.getB().getC().getD().getName());
+        } else {
+            System.out.println("default");
+        }*/
     }
 }
 
