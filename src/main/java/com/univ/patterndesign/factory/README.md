@@ -22,7 +22,7 @@ A：目的是解耦。客户端直接和工厂类打交道，找工厂类要对�
 即，`解耦了对象的创建过程和使用过程`(**不需要在使用对象的地方也知道对象的创建过程**，当然，这里说的创建对象比较复杂的对象，比如依赖一个初始化操作)
 
 ## UML类图
-![工厂方法模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/factory/factorymethod/factory_method.png)
+![工厂方法模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/factory/factory_method_uml.png)
 
 # 抽象工厂方法模式
 较之工厂模式更进一步，即一个工厂创建各种对象(产品簇)，只是`这些对象逻辑上都属于同一产品簇`。实际应用中好像不怎么能碰到。
