@@ -2,6 +2,8 @@ package com.univ.patterndesign.builder;
 
 import org.junit.Test;
 
+import lombok.Data;
+
 /**
  * @author univ
  * @datetime 2018/11/6 4:11 PM
@@ -10,119 +12,162 @@ import org.junit.Test;
 public class BuilderTest {
     @Test
     public void test() {
+        // 客户端需要知道指导员的存在
         Director director = new Director();
-        Builder builder = new ConcreteBuilder1();
-        // 指导者指导建造者进行建造
-        Product product = director.guide(builder);
-        System.out.println(product);
+
+        // 客户也需要知道自己想要什么样的产品(一个建造建造一种类型的产品)
+        CarBuilder carBuilder = new MichelinCarBuilder();
+
+        // 客户端不需要知道具体的构建过程。由指导者指导建造者进行建造即可
+        Car car = director.guide(carBuilder);
+        System.out.println(car);
     }
 
 }
 
-/*
-1. 建造者模式，将一个复杂对象(Product)的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。即：将建造复杂对象的过程和组成对象的部件解耦
-2. 感觉是将一个大对象进行拆分，然后逐个进行建造，建造完成后拼接成一个完整的对象；
-3. 主要用于创建一些复杂的对象，这个对象内部的构建顺序通常是稳定的，但对象外部的构建通常面临着复杂的变化
+/**
+ * 要建造的对象，通常比较复杂，是由其它好几个对象组合而成
  */
-// 具体的物品，很庞大的对象
-class Product {
+@Data
+class Car {
+    // 使用接口而不是具体的类，这样就能生产出不同品牌的轮胎与引擎
+    private Wheel wheel;
+    private Engineer engineer;
+}
+interface Wheel {
+    Wheel makeWheel();
+}
+// 米其林
+@Data
+class MichelinWheel implements Wheel {
+    private String name;
+
+    public MichelinWheel(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Wheel makeWheel() {
+        return this ;
+    }
+}
+// 马牌
+@Data
+class HorseWheel implements Wheel {
+    private String name;
+
+    public HorseWheel(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Wheel makeWheel() {
+        return this;
+    }
+}
+
+interface Engineer {
+    Engineer makeEngineer();
+}
+@Data
+class MichelinEngineer implements Engineer {
+    private String name;
+
+    public MichelinEngineer(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Engineer makeEngineer() {
+        return this;
+    }
+}
+@Data
+class HorseEngineer implements Engineer {
+
+    private String name;
+
+    public HorseEngineer(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Engineer makeEngineer() {
+        return this;
+    }
+}
+
+/**
+ * 职责：定义组成产品的各个部分的创建
+ */
+abstract class CarBuilder {
+    // 要最终建造的产品
+    protected Car car = new Car();
 
     /**
-     * 这里用String形式来模拟产品的组成部门，实际上当然可以是对象形式(一般都是对象形式)
+     * 因为构造的是对象的一部分，因此这里直接返回void即可，外界不会用到这个小对象，按照实际情况使用即可
      */
-    private String head;
-    private String eye;
-    private String body;
-    private String foot;
-
-    public void setHead(String head) {
-        this.head = head;
-    }
-
-    public void setEye(String eye) {
-        this.eye = eye;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setFoot(String foot) {
-        this.foot = foot;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "head='" + head + '\'' +
-                ", eye='" + eye + '\'' +
-                ", body='" + body + '\'' +
-                ", foot='" + foot + '\'' +
-                '}';
-    }
-}
-
-// 建造者模式的抽象定义，定义产品的各个部分的创建
-abstract class Builder {
-
-    // 将一个大产品拆分成小部件然后逐个进行构建
-    public abstract void buildHead(String head);
-    public abstract void buildEye(String eye);
-    public abstract void buildBody(String body);
-    public abstract void buildFoot(String foot);
+    public abstract void buildWheel();
+    public abstract void buildEngineer();
 
     // 获取最后建造完毕的产品
-    public abstract Product getResult();
+    public abstract Car getResult();
 }
-
-class ConcreteBuilder1 extends Builder {
-
-    // 要最终建造的产品,需要先初始化为一个空壳
-    protected Product product = new Product();
+// 会构建米其林车的工人
+class MichelinCarBuilder extends CarBuilder {
 
     @Override
-    public void buildHead(String head) {
-        product.setHead(head);
+    public void buildWheel() {
+        car.setWheel(new MichelinWheel("米其林轮胎"));
     }
 
     @Override
-    public void buildEye(String eye) {
-        product.setEye(eye);
+    public void buildEngineer() {
+        car.setEngineer(new MichelinEngineer("米其林发动机"));
     }
 
     @Override
-    public void buildBody(String body) {
-        product.setBody(body);
-    }
-
-    @Override
-    public void buildFoot(String foot) {
-        product.setFoot(foot);
-    }
-
-    @Override
-    public Product getResult() {
-        // 或许可以在这里调用各个部件的建造方法
-        /*buildHead("head");
-        buildBody("body");
-        buildEye("eye");
-        buildFoot("foot");*/
-
-        return product;
+    public Car getResult() {
+        return car;
     }
 }
+// 会构建马牌车的工人
+class HorseCarBuilder extends CarBuilder {
+    @Override
+    public void buildWheel() {
+        car.setWheel(new MichelinWheel("米其林轮胎"));
+    }
 
-// 指导者，用来指导建造整个产品的流程、顺序
+    @Override
+    public void buildEngineer() {
+        car.setEngineer(new MichelinEngineer("米其林发动机"));
+    }
+
+    @Override
+    public Car getResult() {
+        return car;
+    }
+}
+
+// 指导者，用来指导Builder建造整个产品的流程、顺序
 class Director {
 
-    public Product guide(Builder builder) {
-        // 这里director需要指导builder具体的装配工作，相当于builder需要把建造的流程告诉director，
-        // 但似乎不需要告诉告诉builder，直接在builder.getResult()中完成即可
-        builder.buildBody("body");
-        builder.buildHead("head");
-        builder.buildEye("eye");
-        builder.buildFoot("foot");
-
-        return builder.getResult();
+    /**
+     * 也可以将builder作为Director的成员变量，不过这样的这么话就需要先设置builder，然后才能调用guide方法，不如将builder作为入参来得方便
+     * 感觉这里甚至可以将方法设为static，这样Director的含义更纯粹
+     * @param carBuilder
+     * @return
+     *
+     * 补充：注意这里是如何体现【使得同样的构建过程可以创建不同的表示】的，这里构建过程是稳定的(封装在这一个方法中，先构建谁、后构建谁都已经确定了)，
+     * 但因为不同部分都是接口表示，所以最终的产品是由具体的Builder决定的。
+     */
+    public Car guide(CarBuilder carBuilder) {
+        /**
+         * director把建造的流程告诉builder，即以什么样的顺序来构造(前提就是要构造的对象的过程是较为稳定的)
+         * 引擎和发动机缺一不可(实际情况中，还可能有顺序关系)
+         */
+        carBuilder.buildEngineer();
+        carBuilder.buildWheel();
+        return carBuilder.getResult();
     }
 }
