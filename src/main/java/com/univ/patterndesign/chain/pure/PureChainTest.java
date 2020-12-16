@@ -1,4 +1,4 @@
-package com.univ.patterndesign.chain;
+package com.univ.patterndesign.chain.pure;
 
 import org.jetbrains.annotations.Contract;
 import org.junit.Test;
@@ -6,16 +6,16 @@ import org.junit.Test;
 /**
  * @author univ
  * @datetime 2018/11/6 2:57 PM
- * @description 责任链模式
+ * @description 纯粹的责任链模式
  */
-public class ChainTest {
+public class PureChainTest {
 
     @Test
     public void test() {
-        Handler a = new A();
-        Handler b = new B();
-        Handler c = new C();
-        Handler d = new D();
+        AbstractHandler a = new ConcreteAbstractHandlerA();
+        AbstractHandler b = new ConcreteAbstractHandlerB();
+        AbstractHandler c = new ConcreteAbstractHandlerC();
+        AbstractHandler d = new ConcreteAbstractHandlerD();
         // 设置后继者
         a.setSuccessor(b);
         b.setSuccessor(c);
@@ -25,24 +25,13 @@ public class ChainTest {
     }
 }
 
-/*
-1. 使多个对象都有机会处理请求，从而避免请求的发送者和接收者之间的耦合关系，将这些对象连成一条链，并沿着这条链条传递该请求，直到有一个对象处理它为止；
-2. 注意，客户端需要设置谁是谁的后继对象；
-3. 注意，如果当前对象不能请求又没法将请求传递给下一个对象时的异常处理
- */
+abstract class AbstractHandler {
 
-
-
-abstract class Handler {
-    /*
-    直接将此方法实现在基类中，这样子类不用实现
-    public abstract void setHandler(Handler handler);
-     */
-    // 后续者
-    protected Handler successor;
+    // 引用后继者
+    protected AbstractHandler successor;
 
     // 设置后继者
-    public void setSuccessor(Handler successor) {
+    public void setSuccessor(AbstractHandler successor) {
         this.successor = successor;
     }
 
@@ -50,7 +39,7 @@ abstract class Handler {
     public abstract void handRequest();
 }
 
-class A extends Handler {
+class ConcreteAbstractHandlerA extends AbstractHandler {
 
     @Override
     public void handRequest() {
@@ -70,7 +59,7 @@ class A extends Handler {
     }
 }
 
-class B extends Handler {
+class ConcreteAbstractHandlerB extends AbstractHandler {
 
     @Override
     public void handRequest() {
@@ -90,7 +79,7 @@ class B extends Handler {
     }
 }
 
-class C extends Handler {
+class ConcreteAbstractHandlerC extends AbstractHandler {
 
     @Override
     public void handRequest() {
@@ -110,7 +99,7 @@ class C extends Handler {
     }
 }
 
-class D extends Handler {
+class ConcreteAbstractHandlerD extends AbstractHandler {
 
     @Override
     public void handRequest() {
