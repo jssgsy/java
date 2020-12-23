@@ -2,6 +2,7 @@ package com.univ.jdk8.stream;
 
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -121,7 +122,10 @@ public class StreamAPITest {
     }
 
     /**
-     * 指定第二个参数
+     * 指定第二个参数：分组后的处理-放到什么容器中(默认是list)、作什么操作。
+     * 使用：
+     * groupingBy(Function<? super T, ? extends K> classifier, Collector<? super T, A, D> downstream)
+     *  classifier：分类器(that mapping input elements to keys)。
      */
     @Test
     public void groupingByAdvance() {
@@ -139,40 +143,69 @@ public class StreamAPITest {
 
         // 默认分组后是将分到同一组的归为一个list
         Map<String, List<A>> collect = list.stream().collect(Collectors.groupingBy(A::getName));
-        System.out.println(collect);
+        System.out.println("1" + collect);
 
         // 取每个分组的数量
         Map<Integer, Long> countMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.counting()));
-        System.out.println(countMap);
+        System.out.println("2" + countMap);
         
         // 分组后求统计信息，如count,sum,min,max,average等。
         Map<Integer, IntSummaryStatistics> summaryMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.summarizingInt(A::getAge)));
-        System.out.println(summaryMap);
+        System.out.println("3" + summaryMap);
 
         // 分组后求分组数据中age字段的值
         Map<Integer, Double> averageMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.averagingInt(A::getAge)));
-        System.out.println(averageMap);
+        System.out.println("4" + averageMap);
 
         // 分组后求分组数据中age字段的和,summingInt已经表明要求和的是int类型字段
         Map<Integer, Integer> sumMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.summingInt(A::getAge)));
-        System.out.println(sumMap);
+        System.out.println("5" + sumMap);
 
         // 分组后对分组数据map下（将分组后的数据中的name字段放到一个list中）
         Map<Integer, List<String>> mapMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.mapping(A::getName, Collectors.toList())));
-        System.out.println(mapMap);
+        System.out.println("6" + list.stream().collect(Collectors.groupingBy(A::getAge)));
+        System.out.println("7" + mapMap);
 
         // 分组后取分组数据的最大值，类似的有求最小值minBy
         // 注意，maxBy与minBy与summingInt不同，不能直接传要作用的字段，maxBy与minBy需要比较器才能确定谁大谁小
         Map<Integer, Optional<A>> maxMap = list.stream().collect(Collectors.groupingBy(A::getAge, Collectors.maxBy((t1, t2) -> {
             if (t1.getAge() < t2.getAge()) {
                 return -1;
-            } else if (t1.getAge() == t2.getAge()) {
+            } else if (t1.getAge().equals(t2.getAge())) {
                 return 0;
             }
             return 1;
         })));
-        System.out.println(maxMap);
+        System.out.println("8" + maxMap);
+    }
 
+    /**
+     * 分组后的排序问题。使用
+     * groupingBy(Function<? super T, ? extends K> classifier,
+     *                                   Supplier<M> mapFactory,
+     *                                   Collector<? super T, A, D> downstream)
+     *  mapFactory：用来生成目标Map类型的方法。a function which, when called, produces a new empty Map of the desired type
+     */
+    @Test
+    public void groupingBySort() {
+        List<A> list = Arrays.asList(
+                new A("bbb", 20),
+                new A("aaa", 10),
+                new A("ggg", 80),
+                new A("ccc", 30),
+                new A("bbb", 40),
+                new A("eee", 50),
+                new A("fff", 60),
+                new A("aaa", 70),
+                new A("ggg", 90)
+        );
+        Map<String, List<A>> map1 = list.stream().collect(Collectors.groupingBy(A::getName));
+        // map默认为HashMap，因此分组后的顺序是以key随机确认的
+        System.out.println("1" + map1);
+
+        // 将map2的容器变成LinkedHashMap，此时map2的顺序便是其插入顺序：bbb、aaa、ggg、ccc、eee、fff
+        Map<String, List<A>> map2 = list.stream().collect(Collectors.groupingBy(A::getName, LinkedHashMap::new, Collectors.toList()));
+        System.out.println("2" + map2);
     }
 
     /**
