@@ -7,6 +7,12 @@ package com.univ.patterndesign.singleton;
  */
 public class Singleton {
 
+    /**
+     * 需要使用volatile的原因：禁止重排序
+     *  参考下面实例一个对象时的三个步骤。
+     *  当线程一执行到instance = new Singleton()时，如果发生了重排序，第3步到第2步前面了，此时instance就不为null了，
+     *  因此如果线程二来执行时，会在外围的if判断中为false，因此此时会返回一个未初始化完成的instance对象。
+     */
     private static volatile Singleton instance;
 
     /**
