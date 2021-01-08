@@ -10,6 +10,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -106,6 +108,42 @@ public class CommonScenarioMockitoTest {
 
         String fn = classWithPrivateMethod.fn(10);
         System.out.println(fn);
+    }
+
+    /**
+     * 场景：mock异步方法。
+     * 以spring中的asyncTaskExecutor为例，代码如下：
+     * asyncTaskExecutor.submit(() -> {
+              // 业务代码
+              fn();
+          });
+     * Q：如何模拟submit的入参Runnable中的run方法？
+     * A：借助doAnswer
+     *
+     * 好处：
+     * 1. 达到代码覆盖；
+     * 2. 特别是后续结果依赖这里的异步处理结果时很重要；
+     *
+     * 重要说明：
+     * 1. 其实这里是将异步代码在测试线程中给执行了；
+     * 2. 重要：异步代码中难免会调用其它方法(如这里的fn)，这里的方法同样可以被mock掉，就像外围mock一样，这样就不用一定将这里的异步代码放到一个方法中；
+     */
+    @Test
+    public void testAsync() {
+        // 模拟spring中的AsyncTaskExecutor类
+        class AsyncTaskExecutor {
+            public void submit(Runnable runnable){}
+        }
+
+        // 单测
+        AsyncTaskExecutor asyncTaskExecutor = Mockito.mock(AsyncTaskExecutor.class);
+        Mockito.doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ((Runnable) invocation.getArgument(0)).run();
+                return null;
+            }
+        }).when(asyncTaskExecutor).submit(Mockito.any(Runnable.class));
     }
 
 
