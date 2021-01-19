@@ -10,6 +10,8 @@ import org.junit.Test;
  * @author univ
  * @date 2019/7/22 10:11 AM
  * @description 演示如何使用FutureTask来创建线程执行
+ *
+ * FutureTask:就是一个异步任务(Runnable)，只是此异步任务有返回值
  */
 public class FutureThreadTest {
 
@@ -18,11 +20,11 @@ public class FutureThreadTest {
         Callable<Integer> callable = new HelloCallable();
 
         /**
-         * FutureTask实现了Runnable与Future<V>，即FutureTask代表了一个有返回值的Runnable
+         * FutureTask实现了Runnable与Future<V>，即FutureTask代表了一个有返回值的Runnable，即FutureTask是一个异步任务而已
          * 内部是持有了一个Callable的实例，任务的执行(即Runnable的run方法)会委托至此，所以需要作为构造函数传入。
          */
         FutureTask<Integer> task = new FutureTask<>(callable);
-        Thread thread = new Thread(task);
+        Thread thread = new Thread(task);   // 既然FutureTask就是一个异步任务(Runnable)，自然可以传给Thread
         // 最终线程的启动还是使用的thread.start方法
         thread.start();
         // 获取任务执行返回的结果，这也是使用Callable的原因所有
