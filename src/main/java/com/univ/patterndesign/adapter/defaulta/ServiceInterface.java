@@ -4,7 +4,7 @@ package com.univ.patterndesign.adapter.defaulta;
  * @author univ
  * @date 2020/12/23 3:46 下午
  * @description
- * 缺少适配器模式：缺省适配(Default Adapter)模式为一个接口提供缺省实现，这样子类型可以从这个缺省实现进行扩展，而不必从原有接口进行扩展。
+ * 缺省适配器模式：缺省适配(Default Adapter)模式为一个接口提供缺省实现，这样子类型可以从这个缺省实现进行扩展，而不必从原有接口进行扩展。
  *
  * 此接口有很多方法
  */
