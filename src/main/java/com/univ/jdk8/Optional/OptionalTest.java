@@ -35,6 +35,9 @@ public class OptionalTest {
 
     }
 
+    /**
+     * 可用来替换if-else语句
+     */
     @Test
     public void orElse() {
         Integer i = 1;
