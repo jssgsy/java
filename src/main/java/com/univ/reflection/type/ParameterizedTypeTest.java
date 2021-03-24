@@ -1,4 +1,4 @@
-package com.univ.reflection;
+package com.univ.reflection.type;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
