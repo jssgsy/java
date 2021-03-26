@@ -103,7 +103,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.9.2</version>
+            <version>2.9.10.7</version>
         </dependency>
 
         <!--测试框架mockito，如果不用powermock，记得把这里打开-->
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.1.Final</version>
+            <version>5.3.6.Final</version>
         </dependency>
 
         <!--使用java bean validation不可少的一个依赖-->
@@ -193,7 +193,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.9</version>
+            <version>1.2.25.sec10</version>
         </dependency>
 
     </dependencies>
