@@ -37,19 +37,21 @@ public class MethodTest {
     public String fn(@I1("haha") @I2 String str, @I3 Integer i1) {
         return "fn";
     }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @interface I1 {
+        String value() default "i1_name";
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+
+    @interface I2 {}
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    @interface I3 {}
 }
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
 
-@interface I1 {
-    String value() default "i1_name";
-}
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-
-@interface I2 {}
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
-@interface I3 {}
 
