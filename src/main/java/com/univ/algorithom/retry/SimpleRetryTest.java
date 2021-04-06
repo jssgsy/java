@@ -83,11 +83,46 @@ public class SimpleRetryTest {
      */
     @Test
     public void testWithReturnResult() throws Exception {
-        SimpleRetryHelper retryHelper = new SimpleRetryHelper();
+        SimpleRetryHelper retryHelper = new SimpleRetryHelper(3, new SleepRetryStrategy(2000L));
         retryHelper.callWithReturnResult(this::fnWithReturnResult, t -> {
             Integer t1 = (Integer) t;
             return t1 > 10;
         });
+    }
+
+    interface RetryStrategy {
+
+        void beforeRetry();
+    }
+
+    class DefaultRetryStrategy implements RetryStrategy {
+
+        @Override
+        public void beforeRetry() {
+            System.out.println("默认的重试策略-DefaultRetryStrategy-doNothing");
+        }
+    }
+
+    class SleepRetryStrategy implements RetryStrategy {
+
+        private Long sleepTimeInMillSeconds;
+
+        public SleepRetryStrategy(Long sleepTimeInMillSeconds) {
+            this.sleepTimeInMillSeconds = sleepTimeInMillSeconds;
+        }
+
+        @Override
+        public void beforeRetry() {
+            if (sleepTimeInMillSeconds <= 0) {
+                return;
+            }
+            try {
+                System.out.println("重试策略-SleepRetryStrategy休眠【" + sleepTimeInMillSeconds + "】毫秒");
+                Thread.sleep(sleepTimeInMillSeconds);
+            } catch (InterruptedException e) {
+                System.out.println("重试策略-SleepRetryStrategy抛出异常了");
+            }
+        }
     }
 
     /**
@@ -103,6 +138,25 @@ public class SimpleRetryTest {
          * 当前是第几次重试
          */
         int currentRetryNum = 0;
+
+        /**
+         * 重试策略
+         */
+        private RetryStrategy retryStrategy;
+
+        public SimpleRetryHelper() {
+            retryStrategy = new DefaultRetryStrategy();
+        }
+
+        public SimpleRetryHelper(int maxRetryNum) {
+            this.maxRetryNum = maxRetryNum;
+            retryStrategy = new DefaultRetryStrategy();
+        }
+
+        public SimpleRetryHelper(int maxRetryNum, RetryStrategy retryStrategy) {
+            this.maxRetryNum = maxRetryNum;
+            this.retryStrategy = retryStrategy;
+        }
 
         /**
          * 目标方法返回false时表明需要重试，但此时没法覆盖到目标方法发生异常时的重试
@@ -150,6 +204,7 @@ public class SimpleRetryTest {
             }
             currentRetryNum++;
             System.out.println("当前重试第【" + currentRetryNum + "】次，且上次调用返回值不符合预期，需要再次重试。。。");
+            retryStrategy.beforeRetry();
             Object result = null;
             // 兼容抛出异常时也重试
             try {
