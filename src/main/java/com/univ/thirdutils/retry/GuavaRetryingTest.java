@@ -21,21 +21,19 @@ import com.google.common.base.Predicates;
  * 2. 使用retryer.call(callable);
  */
 public class GuavaRetryingTest {
-
     private Retryer<Boolean> retryer = RetryerBuilder.<Boolean>newBuilder()
             .retryIfResult(Predicates.isNull()) // Callable返回null就重试
             .retryIfResult(aBoolean -> Objects.equals(aBoolean, Boolean.FALSE)) // Callable返回false就重试
             .retryIfRuntimeException()  // Callable抛出运行时异常就重试
             .withWaitStrategy(WaitStrategies.fixedWait(1, TimeUnit.SECONDS))
-            .withStopStrategy(StopStrategies.stopAfterAttempt(3))
+            .withStopStrategy(StopStrategies.stopAfterAttempt(3))   // 如果Stop的话就直接抛出RetryException异常了
             .build();
-
 
     @Test
     public void basic() {
         try {
             Boolean call = retryer.call(() -> {
-                System.out.println("enter ......");
+                System.out.println("目标方法被调用了");
                 // throw new RuntimeException("runtime exception...");
                 return false;
             });
