@@ -9,6 +9,8 @@ package com.univ.patterndesign.composite;
  * 组合模式:
  *  将对象组合成树形结构以表示“部分整体”的层次结构。组合模式使得用户对单个对象和使用具有一致性。
  *  它使树型结构的问题中，模糊了简单元素和复杂元素的概念
+ *
+ *  这里是【透明】的组合模式：将add、remove等方法定义在了Component而不是Composite中
  */
 
 /**

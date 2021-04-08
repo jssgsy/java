@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Composite extends Component {
 
+    // 这里需要有一个List<Component>
     private List<Component> list = new ArrayList<>();
 
     public Composite(){}
