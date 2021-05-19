@@ -10,8 +10,10 @@ import org.junit.Test;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.CtNewConstructor;
 import javassist.NotFoundException;
 
 /**
@@ -93,6 +95,54 @@ public class JavassitTest {
         String result = (String) getName.invoke(instance);
         System.out.println(result); // javassist_name
     }
+
+    /**
+     * 构造函数的简单调用
+     * @throws CannotCompileException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    @Test
+    public void testConstruct() throws CannotCompileException, IllegalAccessException, InstantiationException {
+        String qualifiedClassName = "com.univ.javassit.JavassistDemoV2";
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass ctClass = classPool.makeClass(qualifiedClassName);
+
+        // 为ctClass新增一个构造函数（字符串形式）
+        String constructorStr = "public JavassistDemoV2() {System.out.println(\"这是新增的构造函数输出(字符串形式)\");}";
+        CtConstructor constructor = CtNewConstructor.make(constructorStr, ctClass);
+        ctClass.addConstructor(constructor);
+
+        // 等价于
+        // 为ctClass新增一个构造函数（代码形式）
+        /*CtConstructor ctConstructor = new CtConstructor(new CtClass[] {}, ctClass);
+        ctConstructor.setBody("System.out.println(\"这是新增的构造函数输出(代码形式)\");");
+        ctClass.addConstructor(ctConstructor);*/
+
+        // 转成Class对象：让类加载器加载
+        Class<?> aClass = ctClass.toClass();
+        aClass.newInstance(); // 输出：这是新增的构造函数输出(字符串形式) | 这是新增的构造函数输出(代码形式)
+    }
+
+    /**
+     * 在方法体之后插入代码
+     */
+    @Test
+    public void inertAfter() throws NotFoundException, CannotCompileException {
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass ctClass = classPool.get("com.univ.javassit.JavassistDemo");
+        CtMethod fn = ctClass.getDeclaredMethod("fn", new CtClass[] { CtClass.booleanType });
+        /**
+         * 注：在每个分支的return都会被插入
+         */
+        fn.insertAfter("System.out.println(\"这是新插入的代码\");");
+        ctClass.toClass();
+
+        JavassistDemo javassistDemo = new JavassistDemo();
+        javassistDemo.fn(true);
+        javassistDemo.fn(false);
+
+    }
 }
 
 
@@ -100,5 +150,12 @@ class JavassistDemo {
 
     public void show() {
         System.out.println("show方法的原生输出");
+    }
+
+    public int fn(boolean yes) {
+        if (yes) {
+            return 10;
+        }
+        return -1;
     }
 }
