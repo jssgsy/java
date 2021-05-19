@@ -125,10 +125,11 @@ public class JavassitTest {
     }
 
     /**
-     * 在方法体之后插入代码
+     * 在方法体之后插入代码-CtMethod#insertAfter
+     * 注：是父类中的方法，另外有insertBefore
      */
     @Test
-    public void inertAfter() throws NotFoundException, CannotCompileException {
+    public void insertAfter() throws NotFoundException, CannotCompileException {
         ClassPool classPool = ClassPool.getDefault();
         CtClass ctClass = classPool.get("com.univ.javassit.JavassistDemo");
         CtMethod fn = ctClass.getDeclaredMethod("fn", new CtClass[] { CtClass.booleanType });
@@ -143,6 +144,21 @@ public class JavassitTest {
         javassistDemo.fn(false);
 
     }
+
+    /**
+     * CtConstructor#insertBeforeBody
+     */
+    @Test
+    public void insertBeforeBody() throws NotFoundException, CannotCompileException {
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass ctClass = classPool.get("com.univ.javassit.JavassistDemo");
+        CtConstructor constructor = ctClass.getDeclaredConstructor(new CtClass[] {});
+        String str = "System.out.println(\"这是insertBeforeBody插入的代码\");";
+        constructor.insertBeforeBody(str);
+        ctClass.toClass();
+        new JavassistDemo();
+        // 输出：这是insertBeforeBody插入的代码\n JavassistDemo构造函数被调用了
+    }
 }
 
 
@@ -153,9 +169,10 @@ class JavassistDemo {
     }
 
     public int fn(boolean yes) {
-        if (yes) {
-            return 10;
-        }
-        return -1;
+        return yes ? 1 : -1;
+    }
+
+    public JavassistDemo() {
+        System.out.println("JavassistDemo构造函数被调用了");
     }
 }
