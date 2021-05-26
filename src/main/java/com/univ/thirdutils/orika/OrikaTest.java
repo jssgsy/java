@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Test;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -208,6 +209,8 @@ public class OrikaTest {
 
 }
 
+@Data
+@NoArgsConstructor
 class SourceBean {
     private String name;
     private Integer age;
@@ -220,89 +223,14 @@ class SourceBean {
         this.height = height;
         this.list = list;
     }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public List<Integer> getList() {
-        return list;
-    }
-
-    public void setList(List<Integer> list) {
-        this.list = list;
-    }
 }
 
+@Data
 class DestinationBean {
     private String name2;
     private Integer age;
     private List<Integer> listNew;
     private Integer width;
-
-    public String getName2() {
-        return name2;
-    }
-
-    public void setName2(String name2) {
-        System.out.println("DestinationBean::setName2");
-        this.name2 = name2;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        System.out.println("DestinationBean::age");
-        this.age = age;
-    }
-
-    public List<Integer> getListNew() {
-        return listNew;
-    }
-
-    public void setListNew(List<Integer> listNew) {
-        this.listNew = listNew;
-    }
-
-    public Integer getWidth() {
-        return width;
-    }
-
-    public void setWidth(Integer width) {
-        this.width = width;
-    }
-
-    @Override
-    public String toString() {
-        return "DestinationBean{" +
-                "name2='" + name2 + '\'' +
-                ", age=" + age +
-                ", listNew=" + listNew +
-                ", width=" + width +
-                '}';
-    }
 }
 
 class A {
@@ -317,45 +245,14 @@ class A {
     }
 }
 
+@Data
 class B {
-
     private String name2;
-
-    public void setName2(String name2) {
-        this.name2 = name2;
-    }
-
-    public String getName2() {
-        return name2;
-    }
-
-    @Override
-    public String toString() {
-        return "B{" +
-                "name2='" + name2 + '\'' +
-                '}';
-    }
 }
 
+@Data
 class C {
     private B b = new B();
-
-    public void setB(B b) {
-        this.b = b;
-    }
-
-    public B getB() {
-        return b;
-    }
-
-
-
-    @Override
-    public String toString() {
-        return "C{" +
-                "b=" + b +
-                '}';
-    }
 }
 
 
