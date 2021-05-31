@@ -3,6 +3,10 @@
 
 是一种静态的代理。注，其实代理类所持有的对象类型也可以是父类，没必要一定是具体的子类，视实际情况使用。
 
+# 理解静态代理、动态代理
+* 静态代理：需要显示的书写代理类(为代理类编写源码);
+* 动态代理：不需要显示为代理类编写源码，如JVM直接生成字节码；
+
 # UML类图
 与装饰器模式的类图基本一样，这里的Proxy就相当于装饰器模式中的Abstract Decorator一样，只是代理模式中的Proxy不像装饰器模式的Decorator可能还有子Decorator
 ![代理模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/proxy/proxy_uml.png)
