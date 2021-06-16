@@ -16,14 +16,16 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
 
 /**
- * @author univ
- * @datetime 2018/11/27 11:45 AM
- * @description
  * 注意：
  * 1. 用来进行属性拷贝的bean务必给各属性提供getter/setter方法，否则拷贝不成功！
  * 2. 注册转换器registerConverter与classMap中的customize的区别：
  *  注册转换器：用来处理将一个类型转换成另一个类型（比如内部类的转换，用customize不行）；
  *  customize：要转换的字段间不是简单的复制，此时可用来做一些定制化的转换
+ * 3. 要转换的数据对象最好不要定义成内部类，容易踩坑
+ *
+ * @author univ
+ * @datetime 2018/11/27 11:45 AM
+
  */
 public class OrikaTest {
 
@@ -207,6 +209,52 @@ public class OrikaTest {
 
     }
 
+    /**
+     * 演示显示指定父类的映射关系，哪些情况下子类的映射也会命中
+     */
+    @Test
+    public void test7() {
+
+        // 显示指定父类的映射
+        mapperFactory.classMap(SourceBean.class, DestinationBean.class)
+                // 为便于观察结果，这里利用输出来观察
+                .customize(new CustomMapper<SourceBean, DestinationBean>() {
+                    @Override
+                    public void mapAtoB(SourceBean sourceBean, DestinationBean destinationBean, MappingContext context) {
+                        super.mapAtoB(sourceBean, destinationBean, context);
+                        System.out.println("---mapAtoB---");
+                    }
+
+                    @Override
+                    public void mapBtoA(DestinationBean destinationBean, SourceBean sourceBean, MappingContext context) {
+                        super.mapBtoA(destinationBean, sourceBean, context);
+                        System.out.println("---mapBtoA---");
+                    }
+                })
+                .byDefault()
+                .register();
+
+        MapperFacade mapperFacade = mapperFactory.getMapperFacade();
+        SourceBean sourceBean = new SourceBean();
+        sourceBean.setAge(18);
+        DestinationBean destinationBean = new DestinationBean();
+        ChildSourceBean childSourceBean = new ChildSourceBean();
+        ChildDestBean childDestBean = new ChildDestBean();
+
+        // 以下均命中
+        mapperFacade.map(sourceBean, DestinationBean.class);// ---mapAtoB---
+        mapperFacade.map(sourceBean, ChildDestBean.class);// ---mapAtoB---
+
+        mapperFacade.map(childSourceBean, DestinationBean.class);// ---mapAtoB---
+        mapperFacade.map(childSourceBean, ChildDestBean.class);// ---mapAtoB---
+
+        mapperFacade.map(destinationBean, SourceBean.class);// ---mapBtoA---
+        mapperFacade.map(destinationBean, ChildSourceBean.class);//---mapBtoA---
+
+        mapperFacade.map(childDestBean, SourceBean.class);// ---mapBtoA---
+        mapperFacade.map(childDestBean, ChildSourceBean.class);//---mapBtoA---
+    }
+
 }
 
 @Data
@@ -231,6 +279,16 @@ class DestinationBean {
     private Integer age;
     private List<Integer> listNew;
     private Integer width;
+}
+
+@Data
+class ChildSourceBean extends SourceBean {
+    private String childName;
+}
+
+@Data
+class ChildDestBean extends DestinationBean {
+    private String childName;
 }
 
 class A {
