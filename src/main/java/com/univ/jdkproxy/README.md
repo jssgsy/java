@@ -5,7 +5,7 @@
     * 代理最终的调用会到达target的调用，因此target由应用提供；
     
 * 所谓代理：其实就是说在调用代理对象方法时(看起来像是调用target对象的方法)，由系统进行拦截，先不要直接去执行target的相应方法，而是先拦截下来，转而去执行另一段逻辑，且在此段逻辑中包含target的调用。这段拦截调用的逻辑就是InvocationHandler的invoke方法。
-参考：![JDK动态代理](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/proxy/proxy.png)
+参考：![JDK动态代理](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/jdkproxy/proxy.png)
   
 # 补充
-jdk提供的动态代理是接口维度的，且只要代理了，就代理了接口中的所有方法，不能只设置成代理某个方法(不过可以在InvocationHandler中对方法进行过滤)
+* jdk提供的动态代理是接口维度的，且只要代理了，就代理了接口中的所有方法，不能只设置成代理某个方法(不过可以在InvocationHandler中对方法进行过滤);

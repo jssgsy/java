@@ -1,32 +1,26 @@
-package com.univ.proxy;
+package com.univ.jdkproxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-/** 
+/**
  * @author univ 
  * @date 2016年1月14日 下午4:01:48 
  * @version v1.0
  * @Description: 
  */
-public class Test {
+public class JdkProxyTest {
 
 	public static void main(String[] args){
 		final HelloImpl helloImpl = new HelloImpl();//helloImpl的类型是HelloImpl或者HelloI都可以
 		
 		/**
-		 * helloProxy的类型是HelloProxy或者InvocationHandler都可以;
-		 * 重点：需要将实际要代理的类传递给proxy，这里是通过构造函数
+		 * 重点：需要将实际要代理的类传递给helloIHandler，这里是通过构造函数
 		 */
-		//HelloProxy helloProxy = new HelloProxy(helloImpl);
-		
-		/**
-		 * 注意第二个参数不能写成HelloI.class.getInterfaces();
-		 * 用helloProxy去代理HelloI中的所有方法
-		 */
-//		HelloI proxy = (HelloI) Proxy.newProxyInstance(HelloI.class.getClassLoader(), new Class[]{HelloI.class}, helloProxy);
-//		proxy.sayHello();
+        /*HelloIHandler helloIHandler = new HelloIHandler(helloImpl);
+		HelloI proxy = (HelloI) Proxy.newProxyInstance(HelloI.class.getClassLoader(), new Class[]{HelloI.class}, helloIHandler);
+		proxy.sayHello();*/
 
 		//使用下面的方法能力更好理解动态代理
         // 第二个参数是数组，说明可以代理多个接口

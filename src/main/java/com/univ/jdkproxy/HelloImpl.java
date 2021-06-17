@@ -1,4 +1,4 @@
-package com.univ.proxy;
+package com.univ.jdkproxy;
 /** 
  * @author univ 
  * @date 2016年1月14日 下午3:57:32 
