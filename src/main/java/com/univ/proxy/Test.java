@@ -17,30 +17,32 @@ public class Test {
 		
 		/**
 		 * helloProxy的类型是HelloProxy或者InvocationHandler都可以;
-		 * 通过构造函数传参说明将要代理对象helloImpl;
+		 * 重点：需要将实际要代理的类传递给proxy，这里是通过构造函数
 		 */
 		//HelloProxy helloProxy = new HelloProxy(helloImpl);
 		
 		/**
-		 * 注意对二个参数不能写成HelloI.class.getInterfaces();
-		 * 用helloProxy去代理HelloI中的所有方法(因为helloProxy底部是helloImpl，所以实际是代理helloImpl的方法)
+		 * 注意第二个参数不能写成HelloI.class.getInterfaces();
+		 * 用helloProxy去代理HelloI中的所有方法
 		 */
 //		HelloI proxy = (HelloI) Proxy.newProxyInstance(HelloI.class.getClassLoader(), new Class[]{HelloI.class}, helloProxy);
 //		proxy.sayHello();
-		
+
 		//使用下面的方法能力更好理解动态代理
+        // 第二个参数是数组，说明可以代理多个接口
 		HelloI proxy = (HelloI) Proxy.newProxyInstance(HelloI.class.getClassLoader(), new Class[]{HelloI.class}, new InvocationHandler() {
 			
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				System.out.println("before...");
+				// 注意：这里的helloImpl是被代理的实例，要被代理的实例是没法自动生成的，因为有哪些字段，有哪些方法，方法的实现都是不固定的，因此由外部传入
 				Object obj = method.invoke(helloImpl, args);
 				System.out.println("after...");
 				return obj;
 			}
 		}) ;
+		// 接口中的所有方法都会被代理到
 		proxy.sayHello();
-		
-		
+		proxy.sayGoodbye();
 	}
 }
 

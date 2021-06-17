@@ -11,5 +11,10 @@ public class HelloImpl implements HelloI {
 		System.out.println("hello,world.");
 	}
 
+    @Override
+    public void sayGoodbye() {
+        System.out.println("good bye");
+    }
+
 }
 

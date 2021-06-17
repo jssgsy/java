@@ -9,5 +9,7 @@ package com.univ.proxy;
 public interface HelloI {
 
 	void sayHello();
+
+	void sayGoodbye();
 }
 

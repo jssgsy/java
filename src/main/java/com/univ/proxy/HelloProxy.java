@@ -19,10 +19,23 @@ import java.lang.reflect.Method;
 public class HelloProxy implements InvocationHandler {
 
 	private Object target;//被代理的对象
-	
+
+    /**
+     * 重点：被代理的实例需要赋值给此代理类
+     * @param target
+     */
 	public HelloProxy(Object target){
 		this.target = target;
 	}
+
+    /**
+     * target的所有方法调用都会被拦截
+     * @param proxy 即代理类，注意：不是target，而是target的代理类
+     * @param method
+     * @param args
+     * @return
+     * @throws Throwable
+     */
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
 		before();
@@ -32,11 +45,11 @@ public class HelloProxy implements InvocationHandler {
 	}
 	
 	public void before(){
-		System.out.println("before say hello...");
+		System.out.println("before target invoke...");
 	}
 	
 	public void after(){
-		System.out.println("after say hello...");
+		System.out.println("after target invoke...");
 	}
 
 }
