@@ -8,6 +8,7 @@ cglib：code generation library。即代码生成库，底层基于asm
     * 所以被代理类的`final方法是不能被代理的`，当然final类更加不能使用cglib来代理；
     
 * 因为jdk动态代理是基于接口，因此需要显示提供一个被代理的实例，而cglib是基于继承，所以当代理非接口(即直接代理某个类)时，不用提供被代理的实例；
+    * 当代理接口时，用法就基本和jdk动态代理一模一样了；
 * 两者的使用方法基本一致：
     * 设置回调：jdk动态代理是InvocationHandler,cglib是MethodInterceptor；
     * 设置要代理哪个类；
