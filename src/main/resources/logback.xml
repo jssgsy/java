@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--根标签-->
+<configuration scan="false" scanPeriod="60000" debug="false">
+
+
+    <!--声明一个日志输出目的地：由class的值决定-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+       <!-- layout标签已经被废弃，使用encoder-->
+       <!-- <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </layout>-->
+
+        <!--class的值默认就是ch.qos.logback.classic.encoder.PatternLayoutEncoder，因此这里可省略-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--日志输出地：文件-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/Users/univ/gitRepos/java/src/main/java/com/univ/logback/logs/fixed.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--指定滚动策略-一天一个日志文件-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/Users/univ/gitRepos/java/src/main/java/com/univ/logback/logs/rolling-file-%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!--可选节点，控制保留的归档文件的最大数量，如果超出数量就删除旧文件-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 异步记录日志-借助AsyncAppender-->
+    <appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!--
+            因为AsyncAppender并不和控制台或者文件等是一个具体的日志输出地，因为这里输出指定一个真正的输出地，
+            因此才有了这里的appender-ref，有且只能有一个引用
+         -->
+        <appender-ref ref ="ROLLING-FILE"/>
+    </appender>
+
+    <!--演示filter的含义-->
+    <appender name="do-not-user" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+        <!--表明此appender只接受WARN级别的日志，即使logger设置的可能是更低级别的trace-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--
+        1. logger的含义：用来设置某一个包或者具体某一个类的日志打印级别、以及指定<appender>
+        2. 注意：要理解name的含义，指的是某个包(或者全限定的类名)，且包有层级(父子)关系，如com是com.univ的父级，com.univ是com.univ.algorithm的父级；
+        也就是LoggerFactory.getLogger(Xxx.class)中Xxx类所能生效的范围
+        3. additivity：是否向父级logger传递，也就是是否向<root>，默认为true(此时可能会出现打印多次)
+        4. level属性：也可以用途子标签<level>
+    -->
+    <logger name = "com.univ.logback" level = "info" additivity="true">
+        <appender-ref ref="STDOUT" />
+        <!--可同时放到多个appender中-->
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING-FILE" />
+    </logger>
+
+    <!--
+        root也是一个logger，表明是一个根logger;
+        root标签的name就是ROOT,定义在org.slf4j.Logger.ROOT_LOGGER_NAME
+    -->
+    <root level="info" name = "xxx">
+        <!--STDOUT是appender的name-->
+        <appender-ref ref="STDOUT" />
+    </root>
+
+
+
+</configuration>
