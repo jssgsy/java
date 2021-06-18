@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--根标签-->
-<configuration scan="false" scanPeriod="60000" debug="false">
+<!--根标签，设置dubug为true可以打印出logback本身的日志，默认为false-->
+<configuration scan="false" scanPeriod="60000" debug="true">
 
 
     <!--声明一个日志输出目的地：由class的值决定-->
@@ -81,9 +81,10 @@
 
     <!--
         root也是一个logger，表明是一个根logger;
-        root标签的name就是ROOT,定义在org.slf4j.Logger.ROOT_LOGGER_NAME
+        root标签的name就是ROOT,定义在org.slf4j.Logger.ROOT_LOGGER_NAME;
+        父logger适用于所有的包、所有的类，所以这里的level不要设置过低
     -->
-    <root level="info" name = "xxx">
+    <root level="info">
         <!--STDOUT是appender的name-->
         <appender-ref ref="STDOUT" />
     </root>
