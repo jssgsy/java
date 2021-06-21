@@ -1,5 +1,7 @@
 package com.univ.patterndesign.chain.variant;
 
+import java.util.List;
+
 import org.junit.Test;
 
 /**
@@ -9,74 +11,39 @@ import org.junit.Test;
  */
 public class FilterChainTest {
 
+    /**
+     * 用一个列表来保存所有的处理器
+     */
+    private List<BaseHandler> handlerList;
+
     @Test
     public void test() {
-        BaseHandlerA firstHandler = new BaseHandlerA();
+        BaseHandlerA handlerA = new BaseHandlerA();
         BaseHandlerB handlerB = new BaseHandlerB();
         BaseHandlerC handlerC = new BaseHandlerC();
         BaseHandlerD handlerD = new BaseHandlerD();
 
-        firstHandler.setSuccessor(handlerB);
-        handlerB.setSuccessor(handlerC);
-        handlerC.setSuccessor(handlerD);
+        /**
+         * 此时客户端就使用HandlerProcess了，实际使用中，如下代码一般在应用启动时就已完成，如Dubbo的Filter
+         */
+        HandlerProcess handlerProcess = new HandlerProcess();
+        handlerProcess.addHandler(handlerA);
+        handlerProcess.addHandler(handlerB);
+        handlerProcess.addHandler(handlerC);
+        handlerProcess.addHandler(handlerD);
 
-        firstHandler.handRequest();
+        handlerProcess.preHandler();
+        System.out.println("目标对象方法被调用了");
+        handlerProcess.postHandler();
+
     }
 }
 
-abstract class BaseHandler {
 
-    protected BaseHandler successor;
 
-    public void setSuccessor(BaseHandler successor) {
-        this.successor = successor;
-    }
 
-    public abstract void handRequest() ;
-}
 
-class BaseHandlerA extends BaseHandler {
 
-    @Override
-    public void handRequest() {
-        // 处理器先自己处理请求
-        // ...
-        System.out.println("BaseHandlerA处理请求了");
 
-        // 将请求交给下一个处理器
-        successor.handRequest();
-    }
-}
 
-class BaseHandlerB extends BaseHandler {
 
-    @Override
-    public void handRequest() {
-        // 处理器看看自己是否要处理
-        // if(true) 处理
-        System.out.println("BaseHandlerB处理请求了");
-
-        // 将请求交给下一个处理器
-        successor.handRequest();
-    }
-}
-
-class BaseHandlerC extends BaseHandler {
-
-    @Override
-    public void handRequest() {
-        // 处理器也可以啥都不作，直接给到下一个处理器
-
-        // 将请求交给下一个处理器
-        successor.handRequest();
-    }
-}
-
-class BaseHandlerD extends BaseHandler {
-
-    @Override
-    public void handRequest() {
-        // 最后一个处理器
-        System.out.println("整个请求处理结束了");
-    }
-}
