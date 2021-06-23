@@ -4,7 +4,7 @@ package com.univ.patterndesign.chain.variant;
  * @author univ
  * 2021/6/21 8:34 下午
  */
-class BaseHandlerD implements BaseHandler {
+class ConcreteInterceptorD implements BaseInterceptor {
 
     @Override
     public void preHandler() {

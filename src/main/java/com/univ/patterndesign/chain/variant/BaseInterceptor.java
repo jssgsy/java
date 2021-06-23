@@ -5,7 +5,7 @@ package com.univ.patterndesign.chain.variant;
  * @author univ
  * 2021/6/21 8:33 下午
  */
-interface BaseHandler {
+interface BaseInterceptor {
 
     /**
      * 目标方法调用之前要处理的逻辑

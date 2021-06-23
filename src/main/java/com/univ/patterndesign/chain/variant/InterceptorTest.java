@@ -9,22 +9,22 @@ import org.junit.Test;
  * @date 2020/12/16 11:23 上午
  * @description 纯粹责任链模式的变体-过滤器
  */
-public class FilterChainTest {
+public class InterceptorTest {
 
     /**
      * 用一个列表来保存所有的处理器
      */
-    private List<BaseHandler> handlerList;
+    private List<BaseInterceptor> handlerList;
 
     @Test
     public void test() {
-        BaseHandlerA handlerA = new BaseHandlerA();
-        BaseHandlerB handlerB = new BaseHandlerB();
-        BaseHandlerC handlerC = new BaseHandlerC();
-        BaseHandlerD handlerD = new BaseHandlerD();
+        ConcreteInterceptorA handlerA = new ConcreteInterceptorA();
+        ConcreteInterceptorB handlerB = new ConcreteInterceptorB();
+        ConcreteInterceptorC handlerC = new ConcreteInterceptorC();
+        ConcreteInterceptorD handlerD = new ConcreteInterceptorD();
 
         /**
-         * 此时客户端就使用HandlerProcess了，实际使用中，如下代码一般在应用启动时就已完成，如Dubbo的Filter
+         * 此时客户端就使用HandlerProcess了，实际使用中，如下代码一般在应用启动时就已完成
          */
         HandlerProcess handlerProcess = new HandlerProcess();
         handlerProcess.addHandler(handlerA);
