@@ -1,14 +1,11 @@
 package com.univ.jdkutils.introspector;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.junit.Test;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.junit.Test;
 
 public class PropertyDescriptorTest {
 
@@ -32,10 +29,4 @@ public class PropertyDescriptorTest {
         System.out.println("属性name的新值为：" + readMethod.invoke(person));
     }
 
-    @Getter
-    @Setter
-    @ToString
-    class Person {
-        private String name;
-    }
 }
