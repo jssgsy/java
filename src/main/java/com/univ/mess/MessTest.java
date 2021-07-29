@@ -1,9 +1,8 @@
 package com.univ.mess;
 
-import org.junit.Test;
+import java.util.Stack;
 
-import java.io.*;
-import java.util.*;
+import org.junit.Test;
 
 
 /**
@@ -31,32 +30,6 @@ public class MessTest {
             System.out.println(pop);
         }
     }
-
-    @Test
-    public void test2() throws IOException {
-
-
-        List<Integer> list = new ArrayList<>();
-        Collections.addAll(list, 1, 22, 30, 5);
-
-        Collections.sort(list);
-        System.out.println(list);
-
-
-
-
-
-
-
-
-
-
-    }
-
-
-
-
-
 
 }
 

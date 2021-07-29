@@ -15,13 +15,18 @@ public class SwitchTest {
     @Test
     public void test() {
         Integer l = null;
-        switch (l) {
+        try {
+            switch (l) {
             case 1:
                 System.out.println("hello");
             case 2:
                 System.out.println("hello");
             case 3:
                 System.out.println("hello");
+            }
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
         }
+
     }
 }

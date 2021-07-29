@@ -12,8 +12,7 @@ public class ListTest {
 	 * 1. 循环一遍取得链表的节点个数n；
 	 * 2. 遍历至顺数第n-k+1个节点
 	 */
-	@Test
-	public void kThNode(){
+    public static void main(String[] args) {
 		Node tempHead = buildNodeList();
 		if (tempHead == null) {
 			System.out.println("链表为空...");
@@ -41,7 +40,7 @@ public class ListTest {
 		System.out.println("倒数第" + k + "个节点即顺数第" + (len-k+1) + "个节点的值为： " + head.val) ;
 	}
 
-	private Node buildNodeList() {
+	private static Node buildNodeList() {
 		Node n1 = new Node(1,null);
 		Node n2 = new Node(2,n1);
 		Node n3 = new Node(3,n2);
