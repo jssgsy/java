@@ -1,9 +1,11 @@
 package com.univ.mess;
 
-import java.util.Stack;
+import java.util.Enumeration;
+import javax.naming.CompositeName;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
 
 import org.junit.Test;
-
 
 /**
  * created by Univ
@@ -18,17 +20,15 @@ public class MessTest {
      * peek()://获取栈顶元素,但不出栈
      */
     @Test
-    public void test1() {
+    public void test1() throws InterruptedException, InvalidNameException {
 
-        Stack<Integer> stack = new Stack<>();
-        stack.push(12);
-        stack.push(14);
-        stack.push(16);
-
-        while (!stack.isEmpty()) {
-            Integer pop = stack.pop();//出栈,并返回出栈元素
-            System.out.println(pop);
+        Name objectName = new CompositeName("java:comp/env/jdbc");
+        Enumeration<String> elements = objectName.getAll();
+        while(elements.hasMoreElements()) {
+            System.out.println(elements.nextElement());
         }
+
+
     }
 
 }
