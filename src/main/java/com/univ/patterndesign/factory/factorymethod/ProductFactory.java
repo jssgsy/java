@@ -8,7 +8,7 @@ package com.univ.patterndesign.factory.factorymethod;
 public interface ProductFactory {
     /**
      * 创建对象，由子类实现
-     * @return
+     * @return 返回的还是product类型，由子类返回具体的产品类型
      */
     Product createProduct();
 }
