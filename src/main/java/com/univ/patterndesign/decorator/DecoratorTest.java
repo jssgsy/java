@@ -19,7 +19,7 @@ public class DecoratorTest {
         Decorator d2 = new ConcreteDecorator2();
 
 
-        // 用d1对c1进行装饰,注意，装饰完后，d1已经是一个包裹着c1的Component(始终记住装饰器和component有一样的类型)
+        // 用d1对c1进行装饰,注意，装饰完后，d1已经是一个包裹着c1的Component(始终记住装饰器就是一种component)
         d1.setComponent(c1);
         d1.fn();
 
@@ -27,7 +27,7 @@ public class DecoratorTest {
        /* d1.setComponent(c2);
         d1.fn();*/
 
-        // 重要，setComponent的参数类型为Component，而不论是具体的component还是decorator均是Component类型，这就使得链式装饰成为了可能，这也是为何Decorator要实现(继承)Component的原因之二；
+        // 重要，setComponent的参数类型为Component，而不论是具体的component还是decorator均是Component类型，链式装饰
         d2.setComponent(d1);
         d2.fn();
     }
@@ -62,7 +62,7 @@ class ConcreteComponent2 implements Component {
 
 /*
 1. 装饰器必然要有一个Component的引用，因为是要给其动态添加功能，所以Decorator不能是接口
-2. Decorator是要给Component对象的方法进行“装饰”的，所以这里实现Component类用来保持方法签名一致，另外为何要实现(继承)Component，参见上面的test方法
+2. 抽象Decorator的作用：不是必须，不过如果有多个装饰器，则每个装饰器都需要一个被装饰的作用，因此不如抽离共同部分出来，这就是抽象装饰器的由来
  */
 abstract class Decorator implements Component {
     // 继承给具体的装饰器类使用
@@ -73,7 +73,7 @@ abstract class Decorator implements Component {
     }
 }
 
-// 具体的闭包器
+// 具体的装饰器
 class ConcreteDecorator1 extends Decorator {
 
     @Override
@@ -93,7 +93,7 @@ class ConcreteDecorator1 extends Decorator {
     }
 }
 
-// 具体的闭包器
+// 具体的装饰器
 class ConcreteDecorator2 extends Decorator {
 
     @Override
