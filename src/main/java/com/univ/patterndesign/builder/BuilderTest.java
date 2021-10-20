@@ -149,7 +149,8 @@ class HorseCarBuilder extends CarBuilder {
     }
 }
 
-// 指导者，用来指导Builder建造整个产品的流程、顺序
+// 指导者，用来指导Builder建造整个产品的流程、顺序，这个过程是稳定的
+// Director角色经常可省略，因为构建流程是稳定的，因为可当此流程直接放到抽象的Builder中
 class Director {
 
     /**
@@ -163,7 +164,7 @@ class Director {
      */
     public Car guide(CarBuilder carBuilder) {
         /**
-         * director把建造的流程告诉builder，即以什么样的顺序来构造(前提就是要构造的对象的过程是较为稳定的)
+         * 构造的流程维护在director这，即以什么样的顺序来构造(前提就是要构造的对象的过程是较为稳定的)
          * 引擎和发动机缺一不可(实际情况中，还可能有顺序关系)
          */
         carBuilder.buildEngineer();
