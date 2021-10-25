@@ -15,8 +15,10 @@ A:首先，Iterable的iterator是用来获取Iterator对象的。需要Iterable�
 > 除非再为Iterator接口添加一个reset()方法，用来重置当前迭代位置。
 > 但即使这样，Collection也同时只能存在一个当前迭代位置。而Iterable，每次调用都返回一个从头开始计数的迭代器，多个迭代器时互不干扰。
 
-# 补充
-迭代器迭代期间不允许调用集合的remove方法，但可以调用迭代器自己的remove方法。因为有ConcurrentModificationException存在；
+# 补充-关于ConcurrentModificationException
+* [ConcurrentModificationException](https://a82b7684.wiz06.com/wapp/pages/view/share/s/2EaTq42BJQUg2ptAMq2SlqEf3jWmm32Cl4iD2YkM8D2gkXav)
+* 迭代器迭代期间不允许调用集合的remove方法，但可以调用迭代器自己的remove方法。因为有ConcurrentModificationException存在；
+* 自定义的迭代器也应该满足规约；
 
 示例：
 ArrayList的iterator:
