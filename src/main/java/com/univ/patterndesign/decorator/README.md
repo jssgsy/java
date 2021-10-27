@@ -15,6 +15,7 @@
 * 装饰器模式中有一个抽象的装饰器(用来抽出多个装饰器的共同部分，如都需要持有被装饰对象的引用，不如抽离出来)，可视具体情况退化；
 
 # 示例
+## FilterInputStream
 FileInputStream是一个component，FilterInputStream是一个abstract decorator，BufferedInputStream是一个具体的decorator。
 ```
 // 核心功能
@@ -26,6 +27,9 @@ InputStream bis = new BufferedInputStream(is);
 // 可接着装饰
 InputStream bis = new GZIPInputStream(bis);
 ```
+
+## ThreadPoolTaskExecutor
+* wiz://open_document?guid=a6dc408d-e7bf-4917-91af-c97376d016af&kbguid=&private_kbguid=a82b7684-a5b7-4e10-9976-4c1ab655aa0f
 
 # UML类图
 ![装饰器模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/decorator/decorator_uml.png)
