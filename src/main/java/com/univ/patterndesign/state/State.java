@@ -1,7 +1,9 @@
 package com.univ.patterndesign.state;
 
 /**
- * 状态父类
+ * 抽象状态
+ *
+ * 这里的每个方法都会导致状态的转换，即每个方法都是一个状态转移方法
  * @author univ
  * 2021/6/15 10:46 上午
  */
