@@ -71,6 +71,16 @@ public class BasicEnumTest {
     }
 
     /**
+     * 根据枚举类型及实例名称获取对应的枚举
+     * 注：这里使用的是枚举类Enum的方法
+     */
+    @Test
+    public void getEnumValueOf() {
+        Color green = Enum.valueOf(Color.class, "GREEN");
+        System.out.println(green.toString());
+    }
+
+    /**
      * case中的GREEN不用（也没法）写成A.GREEN,只能是Color中某个定义好的值
      * @param color
      */
