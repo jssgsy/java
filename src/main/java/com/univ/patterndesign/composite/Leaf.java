@@ -41,6 +41,9 @@ public class Leaf extends Component{
 
     }
 
+    /**
+     * 重点：由叶子结点实现最终的业务逻辑
+     */
     @Override
     public void show() {
         System.out.println(getName());

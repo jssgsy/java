@@ -42,6 +42,11 @@ public abstract class Component {
 
     public abstract void remove(Component component);
 
+    /**
+     * 重点：
+     * 真正的业务逻辑代码，非叶子结点仅仅只是委托给其子结点
+     * 所以这里的逻辑最终是由叶子结点来实现的。
+     */
     public abstract void show();
 
     //这里还可以新增判断是否为叶子节点和非叶子节点的方法,这里为了突出组合模式的重点就略过。
