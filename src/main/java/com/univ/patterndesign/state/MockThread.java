@@ -53,7 +53,7 @@ public class MockThread {
     public void sleep() {
         // 做业务相关的事情
 
-        // 状态转移
+        // 将与状态相关的部分转交给状态类来处理
         state.sleep(this);
     }
 
@@ -65,7 +65,7 @@ public class MockThread {
     public void sleepTimeout(long timeout) {
         // 做业务相关的事情
 
-        // 状态转移
+        // 将与状态相关的部分转交给状态类来处理
         state.sleepTimeout(this, timeout);
     }
 
@@ -75,7 +75,7 @@ public class MockThread {
     public void run() {
         // 做业务相关的事情
 
-        // 状态转移
+        // 将与状态相关的部分转交给状态类来处理
         state.run(this);
     }
 
@@ -85,7 +85,7 @@ public class MockThread {
     public void mockNotify() {
         // 做业务相关的事情
 
-        // 状态转移
+        // 将与状态相关的部分转交给状态类来处理
         state.mockNotify(this);
     }
 
@@ -97,7 +97,7 @@ public class MockThread {
     public void getLock() {
         // 做业务相关的事情
 
-        // 状态转移
+        // 将与状态相关的部分转交给状态类来处理
         state.getLock(this);
     }
 
@@ -108,7 +108,7 @@ public class MockThread {
     public void unlock() {
         // 做业务相关的事情
 
-        // 状态转移
+        // 将与状态相关的部分转交给状态类来处理
         state.unlock(this);
     }
 }
