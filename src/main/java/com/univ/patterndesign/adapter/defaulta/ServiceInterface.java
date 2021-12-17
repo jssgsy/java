@@ -19,7 +19,8 @@ public interface ServiceInterface {
 }
 
 /**
- * 缺少适配器：提供接口所有方法的空实现，这样其子类就可以按需只实现其需要的方法而不用一股脑全实现
+ * 缺省适配器：提供接口所有方法的空实现，这样其子类就可以按需只实现其需要的方法而不用一股脑全实现
+ * 注：这里没有Adaptee的角色，ServiceInterface就是Target，而ServiceAdapter就是Adapter
  */
 abstract class ServiceAdapter implements ServiceInterface {
 
