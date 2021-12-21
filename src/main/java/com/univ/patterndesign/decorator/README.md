@@ -16,7 +16,7 @@
 
 # 示例
 ## FilterInputStream
-FileInputStream是一个component，FilterInputStream是一个abstract decorator，BufferedInputStream是一个具体的decorator。
+InputStream是component，FileInputStream是具体的component，FilterInputStream是一个abstract decorator，BufferedInputStream是一个具体的decorator。
 ```
 // 核心功能
 InputStream is = new FileInputStream();
