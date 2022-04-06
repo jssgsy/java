@@ -37,7 +37,16 @@ public abstract class AbstractDataTypeProcessor {
         return success;
     }
 
+    /**
+     * 当前数据类型对值类型的要求
+     * @param values
+     * @return
+     */
     protected abstract boolean validValues(List<String> values);
 
+    /**
+     * 对应的数据类型枚举
+     * @return
+     */
     protected abstract DataTypeEnum getDataTypeEnum();
 }

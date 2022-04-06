@@ -1,7 +1,9 @@
 package com.univ.common_business.condition_expression.datatype;
 
-import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.univ.common_business.condition_expression.enums.DataTypeEnum;
 
@@ -13,7 +15,7 @@ public class BooleanDataTypeProcessor extends AbstractDataTypeProcessor {
 
     @Override
     protected boolean validValues(List<String> values) {
-        return 1 == values.size() && Arrays.asList("true", "false").contains(values.get(0));
+        return CollectionUtils.isEmpty(values) || (1 == values.size() && StringUtils.isEmpty(values.get(0)));
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.univ.common_business.condition_expression.datatype.AbstractDataTypeProcessor;
 import com.univ.common_business.condition_expression.datatype.BooleanDataTypeProcessor;
+import com.univ.common_business.condition_expression.datatype.DoubleDataTypeProcessor;
 import com.univ.common_business.condition_expression.datatype.IntegerDataTypeProcessor;
 import com.univ.common_business.condition_expression.datatype.StringDataTypeProcessor;
 
@@ -29,7 +30,7 @@ public enum DataTypeEnum {
     // 数据类型本身就是语言提供的，没必要额外再定义，这里纳入要支持的类型即可,mytodo:如何获取内置数据类型的字面值？
     integer("integer",
             new IntegerDataTypeProcessor(),
-            Arrays.asList(OperatorEnum.EQ, OperatorEnum.NOT_EQ, OperatorEnum.GT)
+            Arrays.asList(OperatorEnum.EQ, OperatorEnum.NOT_EQ, OperatorEnum.GT, OperatorEnum.LT, OperatorEnum.between)
     ),
     string("string",
             new StringDataTypeProcessor(),
@@ -37,6 +38,10 @@ public enum DataTypeEnum {
     ),
     bool("boolean",
             new BooleanDataTypeProcessor(),
+            Arrays.asList(OperatorEnum.trueX)
+    ),
+    doubleX("double",
+            new DoubleDataTypeProcessor(),
             Arrays.asList(OperatorEnum.EQ, OperatorEnum.NOT_EQ)
     ),
 

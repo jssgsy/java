@@ -30,7 +30,7 @@ public interface PlatformDSL {
      * @param concreteCondition
      * @return
      */
-    default   String generateForConcreteCondition(ConcreteCondition concreteCondition) {
+    default  String generateForConcreteCondition(ConcreteCondition concreteCondition) {
         if (!ConditionExpressionHelper.validConcreteCondition(concreteCondition)) {
             System.out.println("此表达式不合法:" + JSONObject.toJSONString(concreteCondition));
             throw new UnsupportedOperationException("此表达式不合法");
