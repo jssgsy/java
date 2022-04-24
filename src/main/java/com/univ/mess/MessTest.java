@@ -1,9 +1,6 @@
 package com.univ.mess;
 
-import java.util.Enumeration;
-import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
-import javax.naming.Name;
 
 import org.junit.Test;
 
@@ -11,7 +8,7 @@ import org.junit.Test;
  * created by Univ
  * 16/6/18 14:28
  */
-public class MessTest {
+public class MessTest<Item> {
 
     /**
      * 栈的常用方法:
@@ -22,14 +19,14 @@ public class MessTest {
     @Test
     public void test1() throws InterruptedException, InvalidNameException {
 
-        Name objectName = new CompositeName("java:comp/env/jdbc");
-        Enumeration<String> elements = objectName.getAll();
-        while(elements.hasMoreElements()) {
-            System.out.println(elements.nextElement());
-        }
+
+
+
 
 
     }
+
+
 
 }
 
