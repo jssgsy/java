@@ -35,15 +35,15 @@ public class ThreeWayPartition {
         int v = arr[lo];
         // 切成三份，则需要两个指针作区分
         int lt = lo;    // lt(不包含)左边的均小于arr[lo]，初始假设没有值比arr[lo]小
-        int gt = hi;    // gt(不包含)左边的均大于arr[lo]，初始假设没有值比arr[lo]大
+        int gt = hi;    // gt(不包含)右边的均大于arr[lo]，初始假设没有值比arr[lo]大
         // 注：由上面定义可知，[lt, gt]内的元素均等于arr[lo]
         int i = lo + 1; // 遍历指针
         while (i <= gt) {   // i == gt时还不能结束循环
-            if (arr[i] < v) {   // 发现一个更小的元素，则放到lt处
+            if (arr[i] < v) {   // 发现一个更小的元素，则与lt处交换
                 ArrayUtil.exec(arr, i, lt);
                 lt++;
                 i++;
-            } else if (arr[i] > v) {    // 发现一个更大的元素，则放到gt处
+            } else if (arr[i] > v) {    // 发现一个更大的元素，则与gt处交换
                 ArrayUtil.exec(arr, i, gt);
                 gt--;
                 // 注，这里i不能自增，因为从gt处拿过来的值不一定比arr[lo]大，其未知
