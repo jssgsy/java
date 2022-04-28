@@ -7,6 +7,9 @@ import org.junit.Test;
 
 /**
  * 位运算相关
+ *  * 求整数n的二进制表示中1的个数；{@link BitOperator#numberOf_v1(int)}
+ *  * 判定整数n是奇数还是偶数；{@link OddEven#isEven_v2(int)}
+ *
  * @author univ
  * 2022/4/28 11:27 上午
  */
@@ -17,7 +20,7 @@ public class BitOperator {
         List<Integer> list = Arrays.asList(Integer.MIN_VALUE , -1, 127, 9234, -18473, -127, Integer.MAX_VALUE);
         for (Integer n : list) {
             System.out.println(n + "的二进制表示为： " + Integer.toBinaryString(n));
-            System.out.println(n + "的二进制表示中1的个数为： " + numberOf1(n)); //numberOf1_v2(n)
+            System.out.println(n + "的二进制表示中1的个数为： " + numberOf_v1(n)); //numberOf1_v2(n)
         }
     }
     /**
@@ -33,7 +36,7 @@ public class BitOperator {
      * @param n
      * @return
      */
-    public int numberOf1(int n) {
+    public int numberOf_v1(int n) {
         int count = 0;
         while (n != 0) { // 不为0则其二进制表示中至少有一位是1
             count++;

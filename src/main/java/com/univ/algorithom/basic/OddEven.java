@@ -59,7 +59,7 @@ public class OddEven {
     @Test
     public void printBinary() {
         for (int i = -5; i <= 5; i++) {
-            System.out.println(Integer.toBinaryString(i));
+            System.out.println(i + "的二进制表示为：" + Integer.toBinaryString(i));
         }
     }
 
