@@ -14,3 +14,5 @@ void createMap(Thread t, T firstValue) {
 * Thread类中除了有字段ThreadLocal.ThreadLocalMap threadLocals外，还有字段ThreadLocal.ThreadLocalMap inheritableThreadLocals；
 
 源码较简单。
+`ThreadLocal类中的getMap与createMap都是勾子`，而InheritableThreadLocal是ThreadLocal的子类，重写了这两个方法，
+其中使用了inheritableThreadLocals而不是threadLocals外变量，而至于将子从父线程值传递给子线程就是jdk做的事了。
