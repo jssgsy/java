@@ -71,8 +71,8 @@ interface Animal<T> {
     T say();
 }
 
-/*
-注意，如果这里的Animal用了T，则Dog也必须同时声明T
+/**
+    注意，如果这里的Animal用了T，则Dog也必须同时声明T
  */
 class Dog<T> implements Animal<T> {
 

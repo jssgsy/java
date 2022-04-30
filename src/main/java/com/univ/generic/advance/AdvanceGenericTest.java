@@ -55,7 +55,7 @@ public class AdvanceGenericTest {
     @Test
     public void test2() {
         Son son = new Son().setId(20);
-        Integer integer = Optional.of(son).map(t -> t.getId()).orElse(34);
+        Integer integer = Optional.of(son).map(Son::getId).orElse(34);
         System.out.println(integer);
 
 
