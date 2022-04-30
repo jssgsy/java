@@ -10,18 +10,18 @@ import java.util.Stack;
  * @author univ
  * 2022/4/24 11:05 上午
  */
-public class TraverseTree {
+public class TraverseTree<Value extends Comparable<Value>> {
 
     /**
      * 先序：根、左、右
-     * @param node
+     * @param treeNode
      */
-    void preOrder(Node node) {
-        Node cur = node;
+    void preOrder(TreeNode<Value> treeNode) {
+        TreeNode<Value> cur = treeNode;
         /**
          * 核心：引入一个栈，用来保存遍历过程中遇到的节点
          */
-        Stack<Node> stack = new Stack<>();
+        Stack<TreeNode<Value>> stack = new Stack<>();
         // 两个条件组合一起是整理后的，cur为null，表明此时到达末尾了，需要从栈中取出元素(即回溯到父节点)
         while (cur != null || !stack.isEmpty()) {
             if (cur != null) {
@@ -37,11 +37,11 @@ public class TraverseTree {
 
     /**
      * 中序：左、根、右
-     * @param node
+     * @param treeNode
      */
-    void inOrder(Node node) {
-        Node cur = node;
-        Stack<Node> stack = new Stack<>();
+    void inOrder(TreeNode<Value> treeNode) {
+        TreeNode<Value> cur = treeNode;
+        Stack<TreeNode<Value>> stack = new Stack<>();
         while (cur != null || !stack.isEmpty()) {
             if (cur != null) {
                 stack.push(cur);
@@ -56,13 +56,13 @@ public class TraverseTree {
 
     /**
      * 后序：左、右、根
-     * @param node
+     * @param treeNode
      */
-    void postOrder(Node node) {
-        Node cur = node;
-        Stack<Node> stack = new Stack<>();
+    void postOrder(TreeNode<Value> treeNode) {
+        TreeNode<Value> cur = treeNode;
+        Stack<TreeNode<Value>> stack = new Stack<>();
         // 智慧之光：不需要每个节点加一个是否被访问，因为本质是，在判断某个节点是否要真实出栈时是要其右节点是否被访问过，
-        Node lastPrinted = null;
+        TreeNode<Value> lastPrinted = null;
         while (cur != null || !stack.isEmpty()) {
             if (cur != null) {
                 stack.push(cur);
