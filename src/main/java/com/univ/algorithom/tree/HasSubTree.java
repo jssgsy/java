@@ -3,7 +3,9 @@ package com.univ.algorithom.tree;
 import org.junit.Test;
 
 /**
- * 一棵树是否有指定的子树
+ * 一棵树是否有指定的子树<br>
+ *
+ * 递归的应用
  * @author univ
  * 2022/4/30 4:24 下午
  */
