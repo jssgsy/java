@@ -67,16 +67,18 @@ public class BST2BiList {
             TreeNode<Integer> maxNode = BSTUtil.maxNodeOfTree(node.right);// 不管三七二十一暴力求出最小节点，有可能为空
             if (n1 != node) {   // 说明当前节点有左子节点
                 n1.right = node;
-                node.left = n1;
+                node.left = n1;  // 将当前节点的左节点置为左子树中的最大节点
             }
             if (n2 != node) {      // 说明当前节点有左子节点
                 n2.left = node;
-                node.right = n2;
+                node.right = n2;    // 将当前节点的左节点置为右子树中的最小节点
             }
 
             if (null == parent) { // 容易漏。说明处理到根节点了, 此时所有节点均已转换
-                return minNode == null ? node : minNode;
+                return minNode == null ? node : minNode;    // 为空则表示没有左子节点，那最小节点就是当前节点
             } else {
+                // maxNode为空，表明当前节点没有右子节点，则当前节点就是最大节点；
+                // minNode为空，表明当前节点没有左子节点，则当前节点就是最小节点；
                 return node == parent.left ? (maxNode == null ? node : maxNode) : (minNode == null ? node : minNode);
             }
         } else {
