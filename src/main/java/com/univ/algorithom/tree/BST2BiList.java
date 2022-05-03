@@ -67,11 +67,11 @@ public class BST2BiList {
             TreeNode<Integer> maxNode = BSTUtil.maxNodeOfTree(node.right);// 不管三七二十一暴力求出最小节点，有可能为空
             if (n1 != node) {   // 说明当前节点有左子节点
                 n1.right = node;
-                node.left = n1;     // 似乎可以不用，因为天然就有
+                node.left = n1;
             }
             if (n2 != node) {      // 说明当前节点有左子节点
                 n2.left = node;
-                node.right = n2;     // 似乎可以不用，因为天然就有
+                node.right = n2;
             }
 
             if (null == parent) { // 容易漏。说明处理到根节点了, 此时所有节点均已转换
