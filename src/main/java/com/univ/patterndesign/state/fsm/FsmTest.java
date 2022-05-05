@@ -12,6 +12,7 @@ public class FsmTest {
     @Test
     public void testRun() {
         StateMachine stateMachine = new StateMachine();
+        // 注：事件产生时就需要有业务数据了，可以理解成:具体哪个数据发生了转变
         stateMachine.run(StateEnum.NEW, new NewToMiddleEvent(1L));
 
         stateMachine.run(StateEnum.MIDDLE, new MiddleToFinishEvent(1L));
