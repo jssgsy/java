@@ -31,7 +31,7 @@ import org.junit.Test;
  *      那么就使用ThreadGroup(本身就是一个异常捕获处理器)，ThreadGroup内部会使用全局默认的异常捕获处理器(defaultUncaughtExceptionHandler),
  *      如果全局默认的异常捕获处理器也为null，则直接将异常信息打印在控制台；
  *
- *
+ * @see <a href="https://www.joshua317.com/article/240">网络资料</a>
  * @author univ
  * 2022/5/7 8:30 下午
  */
