@@ -16,7 +16,8 @@ import org.junit.Test;
  *
  * 基础知识
  * 1. 如果某个线程中抛出了异常，而此线程又没有经过处理，则此异常会一直往上抛，直至此线程终结；
- * 2. 无论如何，一个线程是没法捕捉到另一个线程中发生的异常的；
+ * 2. 默认情况下，一个线程是没法捕捉到另一个线程中发生的异常的；
+ * 3. 如果要捕获子线程中的未处理异常，则只能借助RunnableFuture;
  *
  * 解决方案：jdk提供的异常捕获类{@link Thread.UncaughtExceptionHandler}
  * 核心入口(从此)：{@link Thread#dispatchUncaughtException(Throwable)}：线程发生了未捕获异常时，由JVM来调用的方法
@@ -118,10 +119,11 @@ public class UnCaughtExceptionTest {
             int i = 10 / 0;
         });
         try {
-            // 此时才会被捕获到
+            // 此时才会被捕获到。
+            // 重点：通过RunnableFuture的方式可以捕获到子线程的异常
             result.get();
         } catch (Exception exception) {
-            System.out.println("线程池的submit中的未捕获异常被捕获到了: " + exception.getMessage());
+            System.out.println("线程【" + Thread.currentThread().getName() + "】捕获了子线程中的未捕获异常: " + exception.getMessage());
         }
 
     }
