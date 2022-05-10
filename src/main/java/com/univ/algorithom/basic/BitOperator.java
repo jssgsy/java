@@ -7,7 +7,7 @@ import org.junit.Test;
 
 /**
  * 位运算相关
- *  * 求整数n的二进制表示中1的个数；{@link BitOperator#numberOf_v1(int)}
+ *  * 求整数n的二进制表示中1的个数；{@link BitOperator#numberOf1_v2(int)}
  *  * 判定整数n是奇数还是偶数；{@link OddEven#isEven_v2(int)}
  *
  * @author univ
@@ -15,18 +15,42 @@ import org.junit.Test;
  */
 public class BitOperator {
 
+    /**
+     * 数字二进制表示中1的个数
+     * {@link #numberOf1_v2(int)} {@link #numberOf1_v1(int)}
+     */
     @Test
-    public void test() {
+    public void testNumberOf1() {
         List<Integer> list = Arrays.asList(Integer.MIN_VALUE , -1, 127, 9234, -18473, -127, Integer.MAX_VALUE);
         for (Integer n : list) {
             System.out.println(n + "的二进制表示为： " + Integer.toBinaryString(n));
-            System.out.println(n + "的二进制表示中1的个数为： " + numberOf_v1(n)); //numberOf1_v2(n)
+            System.out.println(n + "的二进制表示中1的个数为： " + numberOf1_v2(n)); //numberOf1_v1(n)
         }
     }
+
     /**
-     * 输入：一个整数
-     * 输出：此整数的二进制表示中1的个数(包含符号位)
-     * 此方法最简便解法，但最隐晦
+     * 最直观的解法：n的二进制表示中，从右往左依次看所在位是否为1；
+     *
+     * 缺点：固定死了循环次数为32(如果是long则需要固定为64次)
+     * @param n
+     * @return
+     */
+    public int numberOf1_v1(int n) {
+        int it = 1;
+        int count = 0;
+        int i = 1;
+        while (i <= 32) {
+            if ((it & n) != 0) {
+                count++;
+            }
+            it = it << 1;
+            i++;
+        }
+        return count;
+    }
+
+    /**
+     * 最优解法，但最隐晦
      *
      * 核心：
      * 1. 如果n不为0，则其二进制表示中至少有一位是1；
@@ -48,7 +72,7 @@ public class BitOperator {
      * @param n
      * @return
      */
-    public int numberOf_v1(int n) {
+    public int numberOf1_v2(int n) {
         int count = 0;
         while (n != 0) { // 不为0则其二进制表示中至少有一位是1
             count++;
@@ -58,24 +82,74 @@ public class BitOperator {
     }
 
     /**
-     * 最直观的解法：n的二进制表示中，从右往左依次看所在位是否为1；
+     * {@link #isBit1(int, int)}
+     */
+    @Test
+    public void testIsBit1() {
+        int num = 4;
+        for (int i = 1; i <= Integer.SIZE; i++) {
+            System.out.println("数字" + num + "的第" + i + "位是否为1：" + isBit1(num, i));
+        }
+    }
+
+
+    /**
+     * 判断某个整数的二进制表示中，某个索引处的比特是否为1
      *
-     * 缺点：固定死了循环次数为32(如果是long则需要固定为64次)
-     * @param n
+     * 思路来源：
+     *  1. 如果是判断最右边一位是否为1，则直接与1求与运算看是否不为0即可。
+     *  2. 其次对于二进制中的1，通常从右往前找，不过为了统一，这里的index还是遵循从左到右，在代码中处理即可；
+     *
+     * @param num
+     * @param index
      * @return
      */
-    public int numberOf1_v2(int n) {
-        int it = 1;
-        int count = 0;
-        int i = 1;
-        while (i <= 32) {
-            if ((it & n) != 0) {
-                count++;
-            }
-            it = it << 1;
-            i++;
+    boolean isBit1(int num, int index) {
+        if (index > Integer.SIZE) {
+            return false;
         }
-        return count;
+        // 1需要左移的个数
+        int indexFromRight = Integer.SIZE - index;
+
+        return (num & (1 << indexFromRight)) != 0;
+    }
+
+    @Test
+    public void testIndexOfFirst1() {
+        System.out.println("-1的二进制表示为" + Integer.toBinaryString(-1));
+        for (Integer num : Arrays.asList(-1, 1, 2, 3, 4, 5, 6, 7)) {
+            System.out.println(num + "从左到右第一个为1的索引为：" + indexOfFirst1FromLeft(num));
+            System.out.println(num + "从右到左第一个为1的索引为：" + indexOfFirst1FromRight(num));
+        }
+    }
+
+    /**
+     * 找到给定整数的二进制中从左往右的第一个为1(包含符号位)的下标；
+     * @param num
+     * @return 索引从0开始
+     */
+    int indexOfFirst1FromLeft(int num) {
+        for (int i = 0; i < Integer.SIZE; i++) {
+            int i1 = Integer.SIZE - i - 1;
+            if ((num & (1 << i1)) != 0) {
+                return i;
+            }
+        }
+        throw new RuntimeException("数字" + num + "中没有为1的位");
+    }
+
+    /**
+     * 找到给定整数的二进制中从右往左的第一个为1(包含符号位)的下标；
+     * @param num
+     * @return 索引从0开始
+     */
+    int indexOfFirst1FromRight(int num) {
+        for (int i = 0; i < Integer.SIZE; i++) {
+            if ((num & (1 << i)) != 0) {
+                return i;
+            }
+        }
+        throw new RuntimeException("数字" + num + "中没有为1的位");
     }
 
 }
