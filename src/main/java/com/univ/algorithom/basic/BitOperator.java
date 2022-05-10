@@ -86,8 +86,8 @@ public class BitOperator {
      */
     @Test
     public void testIsBit1() {
-        int num = 4;
-        for (int i = 1; i <= Integer.SIZE; i++) {
+        int num = 2;
+        for (int i = 0; i < Integer.SIZE; i++) {
             System.out.println("数字" + num + "的第" + i + "位是否为1：" + isBit1(num, i));
         }
     }
@@ -101,17 +101,16 @@ public class BitOperator {
      *  2. 其次对于二进制中的1，通常从右往前找，不过为了统一，这里的index还是遵循从左到右，在代码中处理即可；
      *
      * @param num
-     * @param index
+     * @param index 从0开始
      * @return
      */
-    boolean isBit1(int num, int index) {
-        if (index > Integer.SIZE) {
+    public static boolean isBit1(int num, int index) {
+        if (index >= Integer.SIZE) {
             return false;
         }
         // 1需要左移的个数
-        int indexFromRight = Integer.SIZE - index;
-
-        return (num & (1 << indexFromRight)) != 0;
+        int j = Integer.SIZE - index - 1;
+        return (num & (1 << j)) != 0;
     }
 
     @Test
@@ -119,7 +118,7 @@ public class BitOperator {
         System.out.println("-1的二进制表示为" + Integer.toBinaryString(-1));
         for (Integer num : Arrays.asList(-1, 1, 2, 3, 4, 5, 6, 7)) {
             System.out.println(num + "从左到右第一个为1的索引为：" + indexOfFirst1FromLeft(num));
-            System.out.println(num + "从右到左第一个为1的索引为：" + indexOfFirst1FromRight(num));
+            // System.out.println(num + "从右到左第一个为1的索引为：" + indexOfFirst1FromRight(num));
         }
     }
 
@@ -128,7 +127,7 @@ public class BitOperator {
      * @param num
      * @return 索引从0开始
      */
-    int indexOfFirst1FromLeft(int num) {
+    public static int indexOfFirst1FromLeft(int num) {
         for (int i = 0; i < Integer.SIZE; i++) {
             int i1 = Integer.SIZE - i - 1;
             if ((num & (1 << i1)) != 0) {
@@ -143,7 +142,7 @@ public class BitOperator {
      * @param num
      * @return 索引从0开始
      */
-    int indexOfFirst1FromRight(int num) {
+    public static int indexOfFirst1FromRight(int num) {
         for (int i = 0; i < Integer.SIZE; i++) {
             if ((num & (1 << i)) != 0) {
                 return i;
