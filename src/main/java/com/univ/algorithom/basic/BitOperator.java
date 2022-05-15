@@ -151,4 +151,52 @@ public class BitOperator {
         throw new RuntimeException("数字" + num + "中没有为1的位");
     }
 
+    /**
+     * {@link #put1(int, int)}
+     */
+    @Test
+    public void testPut1() {
+        int index = 30;
+        for (Integer num : Arrays.asList(1, 4, 256, 109)) {
+            System.out.println(Integer.toBinaryString(num) + ": " + Integer.toBinaryString(put1(num, index)));
+        }
+    }
+
+    /**
+     * 将数字num的二进制表示中的第index位处的值置为1
+     * 如0000 0100（4）的第2位置为1变成0000 0110(5)
+     * @param num
+     * @param index 从0开始，
+     * @return
+     */
+    public static int put1(int num, int index) {
+        int indexFromToLeft = Integer.SIZE - index - 1;
+        // (1 << indexFromToLeft)则第indexFromToLeft位上必然为1，再与num求或运算，则num的第indexFromToLeft必然为1
+        return num | (1 << indexFromToLeft);
+    }
+
+    /**
+     * {@link #put0(int, int)} (int, int)}
+     */
+    @Test
+    public void testPut0() {
+        int index = 30;
+        for (Integer num : Arrays.asList(1, 6, 255, 110)) {
+            System.out.println(Integer.toBinaryString(num) + ": " + Integer.toBinaryString(put0(num, index)));
+        }
+    }
+
+    /**
+     * 将数字num的二进制表示中的第index位处的值置为0
+     * 如0000 0110（6）的第2位置为0变成0000 0100(4    )
+     * @param num
+     * @param index 从0开始，
+     * @return
+     */
+    public static int put0(int num, int index) {
+        int indexFromToLeft = Integer.SIZE - index - 1;
+        // (1 << indexFromToLeft)则第indexFromToLeft位上必然为1，后取反(位上必然为0，其它位为1)，再与num求与运算，则num的第indexFromToLeft必然为0
+        return num & ~(1 << indexFromToLeft);
+    }
+
 }
