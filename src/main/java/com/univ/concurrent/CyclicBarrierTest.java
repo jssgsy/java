@@ -1,7 +1,5 @@
 package com.univ.concurrent;
 
-import org.junit.Test;
-
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -24,44 +22,35 @@ import java.util.concurrent.CyclicBarrier;
 public class CyclicBarrierTest {
 
     public static void main(String[] args) {
-        // 构造函数的参数就是要达到某个状态(条件)时的线程数量
-        CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
-        new Thread(() -> {
+        // 构造函数的参数就是要达到某个状态(条件)时的线程数量，第二个参数(非必填)会在达到条件时立马阻塞执行，先前其它线程的await方法后的代码
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(2, () -> {
+            System.out.println("栅栏被解除立马执行");
             try {
-                Thread.sleep(1000);
-                // 模拟达到某个条件，比写文件结束
-                if (true) {
-                    System.out.println(Thread.currentThread().getName() + "达到条件了");
-                    // 此时此线程会暂停，直到其它几个线程也达到条件后才接着执行
-                    cyclicBarrier.await();
-                    System.out.println("这句在另一个线程达到条件后才会执行");
-                }
-                System.out.println(Thread.currentThread().getName() + "执行结束了");
+                Thread.sleep(6000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (BrokenBarrierException e) {
-                e.printStackTrace();
             }
-        }).start();
-
-        new Thread(() -> {
-            try {
-                // 注意，这里特意睡眠5s
-                Thread.sleep(5000);
-                // 模拟达到某个条件，比写文件结束
-                if (true) {
-                    System.out.println(Thread.currentThread().getName() + "达到条件了");
-                    // 此时此线程会暂停，直到其它几个线程也达到条件后才接着执行
-                    cyclicBarrier.await();
+        });
+        for (int i = 0; i < 2; i++) {
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                    // 模拟达到某个条件，比写文件结束
+                    if (true) {
+                        System.out.println(Thread.currentThread().getName() + "达到条件了");
+                        // 此时此线程会暂停，直到其它几个线程也达到条件后才接着执行
+                        cyclicBarrier.await();
+                        System.out.println(Thread.currentThread().getName() + "这句在所有其它线程达到条件后才会执行");
+                    }
+                    System.out.println(Thread.currentThread().getName() + "执行结束了");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
                 }
-                System.out.println(Thread.currentThread().getName() + "执行结束了");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
+            }).start();
+        }
+        System.out.println(Thread.currentThread().getName() + "执行结束了");// 注：第一句被执行
 
         // 所谓CyclicBarrier可重用，是指可以将之前的CyclicBarrier对象用至其它需要协同的线程上,这个意义上CountDownLatch显然是不能被重用的，因为一旦一个线程执行结束了，则减1，当所有线程都结束后已经变成0了，显然不能再用于下一组需要协调的线程上
         /*new Thread(() -> {
@@ -90,6 +79,5 @@ public class CyclicBarrierTest {
             }
         }).start();*/
 
-        System.out.println(Thread.currentThread().getName() + "执行结束了");
     }
 }

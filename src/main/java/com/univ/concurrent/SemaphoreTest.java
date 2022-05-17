@@ -22,14 +22,13 @@ release(int permits);
 public class SemaphoreTest {
 
     public static void main(String[] args) {
-        int N = 10;
-        int M = 6;
-        // 同时只有6个资源能被使用,相当于往一个池子中放入了6个资源
+        int N = 5;
+        int M = 3;
+        // 同时只有6个资源能被使用,相当于往一个池子中放入了3个资源
         Semaphore semaphore = new Semaphore(M);
 
         for (int i = 0; i < N; i++) {
             new Thread(() -> {
-
                 try {
                     // 申请使用一个资源
                     semaphore.acquire();
