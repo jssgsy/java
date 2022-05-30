@@ -199,4 +199,115 @@ public class BitOperator {
         return num & ~(1 << indexFromToLeft);
     }
 
+    /**
+     * {@link #nearestPower2_v1(int)}
+     */
+    @Test
+    public void testNearestPower2_v1() {
+        for (Integer num : Arrays.asList(1, 2, 3, 6, 8, 13, 15, 16, 17, 31, 32, 33, 198, 2047, 2048, 187432432, Integer.MAX_VALUE - 1100000, Integer.MAX_VALUE)) {
+            System.out.println(num + " 最接近的2的n次幂的值为v1版：" + nearestPower2_v1(num) + "，v2版: " + nearestPower2_v2(num));
+        }
+    }
+
+    /**
+     * 将num转成大于num，且最接近2^n的数
+     * 如6---》8， 8---》，13---》 16， 250---》256
+     * 思路一：找到最高位(从左往右数)为1的，结果就为将此位的左边(高位)一位置为1，其它所有低位置为0
+     * 注：
+     * 1. 如果num正好是2^n，则不需要作额外操作，注意看代码中巧妙的处理
+     * 2. 注意『溢出』的问题，当第一位非符号位为1时，此时结果为负值, 设置最大值为2^30
+     *
+     * @param num 为正数
+     * @return
+     */
+    public static int nearestPower2_v1(int num) {
+        if (num <= 2) {
+            return 2;
+        }
+        // 重点，巧妙！不用这句的话则需要判断num是否本身已是2^n，而加这一句就可以省下判断了
+        num = num - 1;
+        int count = 0;
+        while ((num = num >> 1) != 0) {
+            count++;
+        }
+        int result = 1 << (count + 1);
+        // 临界情况，当非符号位第一位为1时，此时会左移32变成负数，因此此时回退一位，即最大值为2^30。
+        if (result < 0) {
+            return 1 << count;
+        }
+        return result;
+    }
+
+    /**
+     * {@link #nearestPower2_v1(int)}
+     * 此为思路二(感觉还不如上述的思路一)：将这个数字最高位1之后的所有位都填上1，最后加一，就是大于N的最小的 2 的 N 次方
+     *  主要是或运算的妙用。参见{@link #fill1(int)}
+     *
+     * 即hashmap的实现方式。
+     *  {@link java.util.HashMap tableSizeFor(int)}
+     *  {@link java.util.ArrayDeque calculateSize(int)}
+     *
+     * @param num
+     * @return
+     */
+    public static int nearestPower2_v2(int num) {
+        if (num <= 2) {
+            return 2;
+        }
+        num |= num >> 1;
+        num |= num >> 2;
+        num |= num >> 4;
+        num |= num >> 8;
+        num |= num >> 16;
+        if (num + 1 < 0) {  // 发生溢出
+            return (num >> 1) + 1;
+        }
+        return num + 1;
+
+    }
+
+    @Test
+    public void testFill1() {
+        System.out.println(Integer.toBinaryString(1 << 31));
+        for (Integer num : Arrays.asList(6, 8, 2047, 2048, 187432432, Integer.MAX_VALUE - 1100000, Integer.MAX_VALUE)) {
+            System.out.println(Integer.toBinaryString(num) + "(" + num + ") 填充后的二进制为为：" + Integer.toBinaryString(fill1(num)));
+        }
+    }
+
+
+    /**
+     * 将num的第一位为1的左侧所有位均置为1
+     * 参见BitOperator_powOf2.png
+     * @param num
+     * @return
+     */
+    public static int fill1(int num) {
+        if (num <= 0) {
+            throw new RuntimeException("num不能少于0");
+        }
+        // 以需要移位次数最多的10000000000000000000000000000000为例
+        // (如果少于此值，则实际上不用移到这么多次，如16(10000)，则执行 >>4、8、16都是多余的执行)
+
+        // 执行完此句后，最高位会有两个1，即11000000000000000000000000000000
+        num |= num >> 1;
+
+        // 经过上步执行，已经确认最高位会有两位连续的1，因此这次可以直接右移2了
+        // 执行此句后，最高位会有四个1，即11110000000000000000000000000000
+        num |= num >> 2;
+
+        // 经过上步执行，已经确认最高位会有四位连续的1，因此这次可以直接右移4了
+        // 执行此句后，最高位会有八个1，即11111111000000000000000000000000
+        num |= num >> 4;
+
+        // 经过上步执行，已经确认最高位会有八位连续的1，因此这次可以直接右移8了
+        // 执行此句后，最高位会有16个1，即11111111111111110000000000000000
+        num |= num >> 8;
+
+        // 经过上步执行，已经确认最高位会有十六位连续的1，因此这次可以直接右移16了
+        // 执行此句后，最高位会有32个1，即11111111111111111111111111111111
+        num |= num >> 16;
+
+        // 此时已达int上界(最多移1 + 2 + 4 + 8 + 16 = 31位)，不用再右移
+        return num;
+    }
 }
