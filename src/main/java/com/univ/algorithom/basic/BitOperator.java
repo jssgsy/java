@@ -200,6 +200,39 @@ public class BitOperator {
     }
 
     /**
+     * {@link #reverseBit(int, int)}
+     */
+    @Test
+    public void testReverseBit() {
+        int index = 4;
+        for (Integer num : Arrays.asList(13, 18, 34324, -14324)) {
+            System.out.println(num + "(" + Integer.toBinaryString(num) + ")的第" + (index + 1) + "位反转后的值为：" + Integer.toBinaryString(reverseBit(num, index)));
+        }
+    }
+
+    /**
+     * 将数字num对应二进制表示的第index位取反
+     * 重点：如果只是对单独的一个比特位取反，那直接作取反运算即可，那这里是对一个整形的某一个比特位取反
+     *
+     * 思路：使用异或运算(XOR)，注意异或运算的特点：
+     *
+     *  0 ^ 0 = 0
+     *  0 ^ 1 = 1
+     *      可知，任意比特与0作异或运算则结果不变
+     *  1 ^ 0 = 1
+     *  1 ^ 1 = 0
+     *      可知，任意比特与1作异或运算则结果为取反
+     *
+     *  根据上面规则，可得如下实现
+     * @param num
+     * @param index 从右往左，以0开始
+     * @return
+     */
+    public static int reverseBit(int num, int index) {
+        return num ^ 1 << index;
+    }
+
+    /**
      * {@link #nearestPower2_v1(int)}
      */
     @Test
