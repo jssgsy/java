@@ -46,3 +46,9 @@ function fn4() { # function关键字可以省略
     echo "\$*：$*"   # 与$@类似
 }
 fn4 aaa bbb ccc ddd
+
+# 函数定义也可以不用function关键字
+fn5() {
+  echo "this is output of fn5"
+}
+fn5
