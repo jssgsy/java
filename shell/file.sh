@@ -25,13 +25,16 @@ echo "差别\$*: $*"    # one,two,three
 echo "当前目录为：$(dirname $0)"
 
 # 如果一定要获取当前目录的全路径名，采用下面的方法
-echo "当前目录(全路径)为：$(cd dirname $0;pwd)"
+echo "当前目录(全路径)为：$(cd dirname $0 || exit;pwd)"
+# 为了避免cd失败，可使用：$(cd dirname $0 || exit; pwd)
 
 #---------------------------------------------------------------------
 
 #---------------------------------------------------------------------
 # 文件包含
-source student.sh;
+source ./student.sh;
+# 调用其它文件中的变量
+echo "\$studentName: $studentName"
 # 调用其它文件中的函数
 getAge;
 echo $?
