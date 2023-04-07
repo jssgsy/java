@@ -1,6 +1,5 @@
 package com.univ.thirdutils.csv;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +19,7 @@ import lombok.Data;
  * @date 2019/7/23 3:17 PM
  * @description 使用commons-csv来读取和生成CSV文件
  */
-public class CSVTest {
+public class CsvTest {
 
     private String[] headers = new String[] {"id", "name", "age", "married"};
 
@@ -46,22 +45,24 @@ public class CSVTest {
     @Test
     public void readCSV() throws IOException {
         Reader in = new FileReader(csvFileName);
-        CSVFormat csvFormat = CSVFormat.DEFAULT.withHeader(headers).withFirstRecordAsHeader();
+        CSVFormat csvFormat = CSVFormat.DEFAULT // 接下来有很多选项来控制解析csv文件的行为
+                .withHeader(headers)
+                .withFirstRecordAsHeader()
+                .withIgnoreHeaderCase() // 忽略头的大小写，这样record.get("id")与record.get("Id")、record.get("ID")都一样的效果
+                .withIgnoreEmptyLines() // 忽略空行， 默认就是true
+                ;
         // CSVParser实现了Iterable接口
         Iterable<CSVRecord> records = csvFormat.parse(in);
         for (CSVRecord record : records) {
             System.out.println(record.get("id") + "  " + record.get("name") + "  " + record.get("age") + "  " + record.get("married"));
         }
 
-        // 删除生成的临时文件
-        File file = new File(csvFileName);
-        file.delete();
     }
 
 }
 
 /**
- * 表示csv文件中的一行
+ * 表示csv文件中的一行，往csv文件中定数据时方便
  */
 @Data
 class CSVData {
