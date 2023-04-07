@@ -92,8 +92,8 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.2</version>
-			<scope>provided</scope>
+			<version>1.18.24</version>
+			<!--<scope>provided</scope>-->
 		</dependency>
 
         <!-- 属性拷贝工具。https://mvnrepository.com/artifact/ma.glasnost.orika/orika-core -->
@@ -245,6 +245,11 @@
             <version>29.0-jre</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>5.7.0</version>
+        </dependency>
 
     </dependencies>
 </project>
