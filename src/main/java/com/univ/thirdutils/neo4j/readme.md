@@ -11,3 +11,6 @@
 ```
 * 注意版本问题：When developing with `Neo4j 5.x, use Java 17` and your preferred IDE.
 * 使用驱动的方式就和使用jdbc一样，是比较原始的方式，cypher都是原始的字符串拼接；
+
+# 特殊字符
+`节点label、节点属性名、关系type、关系属性名有特殊字符就使用``，属性值有特殊字符就使用\转义双引号`；
