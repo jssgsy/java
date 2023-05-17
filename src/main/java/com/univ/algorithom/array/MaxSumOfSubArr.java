@@ -1,10 +1,9 @@
 package com.univ.algorithom.array;
 
-import java.util.Arrays;
-
+import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
-import com.alibaba.fastjson.JSONObject;
+import java.util.Arrays;
 
 /**
  * 《剑指offer》面试题31：连续子数组的最大和<br>
@@ -27,7 +26,7 @@ public class MaxSumOfSubArr {
         int[] arr7 = { 1, -2, 3, 10, -4, -5, 7, 2, -5};
         for (int[] arr : Arrays.asList(arr0, arr1, arr2, arr3, arr4, arr5, arr6, arr7)) {
             System.out.println("输入数组为：" + JSONObject.toJSONString(arr));
-            System.out.println("一定准确的值为：" + largestSumOfSubArr(arr) + ",  v2版本的值为：" + largestSumOfSubArr_v2(arr));
+            System.out.println("一定准确的值为：" + largestSumOfSubArr(arr) + ",  v3版本的值为：" + largestSumOfSubArr_v3(arr));
             System.out.println();
         }
     }
@@ -109,5 +108,34 @@ public class MaxSumOfSubArr {
             }
         }
         return Math.max(largestSumOfThisSubArr, largestSum);
+    }
+
+    /**
+     * 更优解法
+     * @see <a href='https://leetcode.cn/problems/maximum-subarray/solution/dong-tai-gui-hua-fen-zhi-fa-python-dai-ma-java-dai/'>解析</a>
+     * @param nums
+     * @return
+     */
+    int largestSumOfSubArr_v3(int[] nums) {
+        int len = nums.length;
+        // dp[i] 表示：以 nums[i] 结尾的连续子数组的最大和
+        int[] dp = new int[len];
+        dp[0] = nums[0];
+
+        for (int i = 1; i < len; i++) {
+            if (dp[i - 1] > 0) {
+                dp[i] = dp[i - 1] + nums[i];
+            } else {
+                dp[i] = nums[i];
+            }
+        }
+
+        // 也可以在上面遍历的同时求出 res 的最大值，这里我们为了语义清晰分开写，大家可以自行选择
+        int res = dp[0];
+        for (int i = 1; i < len; i++) {
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+
     }
 }
