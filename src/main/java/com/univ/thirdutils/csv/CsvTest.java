@@ -5,14 +5,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Map;
+import lombok.Data;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-
-import lombok.Data;
 
 /**
  * @author univ
@@ -51,12 +54,46 @@ public class CsvTest {
                 .withIgnoreHeaderCase() // 忽略头的大小写，这样record.get("id")与record.get("Id")、record.get("ID")都一样的效果
                 .withIgnoreEmptyLines() // 忽略空行， 默认就是true
                 ;
-        // CSVParser实现了Iterable接口
+        // 注，CSVParser实现了Iterable接口，所以这里直接使用了Iterable<CSVRecord>，
+        // 但是CSVParser本身也有很多有用的方法，如获取请求头
         Iterable<CSVRecord> records = csvFormat.parse(in);
         for (CSVRecord record : records) {
             System.out.println(record.get("id") + "  " + record.get("name") + "  " + record.get("age") + "  " + record.get("married"));
         }
 
+    }
+
+    /**
+     * 将二维列表转换成以列为key，对应所有列值为list的map
+     * @throws IOException
+     */
+    @Test
+    public void readCSV_v2() throws IOException {
+        Reader in = new FileReader(csvFileName);
+        CSVFormat csvFormat = CSVFormat.DEFAULT
+            .withFirstRecordAsHeader()
+            .withIgnoreHeaderCase()
+            .withIgnoreEmptyLines()
+            .withAllowMissingColumnNames()
+            ;
+        // 这里没以父类作为类型，因为要使用此类本身的方法
+        CSVParser parse = csvFormat.parse(in);
+        // 获取头
+        Map<String, Integer> headerMap = parse.getHeaderMap();
+        Map<String, List<String>> dataMap = new LinkedHashMap<>();
+        headerMap.forEach((header, v) -> {
+            if (StringUtils.isNotEmpty(header)) { // 兼容空列，空列不处理
+                dataMap.put(header, new LinkedList<>());
+            }
+        });
+        for (CSVRecord csvRecord : parse) {
+            headerMap.forEach((headerName, v) -> {
+                if (StringUtils.isNotEmpty(headerName)) {// 兼容空列，空列不处理
+                    dataMap.get(headerName).add(csvRecord.get(headerName));
+                }
+            });
+        }
+        System.out.println(dataMap);
     }
 
 }
