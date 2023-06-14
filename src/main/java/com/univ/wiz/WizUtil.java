@@ -17,7 +17,7 @@ public class WizUtil {
     @Test
     public void test1() throws IOException {
         // 导出后为知笔记的根目录
-        String dir = "/Users/univ/gitRepos/mynote";
+        String dir = "/Users/univ/gitRepos/typora_all/tech_note";
         File file = new File(dir);
         calculateTotalFile(file);
         System.out.println("总文件数为： " + totalFileNum);
