@@ -43,6 +43,7 @@ public class RealWordTest {
      * 大致思路：
      *  map及其流是没有提供sort方法的，本身map就是无序的；
      *  map的entrySet是一个Set，set是能排序的，因此从entrySet身上着手，这是重点
+     *      本质是：对map内部的entrySet进行排序
      *  LinkedHashMap是有顺序的概念的，因此必然要先原来的map转成这种类型；
      */
     @Test
