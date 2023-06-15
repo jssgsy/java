@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.junit.Test;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.Test;
 
 /**
  * @author univ
@@ -19,9 +17,9 @@ import lombok.Data;
  */
 public class CollectorsTest {
 
-    private List<String> list = Arrays.asList("aaa", "bbb", "ccc", "ddd");
+    private final List<String> list = Arrays.asList("aaa", "bbb", "ccc", "ddd");
 
-    private List<Entity> objList = Arrays.asList(
+    private final List<Entity> objList = Arrays.asList(
             new Entity(10, "zhangsan"),
             new Entity(30, "wangwu"),
             new Entity(20, "lisi"),
@@ -47,7 +45,7 @@ public class CollectorsTest {
      */
     @Test
     public void testToMap() {
-        Map<Integer, Entity> collect = objList.stream().collect(Collectors.toMap(t -> t.getAge(), Function.identity()));
+        Map<Integer, Entity> collect = objList.stream().collect(Collectors.toMap(Entity::getAge, Function.identity()));
         System.out.println(collect);
     }
 
@@ -78,7 +76,7 @@ public class CollectorsTest {
      */
     @Test
     public void testGroup() {
-        Map<Integer, List<Entity>> collect = objList.stream().collect(Collectors.groupingBy(t -> t.getAge()));
+        Map<Integer, List<Entity>> collect = objList.stream().collect(Collectors.groupingBy(Entity::getAge));
         System.out.println(collect);
     }
 

@@ -1,6 +1,8 @@
 package com.univ.jdk8.stream;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.IntSummaryStatistics;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,11 +11,9 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.junit.Test;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.Test;
 
 /**
  * 流式api，链式调用
@@ -26,7 +26,7 @@ import lombok.Data;
  */
 public class StreamAPITest {
 
-    private List<A> objList = Arrays.asList(
+    private final List<A> objList = Arrays.asList(
             new A("aaa", 10),
                 new A("bbb", 20),
                 new A("ccc", 30),
@@ -85,7 +85,7 @@ public class StreamAPITest {
         System.out.println(ids);
 
         // 这里利用flatMap方法将集合t中的元素平铺(flat)出来形成一个新stream，之后再进行相应操作
-        list.stream().flatMap(t -> t.stream()).map(x -> x * 10).forEach(y -> System.out.print(y + " "));
+        list.stream().flatMap(Collection::stream).map(x -> x * 10).forEach(y -> System.out.print(y + " "));
     }
 
     @Test
@@ -243,7 +243,7 @@ public class StreamAPITest {
      */
     @Test
     public void of() {
-        Stream.of(1, 10, 34, 56l, "hello").forEach(System.out::println);
+        Stream.of(1, 10, 34, 56L, "hello").forEach(System.out::println);
     }
 
     /**
@@ -275,16 +275,9 @@ public class StreamAPITest {
         // 打印结果
         // 1 3 4 5 10
         System.out.println();
-        
-        Stream.of(1, 4, 3, 10, 5).sorted((o1, o2) -> {
-            if (o1 < o2) {
-                return 1;
-            } else if (01 == 02) {
-                return 0;
-            } else {
-                return -1;
-            }
-        }).forEach(t -> System.out.print(t + " "));// 10 5 4 3 1
+        // 倒序
+        Comparator<Integer> comparator = Integer::compareTo;
+        Stream.of(1, 4, 3, 10, 5).sorted(comparator.reversed()).forEach(t -> System.out.print(t + " "));// 10 5 4 3 1
     }
 
     /**
@@ -319,7 +312,7 @@ public class StreamAPITest {
     @Test
     public void allMatch() {
         // 所有的元素都不等于iii时才返回true
-        boolean b1 = objList.stream().allMatch(t -> !t.getName().equals("iii"));
+        boolean b1 = objList.stream().noneMatch(t -> t.getName().equals("iii"));
         System.out.println(b1); // true
 
         boolean b2 = objList.stream().allMatch(t -> t.getName().equals("aaa"));
@@ -331,7 +324,7 @@ public class StreamAPITest {
      */
     @Test
     public void min() {
-        Optional<A> min = objList.stream().min((first, second) -> first.getAge() - second.getAge() > 0 ? -1 : 1);
+        Optional<A> min = objList.stream().min(Comparator.comparing(A::getAge));
         System.out.println(min.orElse(new A()));
     }
 
@@ -340,8 +333,19 @@ public class StreamAPITest {
      */
     @Test
     public void max() {
-        Optional<A> min = objList.stream().max((first, second) -> first.getAge() - second.getAge() > 0 ? -1 : 1);
+        Optional<A> min = objList.stream().max(Comparator.comparing(A::getAge));
         System.out.println(min.orElse(new A()));
+    }
+
+    /**
+     * 可用来实现取topN逻辑的一步
+     */
+    @Test
+    public void limit() {
+        Comparator<Integer> comparator = Integer::compareTo;
+        List<Integer> top3 = Stream.of(3, 1, 98, 23, 18, 3, 29).sorted(comparator.reversed()).limit(3)
+            .collect(Collectors.toList());
+        System.out.println(top3);
     }
 
     /**
