@@ -81,7 +81,7 @@ public class StreamAPITest {
         list.stream().map(t -> t.stream().map(x -> x * 10)).forEach(t -> System.out.println(Arrays.toString(t.toArray()) + " "));
 
         // 将每个元素(集合)中的元素收集起来形成一个新的集合
-        List<Integer> ids = list.stream().flatMap(t -> t.stream()).collect(Collectors.toList());
+        List<Integer> ids = list.stream().flatMap(Collection::stream).collect(Collectors.toList());
         System.out.println(ids);
 
         // 这里利用flatMap方法将集合t中的元素平铺(flat)出来形成一个新stream，之后再进行相应操作

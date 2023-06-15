@@ -1,9 +1,8 @@
 package com.univ.jdk8.method_reference;
 
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.function.Function;
+import org.junit.Test;
 
 /**
  * 方法引用
@@ -15,20 +14,30 @@ import java.util.function.Function;
 public class MethodReferenceTest {
 
     /**
-     * 引用现有的方法
+     * 静态方法引用
      */
     @Test
-    public void test() {
+    public void staticMethodReference() {
         // 常规lambda表达式
         say((str) -> {
             System.out.println(str);
         }); // hello
 
         /**
-         * 1. 上面lambda方法体要完成的功能是 打印出形参str 而已，而此功能已经被System.out对象的println方法实现了（重点！），此时使用方法引用来直接引用已经有的功能(方法)，而不用重新实现一遍(虽然这里也只是简单的调用一个而已);
+         * 1. 上面lambda方法体要完成的功能是 打印出形参str 而已，而此功能已经被System.out对象的println方法实现了，
+         * 且其方法签名正好和A中fn的一样（重点！），因此可直接使用复用println方法，而不用重新实现一遍了;
          */
         say(System.out::println);   // hello
     }
+
+    /**
+     * 静态方法引用比较好理解，因为没有上下文，只要静态方法的签名与方法入参FunctionalInterface的方法签名一致即可
+     */
+    @Test
+    public void staticMethodReference2() {
+        say2(MethodReferenceTest::staticFn);    // world o o
+    }
+
 
     private void say(A a) {
         a.fn("hello");
@@ -36,15 +45,36 @@ public class MethodReferenceTest {
     //--------------------------------------------------------------------
 
     /**
-     * 自定义现有的方法
+     * 实例方法
      */
     @Test
-    public void test2() {
-        // 常规lambda表达式
-        say2(str -> str + "...");   // world...
+    public void instanceMethodReference() {
 
         // 使用方法引用的形式，表示this的sing方法形参与接口B中的vFn方法形参一致,且想用sing方法就作为vFn方法的实现
+        // 这里传入的是实例方法，所以在sing方法中是可以使用this中的其它变量、方法
         say2(this::sing);   // world...
+
+        // 重点：这里的this可以是任意对象，也就是说对象不同，就有了不同的上下文。如
+        I i = new I();
+        say2(i::str);
+
+        // 这里要好好理解
+        // String的toLowerCase方法其实是没有入参的，但为什么这里能匹配？
+        // 答: 方法在实际调用的时候，第一个隐含参数总是传入this，类似于静态方法：public static String toLowerCase(String this)
+        // 重点：say2方法入参B中的方法是String类型，因此这里的this必须要是String类型的，因此才可以使用String的toLowerCase方法
+        say2(String::toLowerCase);
+
+        /*
+         * 好好理解下面这句为啥不可以
+         * IDE提示：Non-static method cannot be referenced from a static context
+         * 显然是说，这里I::str是static context，而say2是Non-static method，也就是说
+         * 但I类中的str方法是一个实例方法，并不是一个静态方法
+         */
+//        say2(I::str);
+    }
+
+    public static String singV2() {
+        return "aa";
     }
 
     // 和函数式接口A的fn方法保持形参一致
@@ -58,13 +88,11 @@ public class MethodReferenceTest {
     }
     //--------------------------------------------------------------------
 
-    // 演示几种方法引用的形式
+    /**
+     * 构造函数方法引用
+     */
     @Test
-    public void test3() {
-        // 1. 引用实例方法，见上述test2方法
-        
-        // 2. 引用静态方法
-        say2(MethodReferenceTest::staticFn);    // world o o
+    public void constructionMethodReference() {
         
         // 3. 引用构造函数，常规的lambda表达式
         /**
@@ -115,4 +143,12 @@ interface B {
 @FunctionalInterface
 interface C {
     void cFn();
+}
+
+class I {
+
+    private String name = "zs";
+    public String str(String p) {
+        return name + p;
+    }
 }
