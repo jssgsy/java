@@ -1,6 +1,6 @@
 # 参考资料
 [参考资料1](https://www.baeldung.com/javax-validation)
-[参考资料2](https://www.ibm.com/developerworks/cn/java/j-lo-beanvalid/)
+[参考资料1](https://www.baeldung.com/javax-validation-groups)
 
 # 注解与处理器的关系
 主要是`理解一个注解是如何能作用于多个不用类型上`。如(@NotEmpty即可作用于String也可作用于集合)
