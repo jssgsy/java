@@ -1,16 +1,21 @@
 package com.univ.validate.custom.group;
 
-import java.util.Set;
+import org.junit.Test;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import org.junit.Test;
+import javax.validation.groups.Default;
+import java.util.Set;
 
 /**
  * @author univ date 2023/6/29
  */
 public class GroupTest {
 
+    /**
+     * 此时验证的就是默认的javax.validation.groups.Default组
+     */
     @Test
     public void noGroup() {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -25,6 +30,17 @@ public class GroupTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(1L);
         Set<ConstraintViolation<UserDTO>> validate = validator.validate(userDTO, Create.class);
+        printErrMsg(validate);
+    }
+
+    /**
+     * 指定Default组与其它组一起校验
+     */
+    @Test
+    public void saveAndDefault() {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        UserDTO userDTO = new UserDTO();
+        Set<ConstraintViolation<UserDTO>> validate = validator.validate(userDTO, Create.class, Default.class);
         printErrMsg(validate);
     }
 

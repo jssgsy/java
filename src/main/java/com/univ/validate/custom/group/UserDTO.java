@@ -1,9 +1,10 @@
 package com.univ.validate.custom.group;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * @author univ date 2023/6/29
@@ -23,7 +24,10 @@ public class UserDTO {
     @NotEmpty(groups = {Create.class, Update.class}, message = "Create And Update: name不能为空")
     private String name;
 
-    // 只在默认组时下校验
+    /**
+     * 只在默认组时下校验
+     * @see javax.validation.groups.Default
+     */
     @NotNull(message = "Default: age默认不能为空")
     private Integer age;
 
