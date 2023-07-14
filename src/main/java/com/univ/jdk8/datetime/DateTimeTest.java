@@ -1,17 +1,10 @@
 package com.univ.jdk8.datetime;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.Period;
+import org.junit.Test;
+
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
-
-import org.junit.Test;
 
 /**
  * @author univ
@@ -188,4 +181,21 @@ public class DateTimeTest {
         System.out.println("这段时间总共有(两个时间相差)多少分钟: " + minutes);
         System.out.println("这段时间总共有(两个时间相差)多少毫秒: " + millis);
     }
+
+    @Test
+    public void format() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm;ss");
+        String formattedStr = dtf.format(LocalDateTime.now());
+        System.out.println(formattedStr);
+    }
+
+    @Test
+    public void parse() {
+        LocalDateTime.parse("2022-01-02T12:34:13");// 正确的写法
+        // 错误的写法
+        // LocalDateTime.parse("2022-01-02 12:34:13");
+        LocalDateTime parse = LocalDateTime.parse("2022-01-02 12:34:13", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        System.out.println(parse);
+    }
+
 }
