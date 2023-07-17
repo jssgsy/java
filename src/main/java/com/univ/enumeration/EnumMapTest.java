@@ -26,8 +26,8 @@ public class EnumMapTest {
 
     @Test
     public void test1(){
-
-        Map<FontConstant,String> m1 = new EnumMap(FontConstant.class);
+        // 入参class指定了此枚举map key的类型
+        Map<FontConstant, String> m1 = new EnumMap<>(FontConstant.class);
         m1.put(FontConstant.Bold, "bold...");
         m1.put(FontConstant.Plain, "plain...");
 
