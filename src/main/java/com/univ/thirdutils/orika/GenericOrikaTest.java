@@ -37,6 +37,7 @@ public class GenericOrikaTest {
         g1DTOS.add(g1DTO);
 
         // 指定源类型为：G1DTO, 注意，不是List<G1DTO>，因为这里调用的就是mapAsList方法
+        // 输入必须是具体的类型而不能是泛型，这是自然 o - o
         Type<G1DTO> sourceType = new TypeBuilder<G1DTO>(){}.build();
 
         // 指定目标类型为：G1, 注意，不是List<G1>，因为这里调用的就是mapAsList方法
