@@ -1,20 +1,12 @@
 package com.univ.javassit;
 
+import javassist.*;
+import org.junit.Test;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import org.junit.Test;
-
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtField;
-import javassist.CtMethod;
-import javassist.CtNewConstructor;
-import javassist.NotFoundException;
 
 /**
  * @author univ
@@ -159,10 +151,29 @@ public class JavassitTest {
         new JavassistDemo();
         // 输出：这是insertBeforeBody插入的代码\n JavassistDemo构造函数被调用了
     }
+
+    /**
+     * javassist没法读取类从接口继承来的默认方法！！！
+     *
+     */
+    @Test
+    public void cannotAccessDefaultMethodOfInterface() throws NotFoundException, CannotCompileException {
+        ClassPool classPool = ClassPool.getDefault();
+        CtClass ctClass = classPool.get("com.univ.javassit.JavassistDemo");
+        // 所实现接口中的默认方法show1是不可读的，此时抛出异常
+        // show1(..) is not found in com.univ.javassit.JavassistDemo
+//        ctClass.getDeclaredMethod("show1");
+
+    }
 }
 
 
-class JavassistDemo {
+interface Iiii {
+   default void show1() {
+       System.out.println("default show1()");
+   }
+}
+class JavassistDemo implements Iiii {
 
     public void show() {
         System.out.println("show方法的原生输出");
