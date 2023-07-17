@@ -24,7 +24,7 @@ public class CyclicBarrierTest {
     public static void main(String[] args) {
         // 构造函数的参数就是要达到某个状态(条件)时的线程数量，第二个参数(非必填)会在达到条件时立马执行，先于其它线程的await方法后的代码
         CyclicBarrier cyclicBarrier = new CyclicBarrier(2, () -> {
-            System.out.println("栅栏被解除立马执行");
+            System.out.println("栅栏被解除立马执行 " + Thread.currentThread().getName());
             try {
                 Thread.sleep(6000L);
             } catch (InterruptedException e) {

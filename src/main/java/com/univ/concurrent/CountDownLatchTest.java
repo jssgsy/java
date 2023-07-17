@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch;
  * 3. CountDownLatch的核心方法：
  *     a. await();调用await()方法的线程会被挂起，它会等待直到count值为0才继续执行
  *     b. await(long timeout, TimeUnit unit);和await()类似，只不过等待一定的时间后count值还没变为0的话就会继续执行
- *     c. countDown();将count值减1
+ *     c. countDown();将count值减1，不会阻塞
  */
 public class CountDownLatchTest {
 
@@ -31,6 +31,7 @@ public class CountDownLatchTest {
                 System.out.println(Thread.currentThread().getName() + "开始运行");
                 // 此线程执行结束通知主线程，countDown方法调用一次表示某个线程执行结束了
                 countDownLatch.countDown();
+                // countDown并不会阻塞
                 System.out.println(Thread.currentThread().getName() + "此句仍然会运行");
             }).start();
             try {
