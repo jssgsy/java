@@ -41,6 +41,13 @@ public class FastJsonTest {
 
         // 但如果是MyObj<Ge1>这样的就必须借助TypeReference了
     }
+
+    @Test
+    public void mustUseTypeReference() {
+        String json = "{\"data\":{\"name\":\"zhangsan\", \"address\":\"hangzhou\"}}";
+        MyObj<Ge1> parsed = JSONObject.parseObject(json, new TypeReference<MyObj<Ge1>>() {});
+        System.out.println(parsed);
+    }
 }
 
 @Data
@@ -53,4 +60,9 @@ class Ge1 {
 class Ge2 {
     private String name;
     private String address;
+}
+
+@Data
+class MyObj<T> {
+    T data;
 }
