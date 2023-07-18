@@ -34,6 +34,10 @@ public class FastJsonTest {
         // 指定要转换成的类型为：List<Ge2>
         List<Ge2> g2s = JSONObject.parseObject(json, new TypeReference<List<Ge2>>() {});
         System.out.println("g2s：" + g2s);
+
+        // 当然，就这种情形而言不借助TypeReference也是可以完成的
+        JSONObject.parseArray(json, Ge1.class);
+        JSONObject.parseArray(json, Ge2.class);
     }
 }
 
