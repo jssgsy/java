@@ -154,6 +154,7 @@ public class JavassitTest {
 
     /**
      * javassist没法读取类从接口继承来的默认方法！！！
+     * @see <a href='https://github.com/jboss-javassist/javassist/issues/177'>参考资料</a>
      *
      */
     @Test
