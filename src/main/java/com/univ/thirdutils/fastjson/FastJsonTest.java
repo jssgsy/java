@@ -35,9 +35,11 @@ public class FastJsonTest {
         List<Ge2> g2s = JSONObject.parseObject(json, new TypeReference<List<Ge2>>() {});
         System.out.println("g2s：" + g2s);
 
-        // 当然，就这种情形而言不借助TypeReference也是可以完成的
+        // 当然，就这种情形而言不借助TypeReference也是可以完成的，这是因为有parseArray方法
         JSONObject.parseArray(json, Ge1.class);
         JSONObject.parseArray(json, Ge2.class);
+
+        // 但如果是MyObj<Ge1>这样的就必须借助TypeReference了
     }
 }
 
