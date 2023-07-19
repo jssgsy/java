@@ -1,18 +1,13 @@
 package com.univ.reflection.type;
 
+import org.junit.Test;
+
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Test;
 
 /**
  * @author univ
@@ -44,6 +39,11 @@ public class TotalTypeTest<T extends Number & Serializable, E> {
 
     Map<E, T> map2 = new HashMap<>();
 
+    // 如下三个是泛型数组
+    List<String>[] listArr;
+    List<T>[] listArr2;
+    T[] listArr3;
+
     @Test
     public void test() {
         Field[] fields = TotalTypeTest.class.getDeclaredFields();
@@ -59,6 +59,7 @@ public class TotalTypeTest<T extends Number & Serializable, E> {
         if (type instanceof GenericArrayType) {
             GenericArrayType genericArrayType = (GenericArrayType) type;
             System.out.println("GenericArrayType#getGenericComponentType: " + genericArrayType.getGenericComponentType());
+            printType(genericArrayType.getGenericComponentType());
         } else if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             System.out.println("ParameterizedType#getTypeName: " + parameterizedType.getTypeName());
