@@ -79,4 +79,17 @@ public class JwtTest {
         System.out.println("expiresAt: " + jwt.getExpiresAt());
         System.out.println("subject: " + jwt.getSubject());
     }
+
+    /**
+     * 不要这样使用
+     */
+    @Test
+    public void decodeWithoutCheckSignature() {
+        String token = "eyJoMSI6ImFhYSIsImgyIjoiYmJiIiwidHlwIjoiSldUIiwiaDMiOiJjY2MiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiYXVkaWVuY2UxIiwiYXVkaWVuY2UyIl0sInN1YiI6InN1YmplY3QiLCJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoxMjM0LCJpc3MiOiJ1bml2IiwiZXhwIjoxNjg5ODM2MTk5fQ.K";
+        // 此时并不会校验签名，即即使改了【签名】部分（甚至将其删除），这里也能decode出来
+        DecodedJWT decodedJWT = JWT.decode(token);
+        System.out.println(decodedJWT.getHeader());
+        System.out.println(decodedJWT.getPayload());
+        System.out.println(decodedJWT.getIssuer());
+    }
 }
