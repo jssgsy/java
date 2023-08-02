@@ -1,16 +1,5 @@
 package com.univ.thirdutils.neo4j;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Query;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
-import org.neo4j.driver.Values;
-
 /**
  * 使用驱动的方式演示cypher语言的基本用法
  *
@@ -18,24 +7,31 @@ import org.neo4j.driver.Values;
  * 2023/4/7 09:19
  */
 public class CypherExample {
+/*
 
-    /**
+    */
+/**
      * 固定使用bolt协议
-     */
+     *//*
+
     String uri = "bolt://localhost:7687";
 
     String username = "neo4j";
 
     String password = "12345678";
 
-    /**
+    */
+/**
      * 这个是neo4j中的类，不是java.sql.Driver
-     */
+     *//*
+
     private Driver driver;
 
-    /**
+    */
+/**
      * 类似于jdbc中的Connection对象
-     */
+     *//*
+
     private Session session;
 
     @Before
@@ -50,11 +46,13 @@ public class CypherExample {
         session.close();
     }
 
-    /**
+    */
+/**
      * 创建不带任何属性的节点
      *
      * session.run：这里没有在事务中执行；
-     */
+     *//*
+
     @Test
     public void createNode() {
         Query query = new Query("create (a:Person) return a");
@@ -63,11 +61,13 @@ public class CypherExample {
         printResult(result);
     }
 
-    /**
+    */
+/**
      * 创建带属性的切点
      *
      * 注：session.executeWrite，这里在事务中执行的；
-     */
+     *//*
+
     @Test
     public void createNode2() {
         Query query = new Query("create (a:Person {name: \"hello\", age:32}) return a");
@@ -80,9 +80,11 @@ public class CypherExample {
         });
     }
 
-    /**
+    */
+/**
      * 创建节点且设置节点属性，使用参数映射
-     */
+     *//*
+
     @Test
     public void createNode3() {
         String message = "okk";
@@ -104,9 +106,11 @@ public class CypherExample {
         printResult(result);
     }
 
-    /**
+    */
+/**
      * 清空db
-     */
+     *//*
+
     @Test
     public void emptyDB() {
         Query query = new Query("match (a:Person) delete a");
@@ -118,13 +122,16 @@ public class CypherExample {
         result.stream().forEach(r -> r.keys().forEach(k -> System.out.println("k: " + k + " , v: " + r.get(k).keys())));
     }
 
-    /**
+    */
+/**
      * 创建关系，本质其实都是Cypher的应用
-     */
+     *//*
+
     @Test
     public void createRelation() {
         Query query = new Query("create (s:Student) -[:read_in]-> (s1:School) return s, s1");
         Result result = session.run(query);
         printResult(result);
     }
+*/
 }

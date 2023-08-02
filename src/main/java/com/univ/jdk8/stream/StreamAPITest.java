@@ -1,19 +1,15 @@
 package com.univ.jdk8.stream;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.IntSummaryStatistics;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Test;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 流式api，链式调用
@@ -256,10 +252,34 @@ public class StreamAPITest {
 
     /**
      * 去除stream中的重复元素
+     * 根据的是hashCode来对对象进行判等
      */
     @Test
     public void distinct() {
         Stream.of(1, 3, 4, 3, 5, 3, 2, 4, 10).distinct().forEach(System.out::println);
+    }
+
+    /**
+     * 对象集合-根据属性进行去重
+     * 思路：存入不允许重复的容器中
+     * 示例为借助ConcurrentHashMap的key不可重复，此时第一个属性出现的对象将被保留
+     */
+    @Test
+    public void distinctByProperty() {
+        List<A> list = Arrays.asList(
+                new A("aaa", 10),
+                new A("aaa", 20),
+                new A("bbb", 30),
+                new A("ddd", 40),
+                new A("bbb", 50),
+                new A("fff", 60));
+        List<A> collect = list.stream().filter(distinctByKey(A::getName)).collect(Collectors.toList());
+        System.out.println(collect);
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     /**
