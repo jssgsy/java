@@ -1,11 +1,12 @@
 package com.univ.wiz;
 
 import com.univ.util.FileUtil;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
-import org.junit.Test;
 
 /**
  * 处理为知笔记导出为md文件后，很多index_files目录下没有图片资源，可直接删除，同时将md文件移动至正确位置，免去手动操作
@@ -26,6 +27,39 @@ public class WizUtil {
         totalFileNum = 0;
         calculateTotalFile(file);
         System.out.println("剩余文件数为： " + totalFileNum);
+    }
+
+    @Test
+    public void test2() {
+        String dir = "/Users/univ/gitRepos/typora_all/test/personal_note";
+        removeMdPostfix(new File(dir));
+    }
+
+    /**
+     * 是文件夹，但是以.md结尾，去掉此.md后续
+     * @param file
+     */
+    private void removeMdPostfix(File file) {
+        if (file.isFile()) {
+            return;
+        }
+        String fileName = file.getAbsolutePath();
+        if (fileName.contains(".DS_Store")) {
+            return;
+        }
+        if (fileName.endsWith(".md")) {
+            // 去掉md后续
+            String newFileName = fileName.substring(0, fileName.indexOf(".md"));
+            System.out.println(fileName + " ===> " + newFileName);
+            file.renameTo(new File(newFileName));
+        }
+        File[] child = file.listFiles();
+        if (null != child) {
+            for (File tmpFile : child) {
+                removeMdPostfix(tmpFile);
+            }
+        }
+
     }
 
     int totalFileNum = 0;
@@ -102,6 +136,7 @@ public class WizUtil {
 
     /**
      * 在目录下寻找markdown文件
+     *
      * @param dir
      * @return
      */
@@ -121,12 +156,13 @@ public class WizUtil {
 
     /**
      * 包含目录
+     *
      * @param file
      */
     void calculateTotalFile(File file) {
         if (file.isFile() && !file.getName().contains(".DS_Store")) {
             totalFileNum++;
-        } else if (file.isDirectory()){
+        } else if (file.isDirectory()) {
             totalFileNum++;
             File[] files = file.listFiles();
             for (File file1 : files) {
@@ -147,4 +183,8 @@ public class WizUtil {
         return false;
     }
 
+}
+
+
+@interface A {
 }
