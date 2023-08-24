@@ -1,16 +1,24 @@
 package com.univ.thirdutils.jackson;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Test;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Data;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * @author univ
@@ -178,5 +186,70 @@ JsonTypeInfo
         GenericBook<Author> genericBook1 = objectMapper.readValue(jsonStr, javaType);
         System.out.println(genericBook1);
         // Book{name='book', value=Author{name='abc', age=20}}
+    }
+
+    @Test
+    public void timeDefault() throws JsonProcessingException {
+        ObjectMapper om = new ObjectMapper();
+        String jsonStr = om.writeValueAsString(new Demo());
+        System.out.println(jsonStr);
+        // {"name":"univ","localDateTime":{"year":2023,"hour":16,"nano":513000000,"monthValue":8,"dayOfMonth":24,"minute":34,"second":0,"dayOfYear":236,"dayOfWeek":"THURSDAY","month":"AUGUST","chronology":{"calendarType":"iso8601","id":"ISO"}},"localDate":{"year":2023,"month":"AUGUST","monthValue":8,"dayOfMonth":24,"chronology":{"calendarType":"iso8601","id":"ISO"},"era":"CE","dayOfYear":236,"dayOfWeek":"THURSDAY","leapYear":false},"birthday":1692866040513}
+    }
+
+    @Test
+    public void timeJavaTimeModuleDefault() throws JsonProcessingException {
+        ObjectMapper om = new ObjectMapper();
+        om.registerModule(new JavaTimeModule());
+        String jsonStr = om.writeValueAsString(new Demo());
+        System.out.println(jsonStr);
+        // {"name":"univ","localDateTime":[2023,8,24,16,35,52,602000000],"localDate":[2023,8,24],"birthday":1692866152602}
+    }
+
+    @Test
+    public void timeJavaTimeModuleCustomize() throws JsonProcessingException {
+        ObjectMapper om = new ObjectMapper();
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        // 处理LocalDateTime类型的序列化与反序列化
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        // 处理LocalDate类型的序列化与反序列化
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        om.registerModule(javaTimeModule);
+
+        String jsonStr = om.writeValueAsString(new Demo());
+        System.out.println(jsonStr);
+        // {"name":"univ","localDateTime":[2023,8,24,15,36,35,63000000],"localDate":[2023,8,24]}
+    }
+
+    /**
+     * 对Date类型的处理，和LocalDateTime、LocalDate通过Module来实现自定义处理不同
+     * Date类型是直接在ObjectMapper中设置的，同时也可以使用@JsonFormat来指定格式，两者方式任选其一
+     */
+    @Test
+    public void forDate() throws JsonProcessingException {
+        @Data
+        class Dd {
+            @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+            private Date birthday = new Date();
+        }
+        ObjectMapper om = new ObjectMapper();
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // 不用注解的情况下也可以直接在这里设置；
+//        om.setDateFormat(df);
+        String str = om.writeValueAsString(new Dd());
+        System.out.println(str);
+    }
+
+    @Data
+    class Demo {
+        private String name = "univ";
+
+        private LocalDateTime localDateTime = LocalDateTime.now();
+
+        private LocalDate localDate = LocalDate.now();
+
+        private Date birthday = new Date();
     }
 }
