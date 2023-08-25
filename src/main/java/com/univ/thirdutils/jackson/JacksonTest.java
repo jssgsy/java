@@ -1,6 +1,7 @@
 package com.univ.thirdutils.jackson;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,6 +68,34 @@ public class JacksonTest {
 
         // 写入到文件中
         objectMapper.writeValue(new File("src/main/java/com/univ/thirdutils/jackson/file.txt"), new JacksonBean());
+    }
+
+    /**
+     * 异常java.util.LinkedHashMap cannot be cast toXxx的解决
+     *
+     * 1. 显式使用jackson一般不会有此异常；因为会手动指定要获取的实际类型；
+     * 2. 一般出现在与其它框架的集成中，如spring-data-redis，固定指定为Object，又没有覆写默认配置
+     */
+    @Test
+    public void linkedHashMapCannotBeCast() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        byte[] bytes = objectMapper.writeValueAsBytes(new JacksonBean());
+        // 此时会返回LinkedHashMap类型
+        Object o = objectMapper.readValue(bytes, Object.class);
+        // 此时不能强转
+//        JacksonBean bean = (JacksonBean) o;
+        System.out.println(o.getClass()); // class java.util.LinkedHashMap
+
+        // 解决方法如下
+        ObjectMapper objectMapper2 = new ObjectMapper();
+        // 加上这句配置，返回实际的JacksonBean类型，注意要在写之前
+        objectMapper2.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+
+        byte[] bytes2 = objectMapper2.writeValueAsBytes(new JacksonBean());
+        o = objectMapper2.readValue(bytes2, Object.class);
+        // 此时可以强转
+        JacksonBean bean = (JacksonBean) o;
+        System.out.println(bean);    // JacksonBean(name=univ, age=28)
     }
 
     /**
