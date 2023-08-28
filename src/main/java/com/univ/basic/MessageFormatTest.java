@@ -1,8 +1,9 @@
 package com.univ.basic;
 
-import java.text.MessageFormat;
-
 import org.junit.Test;
+
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
 
 /**
  * @author univ
@@ -15,14 +16,25 @@ public class MessageFormatTest {
         /*
         占位符用{0},{1}等形式表示
          */
-        String format = MessageFormat.format("hello, {0}, hello {1}", "apple", "orange");
+        String format = MessageFormat.format("hello, {0}, the price is {1}, the date is {2}", "apple", 1.2, LocalDateTime.now());
         System.out.println(format);
-
 
         // 对象形式，注意，此时对象需要有toString方式
         String format1 = MessageFormat.format("the obj is {0}", new A1());
         System.out.println(format1);
+
+        // 指定占位符的类型
+        // 错误版本
+//        MessageFormat.format("hello {0, number}", "abc");
+        // 字符串形式的数字也不行
+//        MessageFormat.format("hello {0, number}", "2");
+
+        // 正确版本
+        String format2 = MessageFormat.format("hello {0, number}", 2);
+        System.out.println(format2);
+
     }
+
 }
 
 class A1 {
