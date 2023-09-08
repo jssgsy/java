@@ -26,8 +26,9 @@ it is less complex in this situation to treat primitives and composites as homog
 ![组合模式](https://github.com/jssgsy/java/raw/master/src/main/java/com/univ/patterndesign/composite/composite.png)
 
 总共有两种形式的UML类图，主要区分在于是将add、remove、clear等子结点相关方法放在顶层的Component中还是放在Composite中。
-* 放在Component中：此时能保留对叶子与非叶子结点访问的一致性，但其实叶子结点是不需要这些方法的(类型不案例)；
-* 放在Composite中：此时客户端需要区别对待Composite与Leaf结点，当然一般只需要与Composite打交道即可；
+* 透明模式：放在Component中，此时能保留对叶子与非叶子结点访问的一致性，但其实叶子结点是不需要这些方法的；
+* 安全模式：放在Composite中，此时客户端需要区别对待Composite与Leaf结点，当然一般只需要与Composite打交道即可；
+  * 此时Composite和Leaf仍然需要有共同的类型，否则连树形结构都体现不出来了；
 
 # 实际应用
 参见spring mvc中的HandlerMethodArgumentResolver、HandlerMethodArgumentResolverComposite。
