@@ -7,7 +7,8 @@ public class JUnitTest {
     @Test
     public void test() {
 
-        Subject subject = new Subject();
+        // 使用时需要直接使用具体的Subject了，因为导致触发通知的状态变更在这里(somethingChanged方法)
+        ConcreteSubject subject = new ConcreteSubject();
         ObserverA observerA = new ObserverA();
         ObserverB observerB = new ObserverB();
 
@@ -15,6 +16,6 @@ public class JUnitTest {
         subject.addObserver(observerA);
         subject.addObserver(observerB);
 
-        subject.notifyObservers();
+        subject.somethingChanged();
     }
 }
