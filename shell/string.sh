@@ -27,15 +27,4 @@ echo $str1:bbb
 echo "$str1 is god"
 
 # 变量默认值
-# 当变量v不存在，则为v1赋默认值notset_or_empty_str_default_value，否则为v的值(包含v为空字符串)
-v1=${v-notset_default_value}
-echo $v1  # 因为变量v还不存在，因此值为默认值：notset_default_value
-# 定义值为空的变量
-v=''
-v1=${v-notset_or_empty_str_default_value}
-echo $v1  # 此时变量v存在(虽然值为空串),所以$v1的值就为$v的值，即空串
-
-# 变量v2不存在若值为空串，才赋默认值，这种应该更常用
-echo ${v2:-not_set_or_empty_str_default_value}  # not_set_or_empty_str_default_value
-v2=
-echo ${v2:-not_set_or_empty_str_default_value}  # not_set_or_empty_str_default_value
+# 参考var.sh文件内容
