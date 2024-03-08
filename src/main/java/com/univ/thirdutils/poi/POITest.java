@@ -1,22 +1,25 @@
 package com.univ.thirdutils.poi;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author univ
@@ -24,7 +27,6 @@ import org.junit.Test;
  * @description 使用poi处理excel文件的最基本用法
  */
 public class POITest {
-
 
 
     /**
@@ -135,4 +137,91 @@ public class POITest {
             System.out.println("单元格的内容为：" + row.getCell(0).getStringCellValue());
         }
     }
+
+    @Test
+    public void writeBasicOps() throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
+        Row row1 = sheet.createRow(0);
+        Cell c1 = row1.createCell(0);
+        c1.setCellValue("aaa");
+
+        Cell c2 = row1.createCell(1);
+        c2.setCellValue("bbb");
+
+        Row row2 = sheet.createRow(1);
+        Cell c21 = row2.createCell(0);
+        c21.setCellValue("ccc");
+
+        Cell c22 = row2.createCell(1);
+        c22.setCellValue("ddd");
+
+        FileOutputStream outputStream = new FileOutputStream("output.xlsx");
+        workbook.write(outputStream);
+        // 关闭workbook，释放资源
+        workbook.close();
+    }
+
+    @Test
+    public void writeToExcel() {
+        List<Person> personList = Arrays.asList(
+                new Person("aaa", 10),
+                new Person("bbb", 20),
+                new Person("ccc", 30)
+        );
+        // 转成List<List<Object>>
+        List<List<Object>> tableData = new ArrayList<>();
+        // important：赋值顺序需要和表头保持一致
+        personList.forEach(person -> {
+            List<Object> list = new ArrayList<>();
+            list.add(person.getName());
+            list.add(person.getAge());
+            tableData.add(list);
+        });
+        generateExcelData(Arrays.asList("名字", "年龄"), tableData);
+    }
+
+    /**
+     * 重点：
+     *  1. 表格数据必须使用List<List<Object>>，而不能是List<Person>等形式，因为此时无法逐个单元格迭代；
+     *      即必须将List<Person>等形式转成List<List<Object>>的形式；
+     *  2. header中表头的值必须和List<Object>中值的顺序是一样的；
+     * @param header
+     * @param tableData
+     */
+    public void generateExcelData(List<String> header, List<List<Object>> tableData) {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet();
+            int columnNumTotal = header.size();
+            int rowNumTotal = tableData.size();
+            // 设置表头(第一行)
+            Row headerRow = sheet.createRow(0);
+            for (int column = 0; column < columnNumTotal; column++) {
+                Cell cell = headerRow.createCell(column);
+                cell.setCellValue(header.get(column));
+            }
+            // 设置数据
+            for (int row = 0; row < rowNumTotal; row++) {
+                Row currentRow = sheet.createRow(row + 1);
+                // 当前行数据
+                List<Object> rowData = tableData.get(row);
+                for (int col = 0; col < rowData.size(); col++) {
+                    Cell cell = currentRow.createCell(col);
+                    XSSFRichTextString textString = new XSSFRichTextString(rowData.get(col).toString());
+                    cell.setCellValue(textString);
+                }
+            }
+            FileOutputStream outputStream = new FileOutputStream("output.xlsx");
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+@Data
+@AllArgsConstructor
+class Person {
+    private String name;
+    private Integer age;
 }
