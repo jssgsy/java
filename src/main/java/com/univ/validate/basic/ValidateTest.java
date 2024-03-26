@@ -1,12 +1,12 @@
 package com.univ.validate.basic;
 
-import java.util.Set;
+import org.hibernate.validator.HibernateValidator;
+import org.junit.Test;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-
-import org.hibernate.validator.HibernateValidator;
-import org.junit.Test;
+import java.util.Set;
 
 /**
  * @author univ
@@ -27,7 +27,7 @@ public class ValidateTest {
         // 3. 校验对象，并获取校验的结果,会获取所有字段校验失败的信息
         Set<ConstraintViolation<BasicDemo>> validateResult = validator.validate(basicDemo);
         for (ConstraintViolation<BasicDemo> result : validateResult) {
-            System.out.println(result.getMessage());
+            System.out.println("校验失败的字段为: " + result.getPropertyPath() + " ，失败的msg为： " + result.getMessage());
         }
     }
 
@@ -46,6 +46,7 @@ public class ValidateTest {
         Set<ConstraintViolation<BasicDemo>> validateResult = validator.validate(basicDemo);
         for (ConstraintViolation<BasicDemo> result : validateResult) {
             System.out.println(result.getMessage());
+            System.out.println(result.getPropertyPath());
         }
     }
 
