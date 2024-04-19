@@ -24,6 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -223,6 +224,18 @@ public class POITest {
         }
     }
 
+    @Test
+    public void writeToExcelV2() throws IOException, IllegalAccessException {
+        List<Person> personList = Arrays.asList(
+                new Person("zhangsan", "city1", 1),
+                new Person("lis", "city2", 2),
+                new Person("univ",  "city3", 10),
+                new Person("who",  "city4", 20),
+                new Person("wangwu",  "city4", 30)
+        );
+        generateExcelData2(personList);
+    }
+
     public void generateExcelData2(List<?> tableData) {
         // 处理是空列表问题
         if (CollectionUtils.isEmpty(tableData)) {
@@ -244,6 +257,7 @@ public class POITest {
             Field[] declaredFields = tableData.get(0).getClass().getDeclaredFields();
             // 过滤有被@Excel注解的字段，这样就和headers有相同个数元素了
             List<Field> excelFields = Arrays.stream(declaredFields).filter(t -> t.isAnnotationPresent(Excel.class)).collect(Collectors.toList());
+            Map<Integer, Field> fieldMap = excelFields.stream().collect(Collectors.toMap(field -> field.getAnnotation(Excel.class).order(), Function.identity()));
             // 总共有这么多行数据要写，先遍历数据再遍历头
             for (int row = 0; row < tableData.size(); row++) {
                 // 创建一行
@@ -252,9 +266,9 @@ public class POITest {
                 for (int col = 0; col < headers.size(); col++) {
                     Cell cell = currentRow.createCell(col);
                     // 此时col的值就是@Excel注解中value值
-                    int order = col;
+//                    int order = col;
                     // 找到对哪个字段取值：@Excel的order值是col的字段
-                    Field field = excelFields.stream().filter(t -> t.getAnnotation(Excel.class).order() == order).findFirst().orElse(null);
+                    Field field = fieldMap.getOrDefault(col, null);
                     if (null != field) {
                         field.setAccessible(true);
                         cell.setCellValue(field.get(rowData).toString());
@@ -286,31 +300,18 @@ public class POITest {
         return new ArrayList<>(map.values());
     }
 
-    @Test
-    public void writeToExcelV2() throws IOException, IllegalAccessException {
-        List<Person> personList = Arrays.asList(
-                new Person("zhangsan", "city1", 1),
-                new Person("lis", "city2", 2),
-                new Person("univ",  "city3", 10),
-                new Person("who",  "city4", 20),
-                new Person("wangwu",  "city4", 30)
-        );
-        generateExcelData2(personList);
-    }
-
-
 }
 
 @Data
 @AllArgsConstructor
 class Person {
-    @Excel(order = 1, header = "姓名")
+    @Excel(order = 0, header = "姓名")
     private String name;
 
-    @Excel(order = 0, header = "城市")
+    @Excel(order = 1, header = "城市")
     private String city;
 
-    // @Excel(order = 2, header = "god")
+     @Excel(order = 2, header = "god")
     private Integer age;
 }
 
