@@ -2,6 +2,7 @@ package com.univ.thirdutils.poi;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,9 +18,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author univ
@@ -163,22 +168,25 @@ public class POITest {
     }
 
     @Test
-    public void writeToExcel() {
+    public void writeToExcelV1() {
         List<Person> personList = Arrays.asList(
-                new Person("aaa", 10),
-                new Person("bbb", 20),
-                new Person("ccc", 30)
+                new Person("aaa", "wuhan", 10),
+                new Person("bbb", "hangzhou", 20),
+                new Person("ccc", "qinghai",30)
         );
+        List<String> headerList = Arrays.asList("名字", "城市", "年龄");
+
         // 转成List<List<Object>>
         List<List<Object>> tableData = new ArrayList<>();
         // important：赋值顺序需要和表头保持一致
         personList.forEach(person -> {
             List<Object> list = new ArrayList<>();
             list.add(person.getName());
+            list.add(person.getCity());
             list.add(person.getAge());
             tableData.add(list);
         });
-        generateExcelData(Arrays.asList("名字", "年龄"), tableData);
+        generateExcelDataV1(headerList, tableData);
     }
 
     /**
@@ -186,25 +194,22 @@ public class POITest {
      *  1. 表格数据必须使用List<List<Object>>，而不能是List<Person>等形式，因为此时无法逐个单元格迭代；
      *      即必须将List<Person>等形式转成List<List<Object>>的形式；
      *  2. header中表头的值必须和List<Object>中值的顺序是一样的；
-     * @param header
-     * @param tableData
      */
-    public void generateExcelData(List<String> header, List<List<Object>> tableData) {
+    public void generateExcelDataV1(List<String> headerList, List<List<Object>> tableData) {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet();
-            int columnNumTotal = header.size();
-            int rowNumTotal = tableData.size();
             // 设置表头(第一行)
             Row headerRow = sheet.createRow(0);
-            for (int column = 0; column < columnNumTotal; column++) {
+            for (int column = 0; column < headerList.size(); column++) {
                 Cell cell = headerRow.createCell(column);
-                cell.setCellValue(header.get(column));
+                cell.setCellValue(headerList.get(column));
             }
-            // 设置数据
-            for (int row = 0; row < rowNumTotal; row++) {
+            // 是一行一行赋值，因此外围循环的是tableData
+            for (int row = 0; row < tableData.size(); row++) {
                 Row currentRow = sheet.createRow(row + 1);
                 // 当前行数据
                 List<Object> rowData = tableData.get(row);
+                // rowData.size()就是headerList.size()
                 for (int col = 0; col < rowData.size(); col++) {
                     Cell cell = currentRow.createCell(col);
                     XSSFRichTextString textString = new XSSFRichTextString(rowData.get(col).toString());
@@ -217,11 +222,109 @@ public class POITest {
             throw new RuntimeException(e);
         }
     }
+
+    public void generateExcelData2(List<?> tableData) {
+        // 处理是空列表问题
+        if (CollectionUtils.isEmpty(tableData)) {
+            return;
+        }
+        List<String> headers = listHeaders(tableData.get(0).getClass());
+        try(Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet();
+            Row rowZero = sheet.createRow(0);
+            // 先写入表头
+            for (int i = 0; i < headers.size(); i++) {
+                // 这里不能使用Stream的forEach，因为要通过i来创建单元格(当然是可以的，只是麻烦些)
+                Cell cell = rowZero.createCell(i);
+                // 必须要能获取到值，因此headers定义成了List而不能是Collection
+                cell.setCellValue(headers.get(i));
+            }
+
+            // 这里应该放到for外面，因为field只是静态信息
+            Field[] declaredFields = tableData.get(0).getClass().getDeclaredFields();
+            // 过滤有被@Excel注解的字段，这样就和headers有相同个数元素了
+            List<Field> excelFields = Arrays.stream(declaredFields).filter(t -> t.isAnnotationPresent(Excel.class)).collect(Collectors.toList());
+            // 总共有这么多行数据要写，先遍历数据再遍历头
+            for (int row = 0; row < tableData.size(); row++) {
+                // 创建一行
+                Row currentRow = sheet.createRow(row + 1);
+                Object rowData = tableData.get(row);
+                for (int col = 0; col < headers.size(); col++) {
+                    Cell cell = currentRow.createCell(col);
+                    // 此时col的值就是@Excel注解中value值
+                    int order = col;
+                    // 找到对哪个字段取值：@Excel的order值是col的字段
+                    Field field = excelFields.stream().filter(t -> t.getAnnotation(Excel.class).order() == order).findFirst().orElse(null);
+                    if (null != field) {
+                        field.setAccessible(true);
+                        cell.setCellValue(field.get(rowData).toString());
+                    }
+                }
+            }
+            FileOutputStream outputStream = new FileOutputStream("output.xlsx");
+            workbook.write(outputStream);
+        } catch (Exception exception) {
+            // 异常处理
+        }
+
+    }
+
+    /**
+     * 从有被@Excel注解修饰字段中收集表头，且表头已经排好序
+     * @param clz 包含@Excel修饰字段的类
+     */
+    private List<String> listHeaders(Class<?> clz) {
+        Map<Integer, String> map = new TreeMap<>();
+        Field[] declaredFields = clz.getDeclaredFields();
+        for (Field field : declaredFields) {
+            if (field.isAnnotationPresent(Excel.class)) {
+                Excel annotation = field.getAnnotation(Excel.class);
+                map.put(annotation.order(), annotation.header());
+            }
+        }
+        // 这里不能直接使用Collection，因为Collection没法通过下标方式取得逐个元素的值
+        return new ArrayList<>(map.values());
+    }
+
+    @Test
+    public void writeToExcelV2() throws IOException, IllegalAccessException {
+        List<Person> personList = Arrays.asList(
+                new Person("zhangsan", "city1", 1),
+                new Person("lis", "city2", 2),
+                new Person("univ",  "city3", 10),
+                new Person("who",  "city4", 20),
+                new Person("wangwu",  "city4", 30)
+        );
+        generateExcelData2(personList);
+    }
+
+
 }
 
 @Data
 @AllArgsConstructor
 class Person {
+    @Excel(order = 1, header = "姓名")
     private String name;
+
+    @Excel(order = 0, header = "城市")
+    private String city;
+
+    // @Excel(order = 2, header = "god")
     private Integer age;
+}
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@interface Excel {
+
+    /**
+     * 表头的顺序，从0开始，需连续递增
+     */
+    int order() default 0;
+
+    /**
+     * 表头名称
+     */
+    String header() default "请显式赋值";
 }
