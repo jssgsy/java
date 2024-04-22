@@ -1,10 +1,10 @@
 package com.univ.jdkutils.class1;
 
+import org.junit.Test;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import org.junit.Test;
 
 /**
  * @author univ
@@ -68,7 +68,7 @@ public class ClassTest {
     @Test
     public void reflectConstructor() {
         /**
-         * 本类的public构造(注意只有public方法)
+         * 仅限本类的public构造方法，和getFields等不同，这里不包含父类的公共构造方法
          */
         Constructor<?>[] constructors = C1.class.getConstructors();
         System.out.println("getConstructors(): ");
@@ -103,6 +103,41 @@ public class ClassTest {
             System.out.println("\t" + declaredField);
         }
     }
+
+    @Test
+    public void testGetSupperClass() {
+        // java中直接类型仅限一个，因此这里返回类型不是数组，是直接父类
+        Class<? super C1> superclass = C1.class.getSuperclass();
+        // 直接父类
+        System.out.println("直接父类为： " + superclass);
+
+        // 所有父类
+        System.out.println("所有父类为：");
+        while (null != superclass) {
+            System.out.println(superclass);
+            superclass = superclass.getSuperclass();
+        }
+    }
+
+    @Test
+    public void testGetInterfaces() {
+        // 只返回类所【直接实现】的接口
+        Class<?>[] interfaces = C1.class.getInterfaces();
+        for (Class<?> anInterface : interfaces) {
+            System.out.println(anInterface);
+        }
+    }
+
+    @Test
+    public void test() {
+        Integer integer = 1;
+        String str = "aaa";
+        System.out.println(integer.getClass().isPrimitive());
+        System.out.println(int.class.isPrimitive());
+        System.out.println(boolean.class.isPrimitive());
+        System.out.println(str.getClass().isPrimitive());
+    }
+
 
 
 }
