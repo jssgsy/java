@@ -4,7 +4,9 @@ import com.univ.thirdutils.quartz.job.UnivJob;
 import org.junit.Test;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.calendar.CronCalendar;
 
+import java.text.ParseException;
 import java.util.concurrent.*;
 
 /**
@@ -73,6 +75,40 @@ public class QuartzTest {
                 .build();
 
         System.out.println("now : " + System.currentTimeMillis() / 1000);
+        scheduler.scheduleJob(jobDetail, trigger);
+        // 不可少
+        scheduler.start();
+        // 避免主线程结束
+        while (true) {}
+    }
+
+    /**
+     * 使用calendar在某些特殊时期不执行任务
+     */
+    @Test
+    public void calendar() throws SchedulerException, ParseException {
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+        JobDetail jobDetail = JobBuilder.newJob(UnivJob.class)
+                .withIdentity("univJob")
+                .build();
+
+        SimpleTrigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("univTrigger")
+                // 关联calendar
+                .modifiedByCalendar("my_calendar")
+                .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                                .withIntervalInSeconds(1)
+                                .withRepeatCount(50)
+                )
+                .build();
+        // 声明Calendar，这里用CronCalendar为例
+        CronCalendar cronCalendar = new CronCalendar("1,5,10,15,20,30,40,50 * * * * ?");
+
+        // Calendar要生效必须交由scheduler管理
+        scheduler.addCalendar("my_calendar", cronCalendar, true, true);
+
         scheduler.scheduleJob(jobDetail, trigger);
         // 不可少
         scheduler.start();
