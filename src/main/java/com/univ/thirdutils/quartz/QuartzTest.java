@@ -5,6 +5,9 @@ import org.junit.Test;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.calendar.CronCalendar;
+import org.quartz.impl.matchers.KeyMatcher;
+import org.quartz.listeners.JobListenerSupport;
+import org.quartz.listeners.TriggerListenerSupport;
 
 import java.text.ParseException;
 import java.util.concurrent.*;
@@ -115,6 +118,107 @@ public class QuartzTest {
         // 避免主线程结束
         while (true) {}
     }
+
+    @Test
+    public void jobListener() throws SchedulerException, ParseException {
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+        JobDetail jobDetail = JobBuilder.newJob(UnivJob.class)
+                .withIdentity("univJob")
+                .build();
+
+        SimpleTrigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("univTrigger")
+                .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                                .withIntervalInSeconds(2)
+                                .withRepeatCount(0)
+                )
+                .build();
+
+
+        scheduler.scheduleJob(jobDetail, trigger);
+        // 看这里：定义并注册JobListener
+        scheduler.getListenerManager().addJobListener(new JobListenerSupport() {
+            @Override
+            public String getName() {
+                return "univ_job_name";
+            }
+
+            @Override
+            public void jobToBeExecuted(JobExecutionContext context) {
+                System.out.println("job准备执行");
+            }
+
+            @Override
+            public void jobExecutionVetoed(JobExecutionContext context) {
+                System.out.println("job被否决了，这里不会出现");
+            }
+
+            @Override
+            public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
+                System.out.println("job被执行了");
+            }
+        });
+        // 不可少
+        scheduler.start();
+        // 避免主线程结束
+        while (true) {}
+    }
+
+    @Test
+    public void triggerListener() throws SchedulerException, ParseException {
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+        JobDetail jobDetail = JobBuilder.newJob(UnivJob.class)
+                .withIdentity("univJob")
+                .build();
+
+        SimpleTrigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("univTrigger")
+                .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                                .withIntervalInSeconds(2)
+                                .withRepeatCount(0)
+                )
+                .build();
+
+
+        scheduler.scheduleJob(jobDetail, trigger);
+        // 看这里：定义并注册JobListener
+        scheduler.getListenerManager().addTriggerListener(new TriggerListenerSupport() {
+            @Override
+            public String getName() {
+                return "univ_trigger_listener";
+            }
+
+            @Override
+            public void triggerFired(Trigger trigger, JobExecutionContext context) {
+                System.out.println("trigger被触发了");
+            }
+
+            @Override
+            public boolean vetoJobExecution(Trigger trigger, JobExecutionContext context) {
+                System.out.println("trigger不否决job");
+                return false;
+            }
+
+            @Override
+            public void triggerMisfired(Trigger trigger) {
+                System.out.println("trigger没有触发到");
+            }
+
+            @Override
+            public void triggerComplete(Trigger trigger, JobExecutionContext context, Trigger.CompletedExecutionInstruction triggerInstructionCode) {
+                System.out.println("trigger触发执行完成了");
+            }
+        }, KeyMatcher.keyEquals(TriggerKey.triggerKey("univTrigger"))); // 只监听名为univTrigger
+        // 不可少
+        scheduler.start();
+        // 避免主线程结束
+        while (true) {}
+    }
+
 }
 
 
