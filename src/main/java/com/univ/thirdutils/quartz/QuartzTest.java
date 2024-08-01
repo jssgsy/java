@@ -10,6 +10,7 @@ import org.quartz.listeners.JobListenerSupport;
 import org.quartz.listeners.TriggerListenerSupport;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.concurrent.*;
 
 /**
@@ -53,6 +54,50 @@ public class QuartzTest {
         // 避免主线程结束
         while (true) {}
     }
+
+    @Test
+    public void executeOnce() throws SchedulerException {
+        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+
+        JobDetail jobDetail = JobBuilder.newJob(UnivJob.class)
+                .withIdentity("univJob")
+                .build();
+
+        SimpleTrigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("univTrigger")
+                .withSchedule(SimpleScheduleBuilder.simpleSchedule())
+                // 看这里
+                .startAt(new Date(System.currentTimeMillis() + 2000))
+                .build();
+
+        System.out.println("now : " + System.currentTimeMillis() / 1000);
+        scheduler.scheduleJob(jobDetail, trigger);
+        scheduler.start();
+        // 避免主线程结束
+        while (true) {}
+    }
+
+
+    @Test
+    public void executeJobWithoutTrigger() throws SchedulerException {
+        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+
+        JobDetail jobDetail = JobBuilder.newJob(UnivJob.class)
+                .withIdentity("univJob2")
+                // 1处：不被Trigger关联的Job必须是durable的
+                // Jobs added with no trigger must be durable
+                .storeDurably()
+                .build();
+
+        System.out.println("now : " + System.currentTimeMillis() / 1000);
+        // 2处：一般要先通过addJob方法交由Scheduler调度
+        scheduler.addJob(jobDetail, false);
+        scheduler.triggerJob(jobDetail.getKey());
+        scheduler.start();
+        // 避免主线程结束
+        while (true) {}
+    }
+
 
     @Test
     public void basicWithJobData() throws SchedulerException {
