@@ -55,6 +55,29 @@ public class QuartzTest {
         while (true) {}
     }
 
+    /**
+     * 多个Trigger关联同一个job
+     */
+    @Test
+    public void oneJobManyTrigger() throws SchedulerException {
+        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        String jobId = "aaaaaa";
+        JobDetail jobDetail = JobBuilder.newJob(UnivJob.class).withIdentity(jobId, "univ_job_group").build();
+
+        CronTrigger trigger = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ? *"))
+                .withIdentity("trigger", "trigger_group").build();
+        // 关联第一个
+        scheduler.scheduleJob(jobDetail, trigger);
+
+        // 同一个job关联多个Trigger
+        CronTrigger trigger2 = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule("0/3 * * * * ? *"))
+                .withIdentity("triggerId_v2", "trigger_group")
+                .forJob(jobDetail)      // 看这里，关联Job，应该优先使用这种方法
+                .build();
+        scheduler.scheduleJob(trigger2);    // 这里不能重复调用scheduler.scheduleJob(jobDetail, trigger2)方法，因为要求JobKey唯一
+        scheduler.start();
+    }
+
     @Test
     public void executeOnce() throws SchedulerException {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
