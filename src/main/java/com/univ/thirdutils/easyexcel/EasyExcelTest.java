@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.builder.ExcelReaderSheetBuilder;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
@@ -45,7 +46,6 @@ public class EasyExcelTest {
         });
         // 2. 设置各种属性
         readerBuilder.head(EasyPO.class);
-        readerBuilder.sheet();        // 会读取所有sheet页的数据，也是默认行为
         // 3. 调用doReadAll方法进行实际读取
         // 经验证，这里会阻塞读
         readerBuilder.doReadAll();
@@ -60,9 +60,21 @@ public class EasyExcelTest {
         ExcelReaderBuilder readerBuilder = EasyExcel.read(excelFilePath);
         // 2. 设置各种属性
         readerBuilder.head(EasyPO.class);
-        readerBuilder.sheet();        // 会读取所有sheet页的数据，也是默认行为
         // 3. 调用doReadAllSync方法进行实际读取
         List<EasyPO> dataLists = readerBuilder.doReadAllSync();
+        dataLists.forEach(System.out::println);
+    }
+
+    @Test
+    public void readFromSpecificSheet() {
+        String excelFilePath = "data/excel/2007.xlsx";
+        // 1. 获取ExcelReaderBuilder对象
+        ExcelReaderBuilder readerBuilder = EasyExcel.read(excelFilePath);
+        // 2. 设置各种属性
+        readerBuilder.head(EasyPO.class);
+        // 此时必须使用ExcelReaderSheetBuilder对象
+        ExcelReaderSheetBuilder readerSheetBuilder = readerBuilder.sheet(0);
+        List<EasyPO> dataLists = readerSheetBuilder.doReadSync();
         dataLists.forEach(System.out::println);
     }
 
