@@ -12,4 +12,4 @@ target
 logs
 *.log
 
-data
+data/csv
