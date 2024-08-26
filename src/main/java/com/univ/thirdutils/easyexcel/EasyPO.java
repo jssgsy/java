@@ -18,6 +18,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class EasyPO {
 
+    /**
+     * 如果是读取excel，则value的值必须和excel表头名字完全匹配
+     * 在只有一列、两列情景下，如果没有模板，为避免表头名字不匹配，可以不用value而是使用order属性(经验证，如果value与order均存在，value优先)
+     */
     @ExcelProperty(value = "姓名", order = 0)
     private String name;
 
