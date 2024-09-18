@@ -62,11 +62,30 @@ public class StreamAPITest {
      * 注：Optional类中也有map与flatMap方法，含义同这里
      */
     @Test
-    public void map() {
-        // 此时stream中是单一的对象，可直接操作
-        objList.stream().map(t -> {t.setAge(t.getAge() * 10);return t;}).forEach(t -> System.out.print(t + " "));
-        System.out.println();
+    public void flatMap() {
+        Demo d1 = new Demo(10, Arrays.asList("aaa", "bbb"));
+        Demo d2 = new Demo(20, Arrays.asList("ccc", "ddd"));
+        Demo d3 = new Demo(30, Arrays.asList("eee", "fff"));
+        List<Demo> demoList = Arrays.asList(d1, d2, d3);
+        // 目标：逐个收集的元素是demo中的hobbies字段，注，其又是一个集合
 
+        // 方法一：常规
+        List<String> resultList = new ArrayList<>();
+        List<List<String>> list = demoList.stream().map(Demo::getHobbies).collect(Collectors.toList());
+        list.forEach(resultList::addAll);
+        System.out.println("常规方法：" + resultList);
+
+        // 方法二：使用flatMap，确实简单很多
+        // 注意flatMap入参Function要求的返回结果是Stream，是要「拍平」的数据
+        List<String> resultList2 = demoList.stream().flatMap(t -> t.getHobbies().stream()).collect(Collectors.toList());
+        System.out.println("使用flatMap：" + resultList2);
+
+    }
+
+    // 这里提供另一种可使用flatMap的形式
+    @Test
+    public void flatMap2() {
+        // 也可以是列表元素中有成员是List类型
         List<List<Integer>> list = Arrays.asList(
                 Arrays.asList(1, 2),
                 Arrays.asList(3, 4),
@@ -74,14 +93,11 @@ public class StreamAPITest {
         );
 
         // 注意，此时stream中的元素是集合类型，此时在map方法中进行操作就很麻烦
-        list.stream().map(t -> t.stream().map(x -> x * 10)).forEach(t -> System.out.println(Arrays.toString(t.toArray()) + " "));
+        List<Stream<Integer>> list1 = list.stream().map(t -> t.stream().map(x -> x * 10)).collect(Collectors.toList());
 
         // 将每个元素(集合)中的元素收集起来形成一个新的集合
         List<Integer> ids = list.stream().flatMap(Collection::stream).collect(Collectors.toList());
         System.out.println(ids);
-
-        // 这里利用flatMap方法将集合t中的元素平铺(flat)出来形成一个新stream，之后再进行相应操作
-        list.stream().flatMap(Collection::stream).map(x -> x * 10).forEach(y -> System.out.print(y + " "));
     }
 
     @Test
@@ -442,4 +458,6 @@ class A {
 @AllArgsConstructor
 class Demo {
     private Integer id;
+
+    private List<String> hobbies;
 }
