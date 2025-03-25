@@ -29,15 +29,24 @@ public class EnumSetTest {
     @Test
     public void test1(){
 
+        EnumSet<Size> range = EnumSet.range(Size.S, Size.XXL);
+        // [S, X, XL, XXL]
+        System.out.println(range);
+
         /**
          * 1.创建一个空EnumSet,然后通过add方法添加元素;
          */
         EnumSet<Size> s1 = EnumSet.noneOf(Size.class);
+        // 初始大小：0
+        System.out.println("初始大小：" + s1.size());
         s1.add(Size.S);
         s1.add(Size.Z);
+        // 添加元素后大小：2
+        System.out.println("添加元素后大小：" + s1.size());
         s1.add(Size.XL);
         s1.add(Size.XL);//只会存在一份Size.XL
         s1.add(Size.XXL);
+        // [Z, S, XL, XXL]
         showEnumSet(s1);
         System.out.println();
 
@@ -45,13 +54,14 @@ public class EnumSetTest {
          * 2.利用allOf()方法将枚举类型Size的所有实例均添加到EnumSet中;
          */
         EnumSet<Size> s2 = EnumSet.allOf(Size.class);
-        showEnumSet(s2);
-        System.out.println();
+        // [Z, S, X, XL, XXL]
+        System.out.println(s2);
 
         /**
          * 3.利用of()方法将枚举类型Size的部分实例添加到EnumSet中;
          */
         EnumSet<Size> s3 = EnumSet.of(Size.XL, Size.S, Size.X);
+        // [S, X, XL]
         showEnumSet(s3);
         System.out.println();
 
@@ -59,6 +69,8 @@ public class EnumSetTest {
          * 判断集合中是否包含某个元素
          */
         boolean flag = s3.contains(Size.XXL);
+
+        // false
         System.out.println(flag);
     }
 
