@@ -60,7 +60,8 @@
 		<dependency>
 			<groupId>ognl</groupId>
 			<artifactId>ognl</artifactId>
-			<version>3.1.1</version>
+            <!-- 2024.4月的jar -->
+			<version>3.4.3</version>
 		</dependency>
 
 		<!--bean之间相互转换-->
