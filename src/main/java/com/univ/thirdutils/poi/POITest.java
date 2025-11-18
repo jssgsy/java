@@ -144,13 +144,15 @@ public class POITest {
         }
     }
 
+    // 基本思路：从上到下创建行，然后在一行中从左到右创建单元格；
+    // 重点：行其实和sheet一样仍然只是个容器，只有创建出了单元格才算是真正有了表格
     @Test
     public void writeBasicOps() throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
-        Row row1 = sheet.createRow(0);
+        Row row1 = sheet.createRow(0);  //  row和cell均从0开始
         Cell c1 = row1.createCell(0);
-        c1.setCellValue("aaa");
+        c1.setCellValue("aaa"); // 第一行一般当作表头；
 
         Cell c2 = row1.createCell(1);
         c2.setCellValue("bbb");
@@ -162,7 +164,7 @@ public class POITest {
         Cell c22 = row2.createCell(1);
         c22.setCellValue("ddd");
 
-        FileOutputStream outputStream = new FileOutputStream("output.xlsx");
+        FileOutputStream outputStream = new FileOutputStream("data/excel/output.xlsx");
         workbook.write(outputStream);
         // 关闭workbook，释放资源
         workbook.close();
@@ -217,13 +219,14 @@ public class POITest {
                     cell.setCellValue(textString);
                 }
             }
-            FileOutputStream outputStream = new FileOutputStream("output.xlsx");
+            FileOutputStream outputStream = new FileOutputStream("data/excel/output.xlsx");
             workbook.write(outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    // 自定义注解来处理Excel
     @Test
     public void writeToExcelV2() throws IOException, IllegalAccessException {
         List<Person> personList = Arrays.asList(
@@ -236,7 +239,7 @@ public class POITest {
         generateExcelData2(personList);
     }
 
-    public void generateExcelData2(List<?> tableData) {
+    private void generateExcelData2(List<?> tableData) {
         // 处理是空列表问题
         if (CollectionUtils.isEmpty(tableData)) {
             return;
@@ -275,7 +278,7 @@ public class POITest {
                     }
                 }
             }
-            FileOutputStream outputStream = new FileOutputStream("output.xlsx");
+            FileOutputStream outputStream = new FileOutputStream("data/excel/output.xlsx");
             workbook.write(outputStream);
         } catch (Exception exception) {
             // 异常处理
