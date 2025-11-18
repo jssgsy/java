@@ -152,10 +152,14 @@ public class POITest {
         Sheet sheet = workbook.createSheet();
         Row row1 = sheet.createRow(0);  //  row和cell均从0开始
         Cell c1 = row1.createCell(0);
-        c1.setCellValue("aaa"); // 第一行一般当作表头；
+        c1.setCellValue("aaa这是表头aaa这是表头aaa这是表头aaa"); // 第一行一般当作表头；
+        // 自动列宽，似乎没有那么自动变宽
+        // 思路：将要自动变宽的列交给sheet。单元格合并也是相同的的逻辑：将要合并的范围交给sheet
+        sheet.autoSizeColumn(0);
 
         Cell c2 = row1.createCell(1);
-        c2.setCellValue("bbb");
+        c2.setCellValue("bbbbbbbbb");
+        sheet.autoSizeColumn(1);    // 自动列宽
 
         Row row2 = sheet.createRow(1);
         Cell c21 = row2.createCell(0);
@@ -224,6 +228,11 @@ public class POITest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void basicMergeCell() {
+
     }
 
     // 自定义注解来处理Excel

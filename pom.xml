@@ -191,13 +191,13 @@
             <version>3.0.1-b06</version>
         </dependency>
 
-        <!--处理excel文件-->
+        <!--处理excel文件, 适用Excel 97-2003-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>4.1.2</version>
         </dependency>
-        <!--这个也不能少-->
+        <!--这个也不能少, 适用Excel 2007+-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
