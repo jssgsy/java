@@ -8,10 +8,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
 import org.junit.Test;
 
 import java.io.File;
@@ -144,8 +142,12 @@ public class POITest {
         }
     }
 
-    // 基本思路：从上到下创建行，然后在一行中从左到右创建单元格；
-    // 重点：行其实和sheet一样仍然只是个容器，只有创建出了单元格才算是真正有了表格
+    /**
+     * 基本思路：从上到下创建行，然后在一行中从左到右创建单元格；
+     *      注，并不需要严格从上到下从左到右的顺序创建单元格，可以只创建需要的单元格；
+     *      相当于整个sheet是一个画布，哪需要写数据就在哪划一个单元格即可；
+     * 重点：行其实和sheet一样仍然只是个容器，只有创建出了单元格才算是真正有了表格
+     */
     @Test
     public void writeBasicOps() throws IOException {
         Workbook workbook = new XSSFWorkbook();
@@ -172,6 +174,66 @@ public class POITest {
         workbook.write(outputStream);
         // 关闭workbook，释放资源
         workbook.close();
+    }
+
+    /**
+     * 基本思路：
+     *  CellRangeAddress：用于定义合并的单元格范围；
+     *      CellRangeAddress(int firstRow, int lastRow, int firstCol, int lastCol)；
+     *  Sheet.addMergedRegion(CellRangeAddress region)：将定义的范围应用到工作表，完成合并；
+     *      和自动列宽的思路类似；
+     *
+     * 重点：给合并的单元格赋值，其实就是给合并的单元格的左上角单元格赋值！！！；
+     *
+     * 补充：
+     *  * 合并的单元格范围并不需要先使用row.createCell之后再划定范围，即可直接使用CellRangeAddress划定;
+     *  *
+     */
+    @Test
+    public void basicMergeCell() {
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            XSSFSheet sheet = workbook.createSheet("合并单元格示例");
+
+            // 1. 合并第一行的 0-2 列（横向合并 3 列）
+            // 范围：行 0-0，列 0-2
+            CellRangeAddress mergeCols = new CellRangeAddress(0, 0, 0, 2);
+            sheet.addMergedRegion(mergeCols);
+            // 给合并后的左上角单元格设置值（仅需这一个单元格）
+            XSSFRow row0 = sheet.createRow(0);
+            XSSFCell cell0 = row0.createCell(0);
+            cell0.setCellValue("横向合并（0-2列）");
+
+            // 2. 合并第 3 列的 1-3 行（纵向合并 3 行）
+            // 范围：行 1-3，列 3-3
+            CellRangeAddress mergeRows = new CellRangeAddress(1, 3, 3, 3);
+            sheet.addMergedRegion(mergeRows);
+            // 给左上角单元格设置值
+            XSSFRow row1 = sheet.createRow(1);
+            XSSFCell cell1 = row1.createCell(3);
+            cell1.setCellValue("纵向合并（1-3行）");
+
+            // 3. 合并一个矩形区域（行 2-4，列 1-2）
+            CellRangeAddress mergeRect = new CellRangeAddress(2, 4, 1, 2);
+            sheet.addMergedRegion(mergeRect);
+            // 给左上角单元格设置值
+            XSSFRow row2 = sheet.getRow(2); // 若行已创建，直接获取；否则用 createRow(2)
+            if (row2 == null) row2 = sheet.createRow(2);
+            XSSFCell cell2 = row2.createCell(1);
+            cell2.setCellValue("矩形合并区域");
+
+            // 自动调整列宽（可选）
+            for (int i = 0; i < 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // 写入文件
+            try (FileOutputStream fos = new FileOutputStream("data/excel/basicMerge.xlsx")) {
+                workbook.write(fos);
+                System.out.println("合并单元格成功！");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -228,11 +290,6 @@ public class POITest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    public void basicMergeCell() {
-
     }
 
     // 自定义注解来处理Excel
