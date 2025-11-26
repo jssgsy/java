@@ -25,6 +25,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>2.0.2</powermock.version>
+        <hutool-5.version>5.8.40</hutool-5.version>
 	</properties>
 
 	<dependencies>
@@ -348,6 +349,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.31</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool-5.version}</version>
         </dependency>
 
     </dependencies>
