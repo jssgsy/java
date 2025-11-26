@@ -23,6 +23,11 @@ public class PoiComplicateHeadTest {
     // 共享数据，需用成员变量承接
     int colIndex = 0;
 
+    /**
+     * 支持多层级的复杂表头
+     *
+     * 实现的本质仍然是：从上到下、从左到右创建单元格而已
+     */
     @Test
     public void complicatedHeader() throws IOException {
         // List<FieldConfig> headList = twoLevelHead();
