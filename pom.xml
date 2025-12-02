@@ -357,5 +357,13 @@
             <version>${hutool-5.version}</version>
         </dependency>
 
+        <!-- Selenium 3.x 兼容 Java 8 -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.141.59</version> <!-- 3.x 最新稳定版 -->
+        </dependency>
+
+
     </dependencies>
 </project>
