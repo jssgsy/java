@@ -364,6 +364,12 @@
             <version>3.141.59</version> <!-- 3.x 最新稳定版 -->
         </dependency>
 
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.78.1</version> <!-- 推荐1.68+版本，支持国密 -->
+        </dependency>
+
 
     </dependencies>
 </project>
