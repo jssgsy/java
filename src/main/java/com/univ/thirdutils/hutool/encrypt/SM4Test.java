@@ -26,7 +26,7 @@ public class SM4Test {
     // 使用CBC模式：需要向量，生产用
     @Test
     public void cbcEncrypt() {
-        // 重点：使用ECB模式构造SM4
+        // 重点：使用CBC模式构造SM4
         SM4 sm4 = new SM4(Mode.CBC , Padding.PKCS5Padding , SM4_KEY.getBytes() , SM4_IV.getBytes());
 
         // 加密：明文 -> 密文（base64编码）
