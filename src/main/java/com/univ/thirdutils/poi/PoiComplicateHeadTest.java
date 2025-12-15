@@ -3,11 +3,10 @@ package com.univ.thirdutils.poi;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
@@ -17,6 +16,7 @@ import java.util.List;
 
 /**
  * 支持不限层级的复杂合并表头
+ * 核心思想：将表头结构视为一棵或多棵多叉树（森林），然后通过递归遍历这些树结构来确定单元格的合并范围（行跨度和列跨度）并创建单元格。
  */
 public class PoiComplicateHeadTest {
 
@@ -37,10 +37,12 @@ public class PoiComplicateHeadTest {
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             XSSFSheet sheet = workbook.createSheet("复杂表头");
+            // 样式只创建一次
+            XSSFCellStyle headerStyle = createHeaderStyle(workbook);
             // 创建表头
             int currentColIndex = 0;
             for (FieldConfig fieldConfig : headList) {
-                currentColIndex = appendHead(sheet, 0, fieldConfig, treeDepth, currentColIndex);
+                currentColIndex = appendHead(sheet, 0, fieldConfig, treeDepth, currentColIndex, headerStyle);
             }
             try (FileOutputStream fos = new FileOutputStream("data/excel/多级复杂表头.xlsx")) {
                 workbook.write(fos);
@@ -48,6 +50,16 @@ public class PoiComplicateHeadTest {
         }
     }
 
+    /**
+     * 缓存样式
+     * @param workbook 用来创建需要的样式
+     */
+    private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
+        XSSFCellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        return headerStyle;
+    }
 
     /**
      * 将当前节点添加到sheet页表头中
@@ -56,26 +68,26 @@ public class PoiComplicateHeadTest {
      * @param fieldConfig 要添加到表头中的数据
      * @param maxColDepth 整个森林中树的最大的深度
      * @param currentColIndex 当前列
+     * @param headerStyle 单元格要应用的样式
      * @return 下一个要处理的列。重要：利用这点就不需要用共享变量来保存当前处理到哪一列了
      */
     private int appendHead(XSSFSheet sheet,
                             int rowIndex,
                             FieldConfig fieldConfig,
                             int maxColDepth,
-                            int currentColIndex) {
+                            int currentColIndex,
+                            XSSFCellStyle headerStyle) {
         // 重要：如果重复创建则会覆盖掉之前的行，包含数据和新式
         XSSFRow row = sheet.getRow(rowIndex) == null ? sheet.createRow(rowIndex) : sheet.getRow(rowIndex);
         if (CollectionUtils.isEmpty(fieldConfig.children)) {
             // 判断是否需要合并，CellRangeAddress必须得实际合并两个小单元格以上，否则异常
-            if (rowIndex == maxColDepth -1) {
-                XSSFCell cell = row.createCell(currentColIndex);
-                cell.setCellValue(fieldConfig.getName());
-            } else {
-                CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, maxColDepth -1 , currentColIndex, currentColIndex);
+            if (rowIndex < maxColDepth - 1) { // 只有在不是最底层行时才需要向下合并
+                CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, maxColDepth - 1, currentColIndex, currentColIndex);
                 sheet.addMergedRegion(mergeCols);
-                XSSFCell cell = row.createCell(currentColIndex);
-                cell.setCellValue(fieldConfig.getName());
             }
+            XSSFCell cell = row.createCell(currentColIndex);
+            cell.setCellValue(fieldConfig.getName());
+            cell.setCellStyle(headerStyle); // 应用样式
             return currentColIndex + 1; // 返回下一个要处理的列
         } else {
             // 有子节点，先处理自己,宽度是所有子节点的宽度之和
@@ -83,9 +95,10 @@ public class PoiComplicateHeadTest {
             sheet.addMergedRegion(mergeCols);
             XSSFCell cell = row.createCell(currentColIndex);
             cell.setCellValue(fieldConfig.getName());
+            cell.setCellStyle(headerStyle); // 应用样式
             // 继续处理子节点
             for (FieldConfig child : fieldConfig.children) {
-                currentColIndex = appendHead(sheet, rowIndex + 1, child, maxColDepth, currentColIndex);
+                currentColIndex = appendHead(sheet, rowIndex + 1, child, maxColDepth, currentColIndex, headerStyle);
             }
             return currentColIndex; // 返回所有子节点处理完后的最终索引
         }
