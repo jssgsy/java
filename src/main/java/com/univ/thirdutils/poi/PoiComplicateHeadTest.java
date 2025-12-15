@@ -20,9 +20,6 @@ import java.util.List;
  */
 public class PoiComplicateHeadTest {
 
-    // 共享数据，需用成员变量承接
-    int colIndex = 0;
-
     /**
      * 支持多层级的复杂表头
      *
@@ -41,8 +38,9 @@ public class PoiComplicateHeadTest {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             XSSFSheet sheet = workbook.createSheet("复杂表头");
             // 创建表头
+            int currentColIndex = 0;
             for (FieldConfig fieldConfig : headList) {
-                appendHead(sheet, 0, fieldConfig, treeDepth);
+                currentColIndex = appendHead(sheet, 0, fieldConfig, treeDepth, currentColIndex);
             }
             try (FileOutputStream fos = new FileOutputStream("data/excel/多级复杂表头.xlsx")) {
                 workbook.write(fos);
@@ -57,35 +55,39 @@ public class PoiComplicateHeadTest {
      * @param rowIndex 当前行
      * @param fieldConfig 要添加到表头中的数据
      * @param maxColDepth 整个森林中树的最大的深度
+     * @param currentColIndex 当前列
+     * @return 下一个要处理的列。重要：利用这点就不需要用共享变量来保存当前处理到哪一列了
      */
-    private void appendHead(XSSFSheet sheet,
+    private int appendHead(XSSFSheet sheet,
                             int rowIndex,
                             FieldConfig fieldConfig,
-                            int maxColDepth) {
+                            int maxColDepth,
+                            int currentColIndex) {
         // 重要：如果重复创建则会覆盖掉之前的行，包含数据和新式
         XSSFRow row = sheet.getRow(rowIndex) == null ? sheet.createRow(rowIndex) : sheet.getRow(rowIndex);
         if (CollectionUtils.isEmpty(fieldConfig.children)) {
             // 判断是否需要合并，CellRangeAddress必须得实际合并两个小单元格以上，否则异常
             if (rowIndex == maxColDepth -1) {
-                XSSFCell cell = row.createCell(colIndex);
+                XSSFCell cell = row.createCell(currentColIndex);
                 cell.setCellValue(fieldConfig.getName());
             } else {
-                CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, maxColDepth -1 , colIndex, colIndex);
+                CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, maxColDepth -1 , currentColIndex, currentColIndex);
                 sheet.addMergedRegion(mergeCols);
-                XSSFCell cell = row.createCell(colIndex);
+                XSSFCell cell = row.createCell(currentColIndex);
                 cell.setCellValue(fieldConfig.getName());
             }
-            colIndex++;
+            return currentColIndex + 1; // 返回下一个要处理的列
         } else {
             // 有子节点，先处理自己,宽度是所有子节点的宽度之和
-            CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, rowIndex, colIndex, colIndex + width(fieldConfig) -1);
+            CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, rowIndex, currentColIndex, currentColIndex + width(fieldConfig) -1);
             sheet.addMergedRegion(mergeCols);
-            XSSFCell cell = row.createCell(colIndex);
+            XSSFCell cell = row.createCell(currentColIndex);
             cell.setCellValue(fieldConfig.getName());
             // 继续处理子节点
             for (FieldConfig child : fieldConfig.children) {
-                appendHead(sheet, rowIndex + 1, child, maxColDepth);
+                currentColIndex = appendHead(sheet, rowIndex + 1, child, maxColDepth, currentColIndex);
             }
+            return currentColIndex; // 返回所有子节点处理完后的最终索引
         }
     }
 
