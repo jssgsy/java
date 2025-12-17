@@ -1,10 +1,16 @@
 package com.univ.ognl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import ognl.OgnlException;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -108,10 +114,48 @@ public class OgnlTest {
         System.out.println("#map[address]: " + Ognl.getValue("#map['address']", ognlContext, ognlContext.getRoot()));
     }
 
+    /**
+     * 演示为何从context中取值时仍然要传入root对象：为了复用context对象
+     */
+    @Test
+    public void whyStillNeedPassRoot() throws OgnlException {
+        // 共享上下文，可能只包含工具类等
+        OgnlContext sharedContext = (OgnlContext) Ognl.createDefaultContext(null); // 或传入一个空对象
+
+        User u1 = new User("Charlie");
+        User u2 = new User("David");
+
+        // 第一次调用：使用 u1
+        System.out.println(Ognl.getValue("name", sharedContext, u1));;
+
+        // 第二次调用：使用 u2
+        System.out.println(Ognl.getValue("name", sharedContext, u2));;
+    }
+
+    /**
+     * ognl也可以处理List<Object>或List<Map<String, Object>>等类型
+     */
+    @Test
+    public void dealObject() throws IOException, OgnlException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonStr = "\n" +
+                "\t\t\t[{\"buildMainName\": \"1231\", \"buildMainTime\": 13, \"buildMainUnitFunction\": \"基础电信运营商\", \"buildMainTotalItCapacity\": 23, \"buildMainTotalItCapacityUnit\": \"兆瓦\", \"buildMainIsSpecializedCapability\": \"1\", \"buildMainLargeScaleFacilityProjectAmount\": 334, \"buildMainMediumScaleFacilityProjectAmount\": 12}, \n" +
+                "\t\t\t{\"buildMainName\": \"12\", \"buildMainTime\": 2, \"buildMainUnitFunction\": \"互联网及云厂商\", \"buildMainTotalItCapacity\": 2, \"buildMainTotalItCapacityUnit\": \"兆瓦\", \"buildMainIsSpecializedCapability\": \"1\", \"buildMainLargeScaleFacilityProjectAmount\": 2, \"buildMainMediumScaleFacilityProjectAmount\": 2}\n" +
+                "\t\t]";
+        // 此时listObjects中的对象Object其实是一个Map；
+        List<Object> listObjects = objectMapper.readValue(jsonStr, new TypeReference<List<Object>>() {
+        });
+        Object value = Ognl.getValue("[0].buildMainUnitFunction", listObjects);
+        System.out.println(listObjects);
+        System.out.println(value);
+    }
 
 
 }
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 class User{
     private String name;
 
