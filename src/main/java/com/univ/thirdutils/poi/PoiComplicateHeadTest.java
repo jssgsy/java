@@ -37,7 +37,8 @@ public class PoiComplicateHeadTest {
         // List<FieldConfig> headList = fiveLevelHead();
 
         // 1. 找出最大列的深度，用来合并单元格用，即列要占的行数
-        int treeDepth = findMaxDepth(headList);
+        int treeDepth = findMaxTreeDepth(headList);
+        System.out.println(treeDepth);
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             XSSFSheet sheet = workbook.createSheet("复杂表头");
@@ -204,7 +205,7 @@ public class PoiComplicateHeadTest {
      * 森林中树的最大的深度
      * @param fieldConfigs 森林
      */
-    private int findMaxDepth(List<FieldConfig> fieldConfigs) {
+    private int findMaxTreeDepth(List<FieldConfig> fieldConfigs) {
         int maxDepth = 1;
         for (FieldConfig fieldConfig : fieldConfigs) {
             maxDepth = Math.max(depth(fieldConfig), maxDepth);
@@ -214,6 +215,7 @@ public class PoiComplicateHeadTest {
 
     /**
      * 获取指定树的深度,其实就是求多叉树的深度
+     * 深度的定义：路径上的节点个数(不是连接的个数)
      */
     private static int depth(FieldConfig fieldConfig) {
         int maxChildDepth = 0;

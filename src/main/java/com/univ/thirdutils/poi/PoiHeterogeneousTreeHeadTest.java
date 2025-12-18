@@ -31,7 +31,7 @@ public class PoiHeterogeneousTreeHeadTest {
 
         // 1. 找出最大列的深度，用来合并单元格用，即列要占的行数
         int treeDepth = findMaxTreeDepth(headList);
-
+        System.out.println(treeDepth);
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             XSSFSheet sheet = workbook.createSheet("复杂表头");
             // 样式只创建一次
@@ -127,8 +127,8 @@ public class PoiHeterogeneousTreeHeadTest {
         XSSFRow row = sheet.getRow(rowIndex) == null ? sheet.createRow(rowIndex) : sheet.getRow(rowIndex);
         if (CollectionUtils.isEmpty(field.getChildren())) {
             // 判断是否需要合并，CellRangeAddress必须得实际合并两个小单元格以上，否则异常
-            if (rowIndex < maxColDepth ) { // 只有在不是最底层行时才需要向下合并
-                CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, maxColDepth, currentColIndex, currentColIndex);
+            if (rowIndex < maxColDepth - 1 ) { // 只有在不是最底层行时才需要向下合并
+                CellRangeAddress mergeCols = new CellRangeAddress(rowIndex, maxColDepth - 1, currentColIndex, currentColIndex);
                 sheet.addMergedRegion(mergeCols);
             }
             XSSFCell cell = row.createCell(currentColIndex);
@@ -170,7 +170,7 @@ public class PoiHeterogeneousTreeHeadTest {
     private static int treeDepth(Node node) {
         int nodeDepth = nodeOnlyDepth(node);
         int maxFieldDepth = maxFieldDepth(node.getFieldList());
-        return nodeDepth + maxFieldDepth;
+        return 1 + nodeDepth + maxFieldDepth;
     }
 
 
@@ -187,7 +187,7 @@ public class PoiHeterogeneousTreeHeadTest {
 
     /**
      * 节点的深度
-     * @param node 只求节点部分，如果节点下有树则忽略之
+     * @param node 只求节点部分，如果节点下有字段则忽略之
      */
     private static int nodeOnlyDepth(Node node) {
         int maxChildDepth = 0;
@@ -200,6 +200,11 @@ public class PoiHeterogeneousTreeHeadTest {
         return 1 + maxChildDepth;
     }
 
+    /**
+     * 仍然是节点下所有叶子节点的个数，因为本质是要节点要占用的列宽
+     * @param node
+     * @return
+     */
     private static int nodeWidth(Node node) {
         if (CollectionUtils.isEmpty(node.getFieldList())) {
             // 此时看子节点
