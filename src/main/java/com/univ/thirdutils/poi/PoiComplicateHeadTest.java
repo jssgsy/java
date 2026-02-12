@@ -81,7 +81,7 @@ public class PoiComplicateHeadTest {
     /**
      * 按照顺序给所有叶子节点编号(列号)，处理整个森林
      * @param headList 整个表头(即整个森林)，即表头元数据
-     * @return key：colIndex， value：对应的表头元数据(FieldConfig)
+     * @return key：colIndex(表示此叶子结子在excel中的列，方便poi创建列)， value：对应的表头元数据(FieldConfig)
      *  重点：之所以value是FieldConfig，是因为要从尝试从数据中获取对应列名的值，FieldConfig是媒介
      */
     private Map<Integer, FieldConfig> toColIndexMap(List<FieldConfig> headList) {
